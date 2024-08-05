@@ -1,0 +1,41 @@
+---
+import ResponsiveFontSize from "../components/ResponsiveFontSize";
+import {SvgDefs} from "../components/SvgIcons";
+import Header from "../components/Header.astro";
+
+interface Props {
+    title: string;
+}
+
+const lang = "zh"
+const description = ""
+const {title} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="h-full bg-black" style="font-size: 16px">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content={description}/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="generator" content={Astro.generator}/>
+    <title>{title}</title>
+    <ResponsiveFontSize client:only="react"/>
+</head>
+<body class="w-full h-full text-white bg-black m-0 overflow-hidden">
+<div class="w-full h-full relative bg-layout bg-center bg-cover bg-no-repeat">
+    <div class="relative w-full h-full m-auto max-w-[180rem]">
+        <Header/>
+        <main class="w-full h-full relative select-none">
+            <slot/>
+        </main>
+    </div>
+</div>
+<SvgDefs/>
+</body>
+</html>
+
+<style is:global>
+
+</style>
