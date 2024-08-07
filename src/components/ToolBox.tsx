@@ -52,19 +52,19 @@ export default function ToolBox() {
                 <div className={"mt-[1rem] portrait:mt-[3.5rem] px-[3rem] portrait:p-0"
                     + " grid grid-cols-2 portrait:grid-cols-3 gap-[1.75rem]"
                     + " portrait:gap-x-[3.32rem] portrait:gap-y-[2rem] justify-items-center"}>
-                    <a className={aClassName}>
+                    <a className={aClassName} aria-label="Skland - 森空岛">
                         <IconSkland className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
                     </a>
-                    <a className={aClassName}>
+                    <a className={aClassName} aria-label="Bilibili - 哔哩哔哩">
                         <IconBiliBili className={"w-[2.75rem] portrait:w-[5rem] " + iconClassName}/>
                     </a>
-                    <a className={aClassName}>
+                    <a className={aClassName} aria-label="WeChat - 微信">
                         <IconWechat className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
                     </a>
-                    <a className={aClassName}>
+                    <a className={aClassName} aria-label="Weibo - 微博">
                         <IconWeibo className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
                     </a>
-                    <a className={aClassName}>
+                    <a className={aClassName} aria-label="TapTap">
                         <IconTapTap className={"w-[3rem]  portrait:w-[6rem] " + iconClassName}/>
                     </a>
                 </div>

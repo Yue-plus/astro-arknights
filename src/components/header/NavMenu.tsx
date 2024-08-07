@@ -46,6 +46,7 @@ function Navigation() {
             return <a key={index} href={item.href}
                       onClick={_ => isNavMenuOpen.set(!$isNavMenuOpen)}
                       className={"h-[7.5rem] flex items-center justify-between transition ease-in-out duration-200"}
+                      aria-label={item.title + " - " + item.subtitle}
                       style={{
                           color: $viewIndex === index ? "#19d1ff" : "inherit",
                           borderBottom: "1px solid hsla(0, 0%, 100%, .3)",
@@ -74,11 +75,21 @@ function ToolBox() {
             TOOLBOX
         </div>
         <div className={"mt-4 flex items-center justify-between"}>
-            <a className={aClassName}><IconSkland className={"w-[4.5rem] " + iconClassName} /></a>
-            <a className={aClassName}><IconBiliBili className={"w-[4.5rem] " + iconClassName}/></a>
-            <a className={aClassName}><IconWechat className={"w-[3rem] " + iconClassName}/></a>
-            <a className={aClassName}><IconWeibo className={"w-[3rem] " + iconClassName}/></a>
-            <a className={aClassName}><IconTapTap className={"w-[4.5rem] " + iconClassName}/></a>
+            <a className={aClassName} aria-label="Skland - 森空岛">
+                <IconSkland className={"w-[4.5rem] " + iconClassName} />
+            </a>
+            <a className={aClassName} aria-label="Bilibili - 哔哩哔哩">
+                <IconBiliBili className={"w-[4.5rem] " + iconClassName}/>
+            </a>
+            <a className={aClassName} aria-label="WeChat - 微信">
+                <IconWechat className={"w-[3rem] " + iconClassName}/>
+            </a>
+            <a className={aClassName} aria-label="Weibo - 微博">
+                <IconWeibo className={"w-[3rem] " + iconClassName}/>
+            </a>
+            <a className={aClassName} aria-label="TapTap">
+                <IconTapTap className={"w-[4.5rem] " + iconClassName}/>
+            </a>
         </div>
     </div>
 }
