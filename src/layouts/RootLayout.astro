@@ -1,6 +1,9 @@
 ---
 import ResponsiveFontSize from "../components/ResponsiveFontSize";
 import Header from "../components/header/Header.astro";
+import {Menu} from "../components/header/NavMenu";
+import ToolBox from "../components/ToolBox";
+import OwnerInfo from "../components/OwnerInfo";
 import {SvgDefs} from "../components/SvgIcons";
 
 interface Props {
@@ -30,6 +33,9 @@ const {lang, title, description} = Astro.props;
         <main class="w-full h-full relative select-none">
             <slot/>
         </main>
+        <Menu client:load/>
+        <ToolBox client:load />
+        <OwnerInfo client:load />
     </div>
 </div>
 <SvgDefs/>

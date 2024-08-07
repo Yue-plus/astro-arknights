@@ -1,22 +1,22 @@
 ---
-import astroConfig from "../../../astro.config.mjs"
-import {TitleArknights} from "../SvgIcons";
+import {TitleArknights} from "../SvgIcons"
 import NavItem, {NavItemInfo} from "./NavItem"
 import {Social, Sound, OwnerInfo} from "./NavTools"
+import NavMenu from "./NavMenu"
 
-const base: string = astroConfig.base ?? ""
+const base: string = import.meta.env.BASE_URL
 
 const items: NavItemInfo[] = [
-    {title: "INDEX", subtitle: "首页", href: base + "/#index"},
-    {title: "INFORMATION", subtitle: "情报", href: base + "/#information"},
-    {title: "OPERATOR", subtitle: "干员", href: base + "/#operator"},
-    {title: "WORLD", subtitle: "设定", href: base + "/#world"},
-    {title: "MEDIA", subtitle: "泰拉万象", href: base + "/#media"},
-    {title: "MORE", subtitle: "更多内容", href: base + "/#more"},
+    {title: "INDEX", subtitle: "首页", href: base + "#index"},
+    {title: "INFORMATION", subtitle: "情报", href: base + "#information"},
+    {title: "OPERATOR", subtitle: "干员", href: base + "#operator"},
+    {title: "WORLD", subtitle: "设定", href: base + "#world"},
+    {title: "MEDIA", subtitle: "泰拉万象", href: base + "#media"},
+    {title: "MORE", subtitle: "更多内容", href: base + "#more"},
 ]
 
 {/* https://web.hycdn.cn/arknights/official/_next/static/media/audio/bgm.ea4286.mp3 */}
-const soundSrc = base + "/audios/bgm.mp3"
+const soundSrc = base + "audios/bgm.mp3"
 ---
 
 <header class="w-full h-[6.75rem] portrait:h-[9.375rem] absolute top-0 left-0 z-[23] flex items-center"
@@ -35,5 +35,5 @@ const soundSrc = base + "/audios/bgm.mp3"
         <Sound client:only="react" src={soundSrc}/>
         <OwnerInfo client:only="react"/>
     </div>
-    <!-- TODO: 竖屏模式导航菜单按钮 -->
+    <NavMenu client:only="react"/>
 </header>
