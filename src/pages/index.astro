@@ -1,5 +1,13 @@
 ---
 import RootLayout from "../layouts/RootLayout.astro";
+import LineDecorator from "../components/LineDecorator";
+import ScrollTip from "../components/ScrollTip";
 ---
 
-<RootLayout title="Arknights"/>
+<RootLayout title="Arknights">
+    <main class="w-full h-full relative select-none">
+        <!-- TODO: -->
+    </main>
+    <LineDecorator/>
+    <ScrollTip client:load/>
+</RootLayout>
