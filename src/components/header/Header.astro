@@ -1,6 +1,6 @@
 ---
 import {TitleArknights} from "../SvgIcons"
-import NavItem, {NavItemInfo} from "./NavItem"
+import NavItem, {type NavItemInfo} from "./NavItem"
 import {Social, Sound, OwnerInfo} from "./NavTools"
 import NavMenu from "./NavMenu"
 
@@ -22,11 +22,11 @@ const soundSrc = base + "audios/bgm.mp3"
 <header class="w-full h-[6.75rem] portrait:h-[9.375rem] absolute top-0 left-0 z-[23] flex items-center"
         style="background-image: linear-gradient(0deg, transparent, rgba(0, 0, 0, .6), rgba(0, 0, 0, .8))">
     <a class="w-[7rem] mr-auto ml-[3rem] cursor-pointer" href={"/"} aria-label="首页">
-        <TitleArknights class="w-full h-auto pointer-events-none"/>
+        <TitleArknights className="w-full h-auto pointer-events-none"/>
     </a>
     <nav class="portrait:hidden">
         <ul class="flex justify-evenly">{
-            items.map((info: NavItem, index) =>
+            items.map((info: NavItemInfo, index) =>
                     <NavItem client:load {...{index, info}}/>)
         }</ul>
     </nav>

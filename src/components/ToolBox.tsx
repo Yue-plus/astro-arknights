@@ -1,4 +1,3 @@
-import React from "react";
 import {useStore} from "@nanostores/react";
 import {isToolBoxOpen} from "./store/rootLayoutStore.ts";
 import {
