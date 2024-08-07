@@ -1,15 +1,15 @@
 ---
 import ResponsiveFontSize from "../components/ResponsiveFontSize";
+import Header from "../components/header/Header.astro";
 import {SvgDefs} from "../components/SvgIcons";
-import Header from "../components/Header.astro";
 
 interface Props {
-    title: string;
+    lang?: string
+    title?: string
+    description?: string
 }
 
-const lang = "zh"
-const description = ""
-const {title} = Astro.props;
+const {lang, title, description} = Astro.props;
 ---
 
 <!DOCTYPE html>

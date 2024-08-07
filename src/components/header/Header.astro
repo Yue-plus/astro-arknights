@@ -1,0 +1,33 @@
+---
+import {TitleArknights} from "../SvgIcons";
+import NavItem, {NavItemInfo} from "./NavItem"
+import astroConfig from "../../../astro.config.mjs"
+
+const base: string = astroConfig.base ?? ""
+
+const items: NavItemInfo[] = [
+    {title: "INDEX", subtitle: "首页", href: base + "/#index"},
+    {title: "INFORMATION", subtitle: "情报", href: base + "/#information"},
+    {title: "OPERATOR", subtitle: "干员", href: base + "/#operator"},
+    {title: "WORLD", subtitle: "设定", href: base + "/#world"},
+    {title: "MEDIA", subtitle: "泰拉万象", href: base + "/#media"},
+    {title: "MORE", subtitle: "更多内容", href: base + "/#more"},
+]
+---
+
+<header class="w-full h-[6.75rem] portrait:h-[9.375rem] absolute top-0 left-0 z-[23] flex items-center"
+        style="background-image: linear-gradient(0deg, transparent, rgba(0, 0, 0, .6), rgba(0, 0, 0, .8))">
+    <a class="w-[7rem] mr-auto ml-[3rem] cursor-pointer" href={"/"} aria-label="首页">
+        <TitleArknights class="w-full h-auto pointer-events-none"/>
+    </a>
+    <nav class="portrait:hidden">
+        <ul class="flex justify-evenly">{
+            items.map((info: NavItem, index) =>
+                    <NavItem client:load {...{index, info}}/>)
+        }</ul>
+    </nav>
+    <div class="w-[14.75rem] h-full flex pl-[.75rem]">
+        <!-- TODO: 工具栏 -->
+    </div>
+    <!-- TODO: 竖屏模式导航菜单按钮 -->
+</header>
