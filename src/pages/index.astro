@@ -1,15 +1,16 @@
 ---
-import RootLayout from "../layouts/RootLayout.astro";
-import PageTracker from "../components/PageTracker";
-import LineDecorator from "../components/LineDecorator";
-import ScrollTip from "../components/ScrollTip";
-import arknightsConfig from "../../arknights.config";
+import RootLayout from "../layouts/RootLayout.astro"
+import PageTracker from "../components/PageTracker"
+import LineDecorator from "../components/LineDecorator"
+import ScrollTip from "../components/ScrollTip"
+import arknightsConfig from "../../arknights.config"
+import RootPageViews from "./_views/RootPageViews";
 ---
 
 <RootLayout lang={arknightsConfig.language} title={arknightsConfig.title} description={arknightsConfig.description}>
     <PageTracker/>
-    <main class="w-full h-full relative select-none">
-        <!-- TODO: -->
+    <main id="root-page-views" class="w-full h-full relative select-none">
+        <RootPageViews client:only="react"/>
     </main>
     <LineDecorator/>
     <ScrollTip client:load/>
