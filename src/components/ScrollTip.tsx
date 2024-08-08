@@ -1,10 +1,11 @@
 import {useStore} from "@nanostores/react";
 import {viewIndex} from "./store/rootLayoutStore.ts";
 import {IconArrow, LogoRhodesIsland} from "./SvgIcons";
+import arknightsConfig from "../../arknights.config.tsx";
 
 export default function ScrollTip() {
     const $ViewIndex = useStore(viewIndex)
-    const viewIndexInLast = $ViewIndex === 5 // TODO:
+    const viewIndexInLast = $ViewIndex === arknightsConfig.navbar.items.length - 1;
 
     return <div className={"w-[3rem] absolute left-1/2 bottom-[3.75rem] -translate-x-1/2 z-[4] pointer-events-none"}>
         <div className={"flex flex-col items-center transition-opacity duration-300"
