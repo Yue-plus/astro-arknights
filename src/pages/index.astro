@@ -1,10 +1,13 @@
 ---
 import RootLayout from "../layouts/RootLayout.astro";
+import PageTracker from "../components/PageTracker";
 import LineDecorator from "../components/LineDecorator";
 import ScrollTip from "../components/ScrollTip";
+import arknightsConfig from "../../arknights.config";
 ---
 
-<RootLayout title="Arknights">
+<RootLayout lang={arknightsConfig.language} title={arknightsConfig.title} description={arknightsConfig.description}>
+    <PageTracker/>
     <main class="w-full h-full relative select-none">
         <!-- TODO: -->
     </main>

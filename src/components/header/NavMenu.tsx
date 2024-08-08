@@ -2,6 +2,7 @@ import React from "react";
 import {IconBiliBili, IconSkland, IconTapTap, IconWechat, IconWeibo} from "../SvgIcons";
 import {useStore} from "@nanostores/react";
 import {isNavMenuOpen, viewIndex} from "../store/rootLayoutStore.ts";
+import arknightsConfig from "../../../arknights.config.tsx";
 
 export default function NavMenu() {
     const LineClassName: React.ComponentProps<"div">["className"] =
@@ -29,19 +30,11 @@ export default function NavMenu() {
 function Navigation() {
     const $viewIndex = useStore(viewIndex)
     const $isNavMenuOpen = useStore(isNavMenuOpen)
-    const base = import.meta.env.BASE_URL
 
     let delay = -70
     return <div className="pt-[1.25rem] pr-[2.25rem] pb-0 pl-[3.375rem]">{
         // TODO: 此处可以服务端渲染
-        [
-            {title: "INDEX", subtitle: "首页", href: base + "#index"},
-            {title: "INFORMATION", subtitle: "情报", href: base + "#information"},
-            {title: "OPERATOR", subtitle: "干员", href: base + "#operator"},
-            {title: "WORLD", subtitle: "设定", href: base + "#world"},
-            {title: "MEDIA", subtitle: "泰拉万象", href: base + "#media"},
-            {title: "MORE", subtitle: "更多内容", href: base + "#more"},
-        ].map((item, index) => {
+        arknightsConfig.navbar.items.map((item, index) => {
             delay += 70
             return <a key={index} href={item.href}
                       onClick={_ => isNavMenuOpen.set(!$isNavMenuOpen)}

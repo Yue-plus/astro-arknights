@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {IconSocial, IconSound, IconUser} from "../SvgIcons";
 import {useStore} from "@nanostores/react";
 import {isOwnerInfoOpen, isToolBoxOpen} from "../store/rootLayoutStore.ts";
+import arknightsConfig from "../../../arknights.config";
 
 const ActiveColor = "#18d1ff"
 const InactiveColor = "#c4c2c2"
@@ -16,8 +17,8 @@ export function Social() {
     </div>
 }
 
-export function Sound({src}: {src: string}) {
-    const [active, setActive] = useState(false)
+export function Sound() {
+    const [active, setActive] = useState(arknightsConfig?.bgm?.autoplay ?? false)
     const audioRef = useRef<HTMLAudioElement>(null)
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export function Sound({src}: {src: string}) {
             transition: "transform .3s",
             transform: `scaleY(${active ? 1 : .5})`,
         }}/>
-        <audio ref={audioRef} src={src} autoPlay/>
+        <audio ref={audioRef} src={arknightsConfig?.bgm?.src ?? (import.meta.env.BASE_URL + "audios/bgm.mp3")}/>
     </div>
 }
 
