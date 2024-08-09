@@ -1,10 +1,11 @@
 ---
-import ResponsiveFontSize from "../components/ResponsiveFontSize";
-import Header from "../components/header/Header.astro";
-import {Menu} from "../components/header/NavMenu";
-import ToolBox from "../components/ToolBox";
-import OwnerInfo from "../components/OwnerInfo";
-import {SvgDefs} from "../components/SvgIcons";
+import FontFace from "../components/FontFace.astro";
+import ResponsiveFontSize from "../components/ResponsiveFontSize"
+import Header from "../components/header/Header.astro"
+import {Menu} from "../components/header/NavMenu"
+import ToolBox from "../components/ToolBox"
+import OwnerInfo from "../components/OwnerInfo"
+import {SvgDefs} from "../components/SvgIcons"
 
 interface Props {
     lang?: string
@@ -24,6 +25,7 @@ const {lang, title, description} = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <meta name="generator" content={Astro.generator}/>
     <title>{title}</title>
+    <FontFace/>
     <ResponsiveFontSize client:only="react"/>
 </head>
 <body class="w-full h-full text-white bg-black m-0 overflow-hidden">
@@ -32,8 +34,8 @@ const {lang, title, description} = Astro.props;
         <Header/>
         <slot/>
         <Menu client:load/>
-        <ToolBox client:load />
-        <OwnerInfo client:load />
+        <ToolBox client:load/>
+        <OwnerInfo client:load/>
     </div>
 </div>
 <SvgDefs/>
@@ -41,5 +43,31 @@ const {lang, title, description} = Astro.props;
 </html>
 
 <style is:global>
+    @tailwind utilities;
 
+    @layer utilities {
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        .writing-tb {
+            writing-mode: horizontal-tb;
+        }
+
+        .writing-rl {
+            writing-mode: vertical-rl;
+        }
+
+        .writing-lr {
+            writing-mode: vertical-lr;
+        }
+
+        .mask-unset {
+            mask: unset;
+        }
+
+        .mask-gradient-90-transparent-to-white {
+            mask: linear-gradient(90deg, transparent, white 20%);
+        }
+    }
 </style>

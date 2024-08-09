@@ -20,16 +20,21 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				// TODO: 配置字体
-				inter: ["var(--font-inter)"],
-				benderBold: ["var(--font-bender-bold)"],
-				benderRegular: ["var(--font-bender-regular)"],
-				n15eBold: ["var(--font-novecentosanswide-bold)"],
-				n15eDemiBold: ["var(--font-novecentosanswide-demiBold)"],
-				n15eMedium: ["var(--font-novecentosanswide-medium)"],
-				n15eUltraBold: ["var(--font-novecentosanswide-ultraBold)"],
-				oswaldMedium: ["var(--font-oswald-medium)"],
-				sdkSansRegular: ["var(--font-sdk-sans-regular)"],
+				benderBold: ["Bender-Bold"],
+				benderRegular: ["Bender-Regular"],
+				n15eBold: ["Novecentosanswide-Bold"],
+				n15eDemiBold: ["Novecentosanswide-DemiBold"],
+				n15eMedium: ["Novecentosanswide-Medium"],
+				n15eUltraBold: ["Novecentosanswide-UltraBold"],
+				oswaldMedium: ["Oswald-Medium"],
+				oswaldDemiBold: ["Oswald-DemiBold"],
+
+				// TODO: 使用思源黑体
+				// sourceHanMedium: ["SourceHanSans-Medium"],
+				// sourceHanRegular: ["SourceHanSans-Regular"],
+				// sourceHanBold: ["SourceHanSans-Bold"],
+				// sourceHanHeavy: ["SourceHanSans-Heavy"],
+				// sdkSansRegular: ["SDK_Sans-Regular"],
 			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

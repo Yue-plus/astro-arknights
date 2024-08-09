@@ -15,11 +15,11 @@ export default function PageTracker() {
         >{"0" + $viewIndex}</div>
         <div className={"mt-[-1.55em] text-right text-[1.125rem] portrait:text-[1rem] portrait:text-center"
             + " font-benderRegular portrait:writing-rl portrait:absolute portrait:right-0 bottom-0"}
-        >{`// 0${$viewIndex} / 0${arknightsConfig?.pageTracker?.labels?.length - 1 ?? "1"}`}</div>
+        >{`// 0${$viewIndex} / 0${arknightsConfig.pageTracker.labels.length - 1}`}</div>
         <div className={"text-right text-[.375rem] font-n15eMedium tracking-[.5em] portrait:hidden"}
-        >{arknightsConfig.pageTracker?.microInfo ?? "ARKNIGHTS"}</div>
+        >{arknightsConfig.pageTracker.microInfo}</div>
         <div className={"text-right portrait:text-center text-[1.125rem] portrait:text-[.625rem] font-n15eDemiBold"
             + " tracking-widest portrait:absolute portrait:right-[1.5rem] portrait:bottom-0 portrait:writing-rl"}
-        >{arknightsConfig?.pageTracker?.labels[$viewIndex] ?? "HOMEPAGE"}</div>
+        >{arknightsConfig.pageTracker.labels[$viewIndex]}</div>
     </div>
 }
