@@ -1,0 +1,49 @@
+---
+import RootLayout from "./RootLayout.astro";
+import {IconArrow} from "../components/SvgIcons";
+import {Astro} from "astro/env";
+
+interface Props {
+    type?: string
+    goBackHref: string
+}
+
+const base = import.meta.env.BASE_URL
+const type = Astro.props.type ?? "INFO"
+const goBackHref = Astro.props.goBackHref
+---
+
+<RootLayout title="文档">
+    <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
+        <!-- TODO: 装饰线 -->
+        <main class="flex-auto py-[4.5rem] portrait:pt-[2.5rem] portrait:px-[1.875rem] portrait:pb-[12rem] flex">
+            <div class="w-[80.75rem] portrait:w-auto mx-auto flex-none flex-col portrait:flex-auto">
+                <slot/>
+            </div>
+        </main>
+        <aside class="w-[25.5rem] portrait:w-auto mt-auto mb-[9.5rem] flex-none portrait:absolute portrait:right-0 portrait:bottom-[5.625rem] portrait:mb-0 select-none">
+            <!-- TODO: 文档目录 -->
+            <div class="text-[#5f5f5f] text-[12.5rem] text-right font-oswaldMedium tracking-[-.625rem] pr-8 portrait:hidden">
+                <!-- TODO: 竖屏模式也半透明显示在左下角 -->
+                {type}
+            </div>
+            <div class="flex justify-end">
+                <a href={goBackHref} target="_blank"
+                   class="w-[14.875rem] h-[3.75rem] text-inherit no-underline px-[2.5rem] bg-[#5a5a5a] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
+                    <IconArrow className="w-2 rotate-180 pointer-events-none"/>
+                    <div>
+                        <div class="text-[1.25rem] font-bold">返回列表</div>
+                        <div class="text-[.875rem] font-benderBold">GO BACK</div>
+                    </div>
+                </a>
+                <a href={base} target="_blank"
+                   class="w-[10.5rem] h-[3.75rem] text-inherit no-underline px-[2.25rem] bg-[#3f3f3f] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
+                    <div>
+                        <div class="text-[1.25rem] font-bold">返回首页</div>
+                        <div class="text-[.875rem] font-benderBold">HOMEPAGE</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
+    </div>
+</RootLayout>

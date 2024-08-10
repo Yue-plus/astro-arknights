@@ -1,22 +1,19 @@
 import React from "react";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
-import {CopyrightMini, IconGitHub} from "../../components/SvgIcons";
+import {CopyrightMini, IconGitHub, IconArchive} from "../../components/SvgIcons";
 
 type HeroActionButtonProps = {
     icon: React.JSX.Element
     label: string
-    subLabel: string
+    subLabel?: string
     target?: "_blank" | "_top" | "_parent" | "_self"
     href: string
-    textColor: string
-    backgroundColor: string
-    borderColor: string
-    hoverBorderColor: string
+    className?: string
 }
 
-function HeroActionButton({icon, label, subLabel, target, href, textColor, backgroundColor, borderColor, hoverBorderColor}: HeroActionButtonProps) {
+function HeroActionButton({icon, label, subLabel, target, href, className}: HeroActionButtonProps) {
     return <a target={target ?? "_blank"} href={href}
-              className={`w-[10.5rem] portrait:w-[15.125rem] h-[3rem] portrait:h-[4.5rem] text-[${textColor}] no-underline bg-[${backgroundColor}] border-[1px] border-solid border-[${borderColor}] hover:border-[${hoverBorderColor}] rounded pl-4 flex items-center transition-[border-color] duration-300`}>
+              className={`w-[10.5rem] portrait:w-[15.125rem] h-[3rem] portrait:h-[4.5rem] no-underline border-[1px] border-solid rounded pl-4 flex items-center transition-[border-color] duration-300 ${className ?? ""}`.trim()}>
         <div className="w-[1.5rem] portrait:w-[3rem] flex-none mr-3">{icon}</div>
         <div className="whitespace-nowrap leading-[1.4]">
             <div className="text-[.875rem] portrait:text-[1.25rem]">{label}</div>
@@ -27,14 +24,18 @@ function HeroActionButton({icon, label, subLabel, target, href, textColor, backg
 
 const heroActions: HeroActionButtonProps[] = [
     {
+        icon: <IconArchive className="w-full h-auto pointer-events-none"/>,
+        label: "文档",
+        subLabel: "Documentation",
+        href: import.meta.env.BASE_URL + "docs/",
+        className: "text-black bg-ark-blue border-[#2bf] hover:border-white font-bold font-benderBold",
+    },
+    {
         icon: <IconGitHub className="w-full h-auto pointer-events-none"/>,
         label: "GitHub",
         subLabel: "Repository",
         href: "https://github.com/Yue-plus/astro-arknights",
-        textColor: "white",
-        backgroundColor: "black",
-        borderColor: "#333",
-        hoverBorderColor: "white"
+        className: "text-white bg-black border-[#333] hover:border-white font-benderBold",
     },
 ]
 
@@ -71,7 +72,7 @@ export default function Index() {
                 + " block pointer-events-none"}/>
         </div>
         <div className="absolute right-[3rem] portrait:left-[2rem] bottom-[12.75rem] portrait:bottom-[19.5rem] space-y-3 portrait:space-y-5">{
-            heroActions.map((props, index) => <HeroActionButton {...props} />)
+            heroActions.map((props, index) => <HeroActionButton key={index} {...props} />)
         }</div>
         <div className={"w-[10.5rem] portrait:w-[5.75rem] absolute"
             + " portrait:top-[9.25rem] right-[3rem] portrait:right-0 bottom-[5.625rem] portrait:bottom-auto"
