@@ -14,7 +14,7 @@ import arknightsConfig from "../../../arknights.config";
     <nav class="portrait:hidden">
         <ul class="flex justify-evenly">{
             arknightsConfig.navbar.items.map((info: NavItemInfo, index) =>
-                    <NavItem client:load {...{index, info}}/>)
+                    <NavItem client:only="react" {...{index, info}}/>)
         }</ul>
     </nav>
     <div class="w-[14.75rem] h-full flex pl-[.75rem]">

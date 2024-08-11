@@ -33,7 +33,7 @@ const {lang, title, description} = Astro.props;
     <div class="relative w-full h-full m-auto max-w-[180rem]">
         <Header/>
         <slot/>
-        <Menu client:load/>
+        <Menu client:only="react"/>
         <ToolBox client:load/>
         <OwnerInfo client:load/>
     </div>
