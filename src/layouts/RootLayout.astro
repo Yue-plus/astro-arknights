@@ -1,4 +1,5 @@
 ---
+import "../_styles/base.css"
 import FontFace from "../_styles/FontFace.astro"
 import Scrollbar from "../_styles/Scrollbar.astro"
 import ResponsiveFontSize from "../components/ResponsiveFontSize"
@@ -43,33 +44,3 @@ const {lang, title, description} = Astro.props;
 <SvgDefs/>
 </body>
 </html>
-
-<style is:global>
-    @tailwind utilities;
-
-    @layer utilities {
-        .text-balance {
-            text-wrap: balance;
-        }
-
-        .writing-tb {
-            writing-mode: horizontal-tb;
-        }
-
-        .writing-rl {
-            writing-mode: vertical-rl;
-        }
-
-        .writing-lr {
-            writing-mode: vertical-lr;
-        }
-
-        .mask-unset {
-            mask: unset;
-        }
-
-        .mask-gradient-90-transparent-to-white {
-            mask: linear-gradient(90deg, transparent, white 20%);
-        }
-    }
-</style>

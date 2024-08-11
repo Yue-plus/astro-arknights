@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .writing-tb {
+        writing-mode: horizontal-tb;
+    }
+
+    .writing-rl {
+        writing-mode: vertical-rl;
+    }
+
+    .writing-lr {
+        writing-mode: vertical-lr;
+    }
+
+    .mask-unset {
+        mask: unset;
+    }
+
+    .mask-gradient-90-transparent-to-white {
+        mask: linear-gradient(90deg, transparent, white 20%);
+    }
+}
