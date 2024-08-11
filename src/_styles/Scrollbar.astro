@@ -1,0 +1,58 @@
+<style is:global>
+    /* For Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+        /* width: 6px;
+           height: 6px; */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #5a5a5a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #18d1ff;
+        border-radius: 0; /* Ensure no rounded corners */
+        box-shadow: inset 0 0 0 0 #000; /* Remove any shadow that might create a rounded effect */
+    }
+
+    ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 0; /* Ensure no rounded corners for horizontal scrollbar */
+    }
+
+    ::-webkit-scrollbar-thumb:vertical {
+        border-radius: 0; /* Ensure no rounded corners for vertical scrollbar */
+    }
+
+    ::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    /* For Firefox */
+    * {
+        scrollbar-width: auto;
+        scrollbar-color: #18d1ff #5a5a5a;
+    }
+
+    /* For Internet Explorer and Edge (Legacy) */
+    body {
+        -ms-overflow-style: none; /* IE and Edge */
+    }
+
+    body::-ms-scrollbar {
+        /* width: 6px;
+           height: 6px; */
+    }
+
+    body::-ms-scrollbar-track {
+        background: #5a5a5a;
+    }
+
+    body::-ms-scrollbar-thumb {
+        background: #18d1ff;
+        border-radius: 0; /* Ensure no rounded corners */
+    }
+
+    body::-ms-scrollbar-button {
+        display: none;
+    }
+</style>

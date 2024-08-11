@@ -1,5 +1,6 @@
 ---
-import FontFace from "../components/FontFace.astro";
+import FontFace from "../_styles/FontFace.astro"
+import Scrollbar from "../_styles/Scrollbar.astro"
 import ResponsiveFontSize from "../components/ResponsiveFontSize"
 import Header from "../components/header/Header.astro"
 import {Menu} from "../components/header/NavMenu"
@@ -26,6 +27,7 @@ const {lang, title, description} = Astro.props;
     <meta name="generator" content={Astro.generator}/>
     <title>{title}</title>
     <FontFace/>
+    <Scrollbar/>
     <ResponsiveFontSize client:only="react"/>
 </head>
 <body class="w-full h-full text-white bg-black m-0 overflow-hidden">
