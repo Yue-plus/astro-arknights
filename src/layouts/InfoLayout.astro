@@ -4,18 +4,20 @@ import {IconArrow} from "../components/SvgIcons";
 
 interface Props {
     title?: string
-    type?: string
-    goBackHref: string
+    subTitle?: string
+    tabTitle?: string
+    goBackHref?: string
 }
 
 const base = import.meta.env.BASE_URL
 const title = Astro.props.title ?? "INFO"
-const type = Astro.props.type ?? "INFO"
+const subTitle = Astro.props.subTitle ?? "情报中心"
+const tabTitle = Astro.props.tabTitle ?? "情报中心"
 const goBackHref = Astro.props.goBackHref
 const hasLeftAsideSlot = Astro.slots.has("left-aside")
 ---
 
-<RootLayout title={title}>
+<RootLayout title={tabTitle}>
     <!-- TODO: Canvas 动态背景 -->
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
         <!-- TODO: 装饰线 -->
@@ -33,27 +35,33 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
         </main>
         <aside class="w-[25.5rem] portrait:w-auto mt-auto mb-[9.5rem] flex-none portrait:absolute portrait:right-0 portrait:bottom-[5.625rem] portrait:mb-0 select-none">
             <slot name="aside-header"/><!-- TODO: 调整位置，与正文顶部对齐 -->
-            <div class="text-[#5f5f5f] text-[12.5rem] text-right font-oswaldMedium tracking-[-.625rem] pr-8 portrait:hidden">
+            <div class="relative text-right">
+                <div class="text-[1.25rem] text-ark-blue font-black pr-9 portrait:hidden">{subTitle}</div>
                 <!-- TODO: 竖屏模式也半透明显示在左下角 -->
-                {type}
+                <div class="text-[#5f5f5f] text-[12.5rem] leading-none font-oswaldMedium tracking-[-.625rem] pr-8 portrait:hidden">{title}</div>
             </div>
-            <slot name="aside-footer"/>
+            <div class="mt-8 pr-[2.625rem] flex flex-col items-end">
+                <slot name="aside-footer"/>
+            </div>
             <div class="flex justify-end">
-                <a href={goBackHref} target="_blank"
+                <a href={goBackHref ? goBackHref : base} target="_blank"
                    class="w-[14.875rem] h-[3.75rem] text-inherit no-underline px-[2.5rem] bg-[#5a5a5a] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
                     <IconArrow className="w-2 rotate-180 pointer-events-none"/>
                     <div>
-                        <div class="text-[1.25rem] font-bold">返回列表</div>
+                        <div class="text-[1.25rem] font-bold">{goBackHref ? "返回列表" : "返回首页"}</div>
                         <div class="text-[.875rem] font-benderBold">GO BACK</div>
                     </div>
                 </a>
-                <a href={base} target="_blank"
-                   class="w-[10.5rem] h-[3.75rem] text-inherit no-underline px-[2.25rem] bg-[#3f3f3f] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
-                    <div>
-                        <div class="text-[1.25rem] font-bold">返回首页</div>
-                        <div class="text-[.875rem] font-benderBold">HOMEPAGE</div>
-                    </div>
-                </a>
+                {
+                    goBackHref &&
+                        <a href={base} target="_blank"
+                           class="w-[10.5rem] h-[3.75rem] text-inherit no-underline px-[2.25rem] bg-[#3f3f3f] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
+                            <div>
+                                <div class="text-[1.25rem] font-bold">返回首页</div>
+                                <div class="text-[.875rem] font-benderBold">HOMEPAGE</div>
+                            </div>
+                        </a>
+                }
             </div>
         </aside>
     </div>
