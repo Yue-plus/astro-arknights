@@ -1,6 +1,6 @@
 import React from "react";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
-import {CopyrightMini, IconGitHub, IconArchive} from "../../components/SvgIcons";
+import {CopyrightMini, IconArchive, IconGitHub} from "../../components/SvgIcons";
 
 type HeroActionButtonProps = {
     icon: React.JSX.Element
@@ -29,6 +29,18 @@ const heroActions: HeroActionButtonProps[] = [
         subLabel: "Documentation",
         href: import.meta.env.BASE_URL + "docs/",
         className: "text-black bg-ark-blue border-[#2bf] hover:border-white font-bold font-benderBold",
+    },
+    {
+        // TODO: 换个好看的图标
+        icon: <svg className="w-full h-auto pointer-events-none" fillRule="evenodd" fill="currentColor"
+                   viewBox="0 0 1024 1024">
+            <path
+                d="M856.874667 448l51.285333 30.762667a21.333333 21.333333 0 0 1 0 36.608L512 753.066667l-396.16-237.696a21.333333 21.333333 0 0 1 0-36.608l51.285333-30.762667L512 654.933333l344.874667-206.933333z m0 200.533333l51.285333 30.762667a21.333333 21.333333 0 0 1 0 36.608l-374.186667 224.512a42.666667 42.666667 0 0 1-43.946666 0l-374.186667-224.512a21.333333 21.333333 0 0 1 0-36.608l51.285333-30.762667L512 855.466667l344.874667-206.933334zM533.930667 55.850667l374.229333 224.512a21.333333 21.333333 0 0 1 0 36.608L512 554.666667 115.84 316.970667a21.333333 21.333333 0 0 1 0-36.608l374.186667-224.512a42.666667 42.666667 0 0 1 43.946666 0z"/>
+        </svg>,
+        label: "博客 - Blog",
+        // subLabel: "Blog",
+        href: import.meta.env.BASE_URL + "blog/",
+        className: "text-black bg-end-yellow border-[#fe2] hover:border-white font-bold font-benderBold",
     },
     {
         icon: <IconGitHub className="w-full h-auto pointer-events-none"/>,
@@ -71,7 +83,8 @@ export default function Index() {
             <CopyrightMini className={"w-[7.875rem] portrait:w-[7.25rem] mt-[2.5rem] portrait:mt-[9.375rem]"
                 + " block pointer-events-none"}/>
         </div>
-        <div className="absolute right-[3rem] portrait:left-[2rem] bottom-[12.75rem] portrait:bottom-[19.5rem] space-y-3 portrait:space-y-5">{
+        <div
+            className="absolute right-[3rem] portrait:left-[2rem] bottom-[12.75rem] portrait:bottom-[19.5rem] space-y-3 portrait:space-y-5">{
             heroActions.map((props, index) => <HeroActionButton key={index} {...props} />)
         }</div>
         <div className={"w-[10.5rem] portrait:w-[5.75rem] absolute"

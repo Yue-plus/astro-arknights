@@ -12,16 +12,20 @@ const base = import.meta.env.BASE_URL
 const title = Astro.props.title ?? "INFO"
 const type = Astro.props.type ?? "INFO"
 const goBackHref = Astro.props.goBackHref
+const hasLeftAsideSlot = Astro.slots.has("left-aside")
 ---
 
 <RootLayout title={title}>
     <!-- TODO: Canvas 动态背景 -->
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
         <!-- TODO: 装饰线 -->
-        <aside class="w-[16vw] relative top-0 bottom-0 right-0 mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 portrait:hidden">
-            <!-- TODO: 竖屏适配 -->
-            <slot name="left-aside"/>
-        </aside>
+        {
+            hasLeftAsideSlot &&
+                <aside class="w-[16vw] relative top-0 bottom-0 right-0 mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 portrait:hidden">
+                    <!-- TODO: 左侧栏竖屏适配 -->
+                    <slot name="left-aside"/>
+                </aside>
+        }
         <main class="flex-auto pb-[4.5rem] portrait:pt-[2.5rem] portrait:px-[1.875rem] portrait:pb-[12rem] flex">
             <div class="w-[80.75rem] portrait:w-auto mx-auto flex-none flex-col portrait:flex-auto overflow-x-hidden overflow-y-auto">
                 <slot/>
@@ -57,6 +61,7 @@ const goBackHref = Astro.props.goBackHref
 
 <script>
     import {viewIndex} from "../components/store/rootLayoutStore";
+
     viewIndex.set(1)
 </script>
 
