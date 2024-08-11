@@ -1,32 +1,39 @@
 ---
 import RootLayout from "./RootLayout.astro";
 import {IconArrow} from "../components/SvgIcons";
-import {Astro} from "astro/env";
 
 interface Props {
+    title?: string
     type?: string
     goBackHref: string
 }
 
 const base = import.meta.env.BASE_URL
+const title = Astro.props.title ?? "INFO"
 const type = Astro.props.type ?? "INFO"
 const goBackHref = Astro.props.goBackHref
 ---
 
-<RootLayout title="文档">
+<RootLayout title={title}>
+    <!-- TODO: Canvas 动态背景 -->
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
         <!-- TODO: 装饰线 -->
-        <main class="flex-auto py-[4.5rem] portrait:pt-[2.5rem] portrait:px-[1.875rem] portrait:pb-[12rem] flex">
-            <div class="w-[80.75rem] portrait:w-auto mx-auto flex-none flex-col portrait:flex-auto">
+        <aside class="w-[16vw] relative top-0 bottom-0 right-0 mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 portrait:hidden">
+            <!-- TODO: 竖屏适配 -->
+            <slot name="left-aside"/>
+        </aside>
+        <main class="flex-auto pb-[4.5rem] portrait:pt-[2.5rem] portrait:px-[1.875rem] portrait:pb-[12rem] flex">
+            <div class="w-[80.75rem] portrait:w-auto mx-auto flex-none flex-col portrait:flex-auto overflow-x-hidden overflow-y-auto">
                 <slot/>
             </div>
         </main>
         <aside class="w-[25.5rem] portrait:w-auto mt-auto mb-[9.5rem] flex-none portrait:absolute portrait:right-0 portrait:bottom-[5.625rem] portrait:mb-0 select-none">
-            <!-- TODO: 文档目录 -->
+            <slot name="aside-header"/><!-- TODO: 调整位置，与正文顶部对齐 -->
             <div class="text-[#5f5f5f] text-[12.5rem] text-right font-oswaldMedium tracking-[-.625rem] pr-8 portrait:hidden">
                 <!-- TODO: 竖屏模式也半透明显示在左下角 -->
                 {type}
             </div>
+            <slot name="aside-footer"/>
             <div class="flex justify-end">
                 <a href={goBackHref} target="_blank"
                    class="w-[14.875rem] h-[3.75rem] text-inherit no-underline px-[2.5rem] bg-[#5a5a5a] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
@@ -47,3 +54,16 @@ const goBackHref = Astro.props.goBackHref
         </aside>
     </div>
 </RootLayout>
+
+<script>
+    import {viewIndex} from "../components/store/rootLayoutStore";
+    viewIndex.set(1)
+</script>
+
+<style lang="scss" is:global>
+  // TODO: Markdown CSS
+
+  article {
+    font-family: "Source Han Sans", "微软雅黑", sans-serif;
+  }
+</style>

@@ -1,5 +1,35 @@
 ---
+import {getCollection, getEntry} from 'astro:content'
+// import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
+
+const allDocs = await getCollection('docs');
+const {Content, headings} = await allDocs[0].render()
 ---
 
-<InfoLayout goBackHref={import.meta.env.BASE_URL + "docs"} />
+<InfoLayout title="文档" type="Doc" goBackHref={import.meta.env.BASE_URL + "docs"}>
+    <nav slot="left-aside">{allDocs.map(({id, slug, body, collection, data}, index) =>
+        <li>
+            <!-- TODO: 按文件夹分层可折叠 -->
+            <a href={id}>{data.title ?? id}</a>
+        </li>
+    )}</nav>
+    <article>
+        <!--<Debug {allDocs}/>-->
+        <Content/>
+    </article>
+    <nav slot="aside-header" class="h-[42vh] portrait:hidden">
+        <h2 class="text-black bg-white text-[1.75rem] font-bold px-3">
+            <span class="font-oswaldMedium">Document Index</span>
+            <span> - 文档索引</span>
+        </h2>
+        <!-- TODO: 跟随正文滚动、当前阅读段落标题高亮 -->
+        <ul class="h-full mt-[.8rem] overflow-x-hidden overflow-y-auto">{headings.map((item, index) =>
+                <li class="hover:text-ark-blue" style={{paddingLeft: .8 * item.depth + "rem"}}>
+                    <a href={"#" + item.slug} class="text-2xl">
+                        {item.text}
+                    </a>
+                </li>
+        )}</ul>
+    </nav>
+</InfoLayout>
