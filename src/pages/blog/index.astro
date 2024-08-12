@@ -12,7 +12,8 @@ const allBlog = await getCollection("blog");
     <div class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
         <main class="">
             {
-                allBlog.map((item, index) => <InfoCard {...{index, item}} />)
+                (allBlog.length > 0) && allBlog.map((item, index) =>
+                            <InfoCard {...{index, item}}/>)
             }
             <!--<Debug {allBlog}/>-->
         </main>
