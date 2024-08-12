@@ -17,8 +17,12 @@ const category = item?.data?.category ?? "未分类"
 
 {
     item && <a target="_blank" {...{href, title}}
-               class={"w-[38.25rem] h-[17rem] text-inherit hover:text-ark-blue no-underline inline-block relative pt-[3.25rem] cursor-pointer" + ((index % 2 === 0) ? " pr-10" : " pl-10 top-12")}>
-        <img class="" src={base + "images/ACTIVITY.jpg"} alt="Activity - 活动">
+               class={"w-[38.25rem] portrait:w-full h-[17rem] text-inherit hover:text-ark-blue no-underline inline-block relative pt-[3.25rem] cursor-pointer"
+                   + ((index % 2 === 0) ? " landscape:pr-10" : " landscape:pl-10 landscape:top-12")}>
+        <img class="w-full h-[9.875rem] portrait:h-auto object-cover object-center block"
+             src={base + "info-thumbnail/ACTIVITY.jpg"}
+             alt="Thumbnail - 缩略图"
+        />
         <div class="mt-2 flex whitespace-nowrap transition-[color] duration-300">
             <div class="text-ark-blue text-[1.125rem] font-bold mr-12 flex-none">{category}</div>
             <div class="text-[1.125rem] font-bold flex-none mr-12">

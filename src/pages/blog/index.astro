@@ -1,5 +1,5 @@
 ---
-import {getCollection, getEntry} from 'astro:content'
+import {getCollection} from 'astro:content'
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
 import InfoCard from "../../components/InfoCard.astro"
@@ -10,14 +10,14 @@ const allBlog = await getCollection("blog");
 
 <InfoLayout title="BLOG" subTitle="博客" tabTitle="博客">
     <div class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
-        <main class="">
+        <nav class="">
             {
                 (allBlog.length > 0) && allBlog.map((item, index) =>
                             <InfoCard {...{index, item}}/>)
             }
             <!--<Debug {allBlog}/>-->
-        </main>
-        <div class="text-center text-[.75rem] font-n15eBold pb-6">- END -</div>
+        </nav>
+        <div class="text-center text-[.75rem] font-n15eBold pt-12 pb-6">- END -</div>
         <!-- TODO: 显示页码 -->
     </div>
 
