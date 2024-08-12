@@ -3,7 +3,7 @@ import {getCollection, getEntry} from 'astro:content'
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
 
-const allDocs = await getCollection('docs');
+const allDocs = await getCollection("docs");
 const {Content, headings} = await allDocs[0].render()
 ---
 
@@ -14,10 +14,12 @@ const {Content, headings} = await allDocs[0].render()
             <a href={id}>{data.title ?? id}</a>
         </li>
     )}</nav>
+
     <article>
         <!--<Debug {allDocs}/>-->
         <Content/>
     </article>
+
     <nav slot="aside-header" class="h-[42vh] portrait:hidden">
         <h2 class="text-black bg-white text-[1.75rem] font-bold px-3">
             <span class="font-oswaldMedium">Document Index</span>

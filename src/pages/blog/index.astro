@@ -1,10 +1,25 @@
 ---
-import InfoLayout from "../../layouts/InfoLayout.astro";
+import {getCollection, getEntry} from 'astro:content'
+// import {Debug} from 'astro:components'
+import InfoLayout from "../../layouts/InfoLayout.astro"
+import InfoCard from "../../components/InfoCard.astro"
 
 const base = import.meta.env.BASE_URL
+const allBlog = await getCollection("blog");
 ---
+
 <InfoLayout title="BLOG" subTitle="博客" tabTitle="博客">
-    <!-- TODO: 博客分组列表 -->
+    <div class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
+        <main class="">
+            {
+                allBlog.map((item, index) => <InfoCard {...{index, item}} />)
+            }
+            <!--<Debug {allBlog}/>-->
+        </main>
+        <div class="text-center text-[.75rem] font-n15eBold pb-6">- END -</div>
+        <!-- TODO: 显示页码 -->
+    </div>
+
     <div slot="aside-footer">
         <!-- TODO: 分组类型选择 -->
     </div>

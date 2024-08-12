@@ -1,0 +1,27 @@
+---
+import {CollectionEntry} from 'astro:content'
+
+interface Props {
+    index: number
+    item: CollectionEntry<"blog">
+}
+
+const base = import.meta.env.BASE_URL
+const index = Astro.props.index
+const {id, slug, body, collection, data, render} = Astro.props.item
+const href = base + "blog/" + id
+const [year, month, day] = id.split("-")
+const title = data.title ?? id
+---
+
+<a target="_blank" {...{href, title}}
+   class={"w-[38.25rem] h-[17rem] text-inherit hover:text-ark-blue no-underline inline-block relative pt-[3.25rem] cursor-pointer" + ((index % 2 === 0) ? " pr-10" : " pl-10 top-12")}>
+    <img class="" src={base + "images/ACTIVITY.jpg"} alt="Activity - 活动">
+    <div class="mt-2 flex whitespace-nowrap transition-[color] duration-300">
+        <div class="text-ark-blue text-[1.125rem] font-bold mr-12 flex-none">{data.category ?? "未分类"}</div>
+        <div class="text-[1.125rem] font-boldflex-none mr-12">
+            <div class="text-[.875rem] font-benderRegular">{`${year} // ${month} / ${day}`}</div>
+            <div class="text-[1.25rem] leading-[1.4] font-bold truncate">{title}</div>
+        </div>
+    </div>
+</a>
