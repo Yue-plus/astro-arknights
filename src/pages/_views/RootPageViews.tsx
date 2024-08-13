@@ -24,6 +24,8 @@ export default function RootPageViews() {
     // 上次鼠标滚轮使用时间戳
     const lastScrollTime = useRef(0);
 
+    // TODO: 响应移动端上下滑动手势
+
     // 监听鼠标滚轮修改 viewIndex；限制修改间隔为一秒；
     useEffect(() => {
         const handleScroll = (event: WheelEvent) => {
