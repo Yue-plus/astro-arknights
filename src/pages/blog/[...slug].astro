@@ -1,0 +1,24 @@
+---
+import {getCollection} from "astro:content";
+// import {Debug} from 'astro:components'
+import InfoLayout from "../../layouts/InfoLayout.astro";
+
+export async function getStaticPaths() {
+    const allBlog = await getCollection("blog")
+    console.log(allBlog)
+    return allBlog.map(entry => ({
+        params: {slug: entry.slug},
+        props: {entry}
+    }))
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const goBackHref = import.meta.env.BASE_URL + "blog"
+const tabTitle = entry?.data?.title ?? "无标题"
+---
+
+<InfoLayout title="BLOG" subTitle="博客" {...{tabTitle, goBackHref}}>
+    <Content/>
+    <!--<Debug {entry} />-->
+</InfoLayout>

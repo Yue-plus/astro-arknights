@@ -11,7 +11,7 @@ const index = Astro.props.index;
 const item = Astro.props.item;
 const thumbnail = base + "info-thumbnail/" + (item?.data?.thumbnail ?? "ACTIVITY.jpg")
 const title = item?.data?.title ?? item?.id ?? "";
-const href = item ? (base + "blog/" + item.id) : "";
+const href = item ? (base + "blog/" + item.slug) : "";
 const [year, month, day] = item?.id?.split("-") ?? ["yyyy", "MM", "dd"];
 const category = item?.data?.category ?? "未分类"
 ---
@@ -30,4 +30,4 @@ const category = item?.data?.category ?? "未分类"
             </div>
         </div>
     </a>
-    }
+}
