@@ -49,7 +49,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
                 <slot name="aside-footer"/>
             </div>
             <div class="flex justify-end">
-                <a href={goBackHref ? goBackHref : base} target="_blank"
+                <a href={goBackHref ? goBackHref : base} target="_self"
                    class="w-[14.875rem] h-[3.75rem] text-inherit no-underline px-[2.5rem] bg-[#5a5a5a] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
                     <IconArrow className="w-2 rotate-180 pointer-events-none"/>
                     <div>
@@ -59,7 +59,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
                 </a>
                 {
                     goBackHref &&
-                        <a href={base} target="_blank"
+                        <a href={base} target="_self"
                            class="w-[10.5rem] h-[3.75rem] text-inherit no-underline px-[2.25rem] bg-[#3f3f3f] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
                             <div>
                                 <div class="text-[1.25rem] font-bold">返回首页</div>
@@ -113,6 +113,18 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
     h6 {
       font-size: 32px;
       font-weight: 400;
+    }
+
+    a {
+      color: #18d1ff;
+      padding: 0 3px;
+      transition: color, background-color;
+      transition-duration: 300ms;
+
+      &:hover {
+        color: black;
+        background-color: #18d1ff;
+      }
     }
 
     em strong {

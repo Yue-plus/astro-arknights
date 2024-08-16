@@ -5,7 +5,7 @@ import InfoLayout from "../../layouts/InfoLayout.astro";
 
 export async function getStaticPaths() {
     const allBlog = await getCollection("blog")
-    console.log(allBlog)
+
     return allBlog.map(entry => ({
         params: {slug: entry.slug},
         props: {entry}

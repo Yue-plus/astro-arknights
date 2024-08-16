@@ -1,0 +1,44 @@
+---
+import {getCollection, getEntry} from 'astro:content'
+// import {Debug} from 'astro:components'
+import InfoLayout from "../../layouts/InfoLayout.astro"
+import DocsLeftAside from "../../components/DocsLeftAside.astro";
+
+
+export async function getStaticPaths() {
+    const allDocs = await getCollection("docs");
+
+    return allDocs.map(entry => ({
+        params: {slug: entry.slug.split("-").slice(1).join("-")},
+        props: {entry},
+    }))
+}
+
+const {entry} = Astro.props
+const {Content, headings} = await entry.render()
+const tabTitle = entry?.data?.title ?? "无标题"
+---
+
+<InfoLayout title="DOCS" tabTitle={tabTitle + " - 文档"}>
+    <DocsLeftAside slot="left-aside"/>
+
+    <article>
+        <!--<Debug {allDocs}/>-->
+        <Content/>
+    </article>
+
+    <nav slot="aside-header" class="h-[42vh] portrait:hidden">
+        <h2 class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">
+            Document Index - 文档索引
+        </h2>
+
+        <!-- TODO: 跟随正文滚动、当前阅读段落标题高亮 -->
+        <ul class="h-full mt-[.8rem] overflow-x-hidden overflow-y-auto">{headings.map((item, index) =>
+                <li class="hover:text-ark-blue" style={{paddingLeft: .8 * item.depth + "rem"}}>
+                    <a href={"#" + item.slug} class="text-2xl">
+                        {item.text}
+                    </a>
+                </li>
+        )}</ul>
+    </nav>
+</InfoLayout>
