@@ -3,10 +3,13 @@ import React from "react"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons";
 
+const base = import.meta.env.BASE_URL
+
 function BreakingNewsTag({label, active}: {
     label: string,
     active?: boolean
 }) {
+    // TODO:
     return <div className={(active ? "text-black bg-ark-blue " : "")
         + "w-[5.625rem] h-[1.25em] portrait:text-[1.25rem] hover:text-ark-blue font-bold"
         + " pr-2 pl-[.125rem] mr-4 flex items-center cursor-pointer"}>
@@ -16,16 +19,17 @@ function BreakingNewsTag({label, active}: {
     </div>
 }
 
-function BreakingNewsItem({tag, title, date}: {
-    tag: string,
+function BreakingNewsItem({category, title, date, href}: {
+    category: string,
     title: string,
     date: string,
+    href: string,
 }) {
-    return <a href="" target="_blank"
+    return <a {...{href}} target="_blank"
               className={"w-[22.5rem] portrait:w-[unset] h-24 portrait:h-[7.125rem] text-inherit"
                   + " border-b-[1px] border-solid border-[#ffffff4d] portrait:border-[#403c3b] no-underline"
                   + " flex items-center cursor-pointer"}>
-        <div className={"text-[1.125rem] text-ark-blue whitespace-nowrap"}>{tag}</div>
+        <div className={"text-[1.125rem] text-ark-blue whitespace-nowrap"}>{category}</div>
         <div className={"w-[17.5rem] portrait:w-[unset] text-[d2d2d2] ml-auto portrait:ml-[2.75rem] portrait:flex-auto"
             + " portrait:flex portrait:flex-row-reverse portrait:justify-between portrait:items-center"}>
             <div className={"portrait:text-[1rem] font-benderRegular portrait:ml-20 whitespace-nowrap tracking-[1px]"}>
@@ -104,14 +108,15 @@ export default function Information() {
                 </div>
                 <div className={"flex portrait:mt-8 portrait:pt-8 portrait:pb-8 portrait:border-y"
                     + " portrait:border-solid portrait:border-t-[#565656] portrait:border-b-[#403c3b]"}>{
+                    // TODO: 读取博客内容集合分类（category）
                     ["最新", "公告", "活动", "新闻"].map((label, index) =>
                         <BreakingNewsTag key={index} {...{label, active: (index === 0)}} />)
                 }</div>
                 <div className={"mt-2 portrait:mt-0"}>
-                    <BreakingNewsItem tag="公告" title="[Breaking News Item Title]" date="2024 // 07 / 17"/>
-                    <BreakingNewsItem tag="公告" title="中文测试中文测试中文测试中文测试" date="2024 // 07 / 17"/>
-                    <BreakingNewsItem tag="公告" title="日本語テスト日本語テスト" date="2024 // 07 / 17"/>
-                    <a href="" target="_blank" className={"w-[7.625rem] portrait:w-[11.125rem]"
+                    <BreakingNewsItem category="公告" title="[Breaking News Item Title]" date="2024 // 07 / 17" href=""/>
+                    <BreakingNewsItem category="公告" title="中文测试中文测试中文测试中文测试" date="2024 // 07 / 17" href=""/>
+                    <BreakingNewsItem category="公告" title="日本語テスト日本語テスト" date="2024 // 07 / 17" href=""/>
+                    <a href={base + "blog/"} target="_blank" className={"w-[7.625rem] portrait:w-[11.125rem]"
                         + " h-[1.5rem] portrait:h-[1.75rem] text-[.875rem] portrait:text-[1.3125rem] text-[#d2d2d2]"
                         + " hover:text-black font-benderBold whitespace-nowrap bg-[#585858] hover:bg-white"
                         + " px-[.625rem] portrait:px-3 mt-8 portrait:mt-10 flex items-center cursor-pointer"

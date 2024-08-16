@@ -8,7 +8,7 @@ import RootPageViews from "./_views/RootPageViews";
 ---
 
 <RootLayout lang={arknightsConfig.language} title={arknightsConfig.title} description={arknightsConfig.description}>
-    <PageTracker/>
+    <PageTracker client:load/>
     <main id="root-page-views" class="w-full h-full relative select-none">
         <RootPageViews client:only="react"/>
     </main>
