@@ -93,7 +93,7 @@ export default function Information() {
                         </div>
                         <div className={"mt-[1rem] text-[1.125rem] portrait:hidden"}>[SWIPER_SUBTITLE]</div>
                         <div className={"text-[.75rem] portrait:text-[.875rem] font-n15eMedium"
-                            + " leading-5 tracking-[2px]"}>HTTPS://ARKNIGHTS.YUE.ZONE/
+                            + " leading-5 tracking-[2px]"}>HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/
                         </div>
                         <a href="" target="_blank" className={"w-[14.375rem] h-[3.75rem] pr-7 pl-4 mt-8 text-black"
                             + " no-underline whitespace-nowrap bg-ark-blue hover:bg-white flex items-center"
