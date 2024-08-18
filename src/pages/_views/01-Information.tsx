@@ -2,6 +2,7 @@ import React from "react"
 // import "swiper/css"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons";
+import type { BreakingNewsItemProps } from "../../_types/BreakingNewsItemProps.ts";
 
 const base = import.meta.env.BASE_URL
 
@@ -19,12 +20,7 @@ function BreakingNewsTag({label, active}: {
     </div>
 }
 
-function BreakingNewsItem({category, title, date, href}: {
-    category: string,
-    title: string,
-    date: string,
-    href: string,
-}) {
+function BreakingNewsItem({category, title, date, href}: BreakingNewsItemProps) {
     return <a {...{href}} target="_blank"
               className={"w-[22.5rem] portrait:w-[unset] h-24 portrait:h-[7.125rem] text-inherit"
                   + " border-b-[1px] border-solid border-[#ffffff4d] portrait:border-[#403c3b] no-underline"
