@@ -26,7 +26,7 @@ function BreakingNewsItem({category, title, date, href}: BreakingNewsItemProps) 
               className={"w-[22.5rem] portrait:w-[unset] h-24 portrait:h-[7.125rem] text-inherit"
                   + " border-b-[1px] border-solid border-[#ffffff4d] portrait:border-[#403c3b] no-underline"
                   + " flex items-center cursor-pointer"}>
-        <div className={"text-[1.125rem] text-ark-blue whitespace-nowrap"}>{category}</div>
+        <div className={"text-[1.125rem] text-ark-blue font-bold whitespace-nowrap"}>{category}</div>
         <div className={"w-[17.5rem] portrait:w-[unset] text-[d2d2d2] ml-auto portrait:ml-[2.75rem] portrait:flex-auto"
             + " portrait:flex portrait:flex-row-reverse portrait:justify-between portrait:items-center"}>
             <div className={"portrait:text-[1rem] font-benderRegular portrait:ml-20 whitespace-nowrap tracking-[1px]"}>
@@ -50,12 +50,8 @@ function BreakingNewsList() {
         fetch(base + "blog/breaking-news.json")
             .then(response => response.json())
             .then(data => {
-                setCategory(data.map((item: {
-                    name: string,
-                    list: BreakingNewsItemProps[]
-                }, index: number) => item.name))
+                setCategory(data.map((item: { name: string, list: BreakingNewsItemProps[] }) => item.name))
                 setData(data)
-                console.log(data)
             })
     }, []);
 
@@ -70,6 +66,7 @@ function BreakingNewsList() {
         }</div>
         <div className={"mt-2 portrait:mt-0"}>
             {
+                // TODO: 添加动效
                 data.length > 0 && data[categoryIndex]?.list.length > 0
                     ? data[categoryIndex].list.map((item: BreakingNewsItemProps) => <BreakingNewsItem {...item} />)
                     : <div className="text-4xl font-benderBold p-8">NO DATA</div>
@@ -84,6 +81,39 @@ function BreakingNewsList() {
             </a>
         </div>
     </>
+}
+
+function SwiperInfo({title, subtitle, date, href}: {
+    title?: string,
+    subtitle?: string,
+    date?: string,
+    href?: string
+}) {
+    // TODO: 添加动效
+    return <div
+        className={"w-[26.5rem] portrait:w-[unset] portrait:static absolute left-[3.875rem] bottom-[-1.875rem]"}>
+        <div className="flex flex-col portrait:flex-col-reverse">
+            <div className={"font-benderRegular tracking-[1px] portrait:mt-[1rem]"}>{date ?? "yyyy // MM / dd"}</div>
+            <div
+                className={"max-h-[2.8em] portrait:max-h-[1.4em] overflow-ellipsis text-[2.25rem] portrait:text-[2.5rem] font-bold tracking-[2px] line-clamp-2 portrait:line-clamp-1"}>
+                {title ?? "[SWIPER_TITLE]"}
+            </div>
+        </div>
+        <div className={"mt-[1rem] text-[1.125rem] portrait:hidden"}>
+            {subtitle ?? "[SWIPER_SUBTITLE]"}
+        </div>
+        <div className={"text-[.75rem] portrait:text-[.875rem] font-n15eMedium leading-5 tracking-[2px]"}>
+            HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/
+        </div>
+        <a {...{href}} target="_blank"
+           className={"w-[14.375rem] h-[3.75rem] pr-7 pl-4 mt-8 text-black no-underline whitespace-nowrap bg-ark-blue hover:bg-white flex items-center cursor-pointer transition-colors duration-300 portrait:hidden"}>
+            <div>
+                <div className={"text-[1.25rem] font-bold"}>更多情报</div>
+                <div className={"text-[.875rem] font-benderBold"}>READ MORE</div>
+            </div>
+            <IconArrow className={"w-[.5rem] ml-auto flex-none pointer-events-none"}/>
+        </a>
+    </div>
 }
 
 export default function Information() {
@@ -124,32 +154,7 @@ export default function Information() {
                 <div className={"h-[.95em] text-[7rem] text-[#242424] font-oswaldMedium -tracking-wider"
                     + " whitespace-nowrap overflow-hidden absolute top-full left-[9rem] flex items-end portrait:hidden"}
                 ><span>BREAKING NEWS</span></div>
-                <div className={"w-[26.5rem] portrait:w-[unset] portrait:static"
-                    + " absolute left-[3.875rem] bottom-[-1.875rem]"}>
-                    <div className={"transition-[visibility,opacity] duration-300 translate-x-[-1.5rem]"}>
-                        <div className={"font-benderRegular tracking-[1px] portrait:mt-[1rem]"}>
-                            2024 // 07 / 16
-                        </div>
-                        <div className={"max-h-[2.8rem] portrait:max-h-[1.4rem] overflow-ellipsis"
-                            + " text-[2.25rem] portrait:text-[2.5rem] font-bold tracking-[2px]"
-                            + " line-clamp-2 portrait:line-clamp-1"}
-                        >[SWIPER_TITLE]
-                        </div>
-                        <div className={"mt-[1rem] text-[1.125rem] portrait:hidden"}>[SWIPER_SUBTITLE]</div>
-                        <div className={"text-[.75rem] portrait:text-[.875rem] font-n15eMedium"
-                            + " leading-5 tracking-[2px]"}>HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/
-                        </div>
-                        <a href="" target="_blank" className={"w-[14.375rem] h-[3.75rem] pr-7 pl-4 mt-8 text-black"
-                            + " no-underline whitespace-nowrap bg-ark-blue hover:bg-white flex items-center"
-                            + " cursor-pointer transition-colors duration-300 portrait:hidden"}>
-                            <div>
-                                <div className={"text-[1.25rem] font-bold"}>更多情报</div>
-                                <div className={"text-[.875rem] font-benderBold"}>READ MORE</div>
-                            </div>
-                            <IconArrow className={"w-[.5rem] ml-auto flex-none pointer-events-none"}/>
-                        </a>
-                    </div>
-                </div>
+                <SwiperInfo/>
                 <BreakingNewsList/>
             </div>
         </div>
