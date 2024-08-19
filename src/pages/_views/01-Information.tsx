@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react"
-// import "swiper/css"
+import Swiper from "swiper"
+import "swiper/css"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
-import {IconArrow} from "../../components/SvgIcons";
-import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts";
+import {IconArrow} from "../../components/SvgIcons"
+import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts"
 
 const base = import.meta.env.BASE_URL
 
@@ -68,7 +69,8 @@ function BreakingNewsList() {
             {
                 // TODO: 添加动效
                 data.length > 0 && data[categoryIndex]?.list.length > 0
-                    ? data[categoryIndex].list.map((item: BreakingNewsItemProps) => <BreakingNewsItem {...item} />)
+                    ? data[categoryIndex].list.map((item: BreakingNewsItemProps, index: number) =>
+                        <BreakingNewsItem key={index} {...item} />)
                     : <div className="text-4xl font-benderBold p-8">NO DATA</div>
             }
             <a target="_blank" href={base + "blog/"} className={"w-[7.625rem] portrait:w-[11.125rem]"
@@ -116,28 +118,49 @@ function SwiperInfo({title, subtitle, date, href}: {
     </div>
 }
 
+function SwiperBody() {
+    const swiper = new Swiper(".swiper", {
+        direction: "horizontal",
+        scrollbar: {
+            el: ".swiper-scrollbar-horizontal"
+        }
+    })
+
+    return <div className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static"
+        + " absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem]"
+        + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
+        + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
+        <div className={"w-full h-full swiper swiper-horizontal swiper-backface-hidden"}>
+            <div className="swiper-wrapper">
+                {/* TODO: */}
+                <div className="swiper-slide text-center text-9xl bg-[darkred]">Slide 1</div>
+                <div className="swiper-slide text-center text-9xl bg-[darkgreen]">Slide 2</div>
+                <div className="swiper-slide text-center text-9xl bg-[darkblue]">Slide 3</div>
+            </div>
+        </div>
+    </div>
+}
+
+function SwiperScrollbar() {
+    return <div className={"w-[61rem] portrait:w-full h-[.5rem] portrait:h-[.375rem] portrait:pr-[5.75rem]"
+        + " absolute portrait:flex top-[56.375rem] portrait:top-[33.125rem] right-0"
+        + " z-[4] transition-[visibility,opacity] duration-1000"}>
+        <div className={"w-[12rem] h-px absolute top-0 right-full portrait:hidden"} style={{
+            backgroundImage: "linear-gradient(90deg, hsla(0, 0%, 67%, 0), hsla(0, 0%, 67%, .7))"
+        }}/>
+        <div className="swiper-scrollbar-horizontal w-full h-full bg-[#ababab] duration-0">
+            {/* TODO: swiper-scrollbar-horizontal */}
+            <div className="swiper-scrollbar-drag h-full bg-ark-blue relative"/>
+        </div>
+    </div>
+}
+
 export default function Information() {
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto"
         + " transition-opacity duration-100"}>
         <PortraitBottomGradientMask/>
-        <div className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static"
-            + " absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem]"
-            + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
-            + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
-            <div className={"w-full h-full swiper swiper-horizontal swiper-backface-hidden"}>
-                {/* TODO: use SwiperJs */}
-            </div>
-        </div>
-        <div className={"w-[61rem] portrait:w-full h-[.5rem] portrait:h-[.375rem] portrait:pr-[5.75rem]"
-            + " absolute portrait:flex top-[56.375rem] portrait:top-[33.125rem] right-0"
-            + " z-[4] transition-[visibility,opacity] duration-1000"}>
-            <div className={"w-[12rem] h-px absolute top-0 right-full portrait:hidden"} style={{
-                backgroundImage: "linear-gradient(90deg, hsla(0, 0%, 67%, 0), hsla(0, 0%, 67%, .7))"
-            }}/>
-            <div className={"w-full h-full bg-[#ababab] duration-0 swiper-scrollbar-horizontal"}>
-                {/* TODO: swiper-scrollbar-horizontal */}
-            </div>
-        </div>
+        <SwiperBody/>
+        <SwiperScrollbar/>
         <div className={"w-full h-full absolute top-0 left-0 bg-[length:100%_100%] pointer-events-none portrait:hidden"}
              style={{backgroundImage: "linear-gradient(0deg, #000 5rem, transparent 20rem)"}}/>
         <div className={"w-full h-full absolute top-0 left-0 portrait:hidden bg-common-mask bg-[length:100%_100%]"
