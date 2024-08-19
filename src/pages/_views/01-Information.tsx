@@ -1,18 +1,19 @@
-import React from "react"
+import React, {useEffect, useState} from "react"
 // import "swiper/css"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons";
-import type { BreakingNewsItemProps } from "../../_types/BreakingNewsItemProps.ts";
+import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts";
 
 const base = import.meta.env.BASE_URL
 
-function BreakingNewsTag({label, active}: {
+function BreakingNewsTag({label, active, onClick}: {
     label: string,
     active?: boolean
+    onClick?: () => void
 }) {
     // TODO:
-    return <div className={(active ? "text-black bg-ark-blue " : "")
-        + "w-[5.625rem] h-[1.25em] portrait:text-[1.25rem] hover:text-ark-blue font-bold"
+    return <div {...{onClick}} className={(active ? "text-black bg-ark-blue " : "hover:text-ark-blue ")
+        + "w-[5.625rem] h-[1.25em] portrait:text-[1.25rem] font-bold"
         + " pr-2 pl-[.125rem] mr-4 flex items-center cursor-pointer"}>
         <span>{label}</span>
         <IconArrow className={(active ? "" : "opacity-0 ")
@@ -36,6 +37,53 @@ function BreakingNewsItem({category, title, date, href}: BreakingNewsItemProps) 
             >{title}</div>
         </div>
     </a>
+}
+
+function BreakingNewsList() {
+    // TODO: 服务端渲染
+
+    const [category, setCategory] = useState([] as string[])
+    const [data, setData] = useState([] as { name: string, list: BreakingNewsItemProps[] }[])
+    const [categoryIndex, setCategoryIndex] = useState(0)
+
+    useEffect(() => {
+        fetch(base + "blog/breaking-news.json")
+            .then(response => response.json())
+            .then(data => {
+                setCategory(data.map((item: {
+                    name: string,
+                    list: BreakingNewsItemProps[]
+                }, index: number) => item.name))
+                setData(data)
+                console.log(data)
+            })
+    }, []);
+
+    return <>
+        <div className={"flex portrait:mt-8 portrait:pt-8 portrait:pb-8 portrait:border-y"
+            + " portrait:border-solid portrait:border-t-[#565656] portrait:border-b-[#403c3b]"}>{
+            category.map((label, index) => <BreakingNewsTag
+                key={index}
+                active={index === categoryIndex} {...{label}}
+                onClick={() => setCategoryIndex(index)}
+            />)
+        }</div>
+        <div className={"mt-2 portrait:mt-0"}>
+            {
+                data.length > 0 && data[categoryIndex]?.list.length > 0
+                    ? data[categoryIndex].list.map((item: BreakingNewsItemProps) => <BreakingNewsItem {...item} />)
+                    : <div className="text-4xl font-benderBold p-8">NO DATA</div>
+            }
+            <a target="_blank" href={base + "blog/"} className={"w-[7.625rem] portrait:w-[11.125rem]"
+                + " h-[1.5rem] portrait:h-[1.75rem] text-[.875rem] portrait:text-[1.3125rem] text-[#d2d2d2]"
+                + " hover:text-black font-benderBold whitespace-nowrap bg-[#585858] hover:bg-white"
+                + " px-[.625rem] portrait:px-3 mt-8 portrait:mt-10 flex items-center cursor-pointer"
+                + " transition-colors duration-300"}>
+                <span>READ MORE</span>
+                <IconArrow className={"w-[.4375rem] ml-auto flex-none"}/>
+            </a>
+        </div>
+    </>
 }
 
 export default function Information() {
@@ -102,25 +150,7 @@ export default function Information() {
                         </a>
                     </div>
                 </div>
-                <div className={"flex portrait:mt-8 portrait:pt-8 portrait:pb-8 portrait:border-y"
-                    + " portrait:border-solid portrait:border-t-[#565656] portrait:border-b-[#403c3b]"}>{
-                    // TODO: 读取博客内容集合分类（category）
-                    ["最新", "公告", "活动", "新闻"].map((label, index) =>
-                        <BreakingNewsTag key={index} {...{label, active: (index === 0)}} />)
-                }</div>
-                <div className={"mt-2 portrait:mt-0"}>
-                    <BreakingNewsItem category="公告" title="[Breaking News Item Title]" date="2024 // 07 / 17" href=""/>
-                    <BreakingNewsItem category="公告" title="中文测试中文测试中文测试中文测试" date="2024 // 07 / 17" href=""/>
-                    <BreakingNewsItem category="公告" title="日本語テスト日本語テスト" date="2024 // 07 / 17" href=""/>
-                    <a href={base + "blog/"} target="_blank" className={"w-[7.625rem] portrait:w-[11.125rem]"
-                        + " h-[1.5rem] portrait:h-[1.75rem] text-[.875rem] portrait:text-[1.3125rem] text-[#d2d2d2]"
-                        + " hover:text-black font-benderBold whitespace-nowrap bg-[#585858] hover:bg-white"
-                        + " px-[.625rem] portrait:px-3 mt-8 portrait:mt-10 flex items-center cursor-pointer"
-                        + " transition-colors duration-300"}>
-                        <span>READ MORE</span>
-                        <IconArrow className={"w-[.4375rem] ml-auto flex-none"}/>
-                    </a>
-                </div>
+                <BreakingNewsList/>
             </div>
         </div>
     </div>

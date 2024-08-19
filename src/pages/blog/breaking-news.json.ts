@@ -13,19 +13,22 @@ export async function GET({params, request}: APIContext) {
     const base = import.meta.env.BASE_URL
     const allBlog = await getCollection("blog");
 
-    return new Response(JSON.stringify({
-        "最新": allBlog.reverse().slice(0, 5).map((item, index) => {
-            const date = new Date(item.data.date ?? item.id.substring(0, 9));
+    return new Response(JSON.stringify([
+        {
+            name: "最新",
+            list: allBlog.reverse().slice(0, 3).map((item, index) => {
+                const date = new Date(item.data.date ?? item.id.substring(0, 9));
 
-            return {
-                title: item.data.title ?? item.id,
-                date: date.getFullYear() + " // " + (date.getMonth() + 1) + " / " + date.getDay(),
-                href: base + "blog/" + item.slug,
-                category: item.data.category ?? "未分类"
-            }
-        }) as BreakingNewsItemProps[],
-        "公告": [] as BreakingNewsItemProps[],
-        "活动": [] as BreakingNewsItemProps[],
-        "新闻": [] as BreakingNewsItemProps[],
-    }));
+                return {
+                    title: item.data.title ?? item.id,
+                    date: date.getFullYear() + " // " + (date.getMonth() + 1) + " / " + date.getDay(),
+                    href: base + "blog/" + item.slug,
+                    category: item.data.category ?? "未分类"
+                }
+            }) as BreakingNewsItemProps[]
+        },
+        {name: "公告", list: [] as BreakingNewsItemProps[]},
+        {name: "活动", list: [] as BreakingNewsItemProps[]},
+        {name: "新闻", list: [] as BreakingNewsItemProps[]},
+    ]));
 }
