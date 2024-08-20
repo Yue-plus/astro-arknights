@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react"
-import Swiper from "swiper"
+import {Swiper, SwiperSlide} from "swiper/react"
 import "swiper/css"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
@@ -119,25 +119,16 @@ function SwiperInfo({title, subtitle, date, href}: {
 }
 
 function SwiperBody() {
-    const swiper = new Swiper(".swiper", {
-        direction: "horizontal",
-        scrollbar: {
-            el: ".swiper-scrollbar-horizontal"
-        }
-    })
-
     return <div className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static"
         + " absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem]"
         + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
         + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
-        <div className={"w-full h-full swiper swiper-horizontal swiper-backface-hidden"}>
-            <div className="swiper-wrapper">
-                {/* TODO: */}
-                <div className="swiper-slide text-center text-9xl bg-[darkred]">Slide 1</div>
-                <div className="swiper-slide text-center text-9xl bg-[darkgreen]">Slide 2</div>
-                <div className="swiper-slide text-center text-9xl bg-[darkblue]">Slide 3</div>
-            </div>
-        </div>
+        {/* See: https://swiperjs.com/react */}
+        <Swiper className="w-full h-full">
+            <SwiperSlide className="text-center text-9xl bg-[darkred]">Slide 1</SwiperSlide>
+            <SwiperSlide className="text-center text-9xl bg-[darkgreen]">Slide 2</SwiperSlide>
+            <SwiperSlide className="text-center text-9xl bg-[darkblue]">Slide 3</SwiperSlide>
+        </Swiper>
     </div>
 }
 
