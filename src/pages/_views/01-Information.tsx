@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react"
 import {Swiper, SwiperSlide} from "swiper/react"
+import {Scrollbar} from "swiper/modules"
 import "swiper/css"
+import "swiper/css/scrollbar"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
 import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts"
@@ -124,7 +126,8 @@ function SwiperBody() {
         + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
         + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
         {/* See: https://swiperjs.com/react */}
-        <Swiper className="w-full h-full">
+        <Swiper className="w-full h-full" modules={[Scrollbar]}
+                scrollbar={{el: ".swiper-scrollbar-horizontal", hide: false, draggable: true}}>
             <SwiperSlide className="text-center text-9xl bg-[darkred]">Slide 1</SwiperSlide>
             <SwiperSlide className="text-center text-9xl bg-[darkgreen]">Slide 2</SwiperSlide>
             <SwiperSlide className="text-center text-9xl bg-[darkblue]">Slide 3</SwiperSlide>
@@ -140,8 +143,7 @@ function SwiperScrollbar() {
             backgroundImage: "linear-gradient(90deg, hsla(0, 0%, 67%, 0), hsla(0, 0%, 67%, .7))"
         }}/>
         <div className="swiper-scrollbar-horizontal w-full h-full bg-[#ababab] duration-0">
-            {/* TODO: swiper-scrollbar-horizontal */}
-            <div className="swiper-scrollbar-drag h-full bg-ark-blue relative"/>
+            <div className="swiper-scrollbar-drag h-full bg-ark-blue rounded-none relative"/>
         </div>
     </div>
 }
