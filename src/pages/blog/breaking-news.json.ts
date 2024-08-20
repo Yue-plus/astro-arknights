@@ -3,7 +3,8 @@ import {getCollection} from "astro:content";
 import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts";
 
 /**
- * 该静态文件端点被 ../_views/01-Information.tsx 调用
+ * 该静态文件端点被 ../_views/01-Information.tsx BreakingNewsList 调用
+ * The static file endpoint is called by ../_views/01-Information.tsx BreakingNewsList
  *
  * 参考：https://docs.astro.build/zh-cn/guides/endpoints/
  * See: https://docs.astro.build/en/guides/endpoints/

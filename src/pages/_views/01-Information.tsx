@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react"
 import {Swiper, SwiperSlide} from "swiper/react"
-import {Scrollbar} from "swiper/modules"
+import {Scrollbar, Autoplay} from "swiper/modules"
 import "swiper/css"
+import "swiper/css/autoplay"
 import "swiper/css/scrollbar"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
@@ -126,7 +127,9 @@ function SwiperBody() {
         + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
         + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
         {/* See: https://swiperjs.com/react */}
-        <Swiper className="w-full h-full" modules={[Scrollbar]}
+        <Swiper className="w-full h-full"
+                modules={[Autoplay, Scrollbar]}
+                autoplay={{delay: 5000}}
                 scrollbar={{el: ".swiper-scrollbar-horizontal", hide: false, draggable: true}}>
             <SwiperSlide className="text-center text-9xl bg-[darkred]">Slide 1</SwiperSlide>
             <SwiperSlide className="text-center text-9xl bg-[darkgreen]">Slide 2</SwiperSlide>
