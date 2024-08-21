@@ -25,6 +25,14 @@ export default {
             {title: "MEDIA", subtitle: "泰拉万象", href: import.meta.env.BASE_URL + "#media"},
             {title: "MORE", subtitle: "更多内容", href: import.meta.env.BASE_URL + "#more"},
         ],
+        toolbox: {
+            Skland: "https://www.skland.com/",
+            Bilibili: "https://space.bilibili.com/28606851",
+            WeChat: "https://weixin.qq.com/",
+            Weibo: "https://weibo.com/",
+            TapTap: "https://www.taptap.cn/",
+            GitHub: "https://github.com/Yue-plus/astro-arknights",
+        },
     },
     pageTracker: {
         microInfo: "ARKNIGHTS",

@@ -7,7 +7,10 @@ import colors from "tailwindcss/colors";
  * @type {import('tailwindcss').Config}
  */
 export default {
-	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+	content: [
+		'./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
+		'./arknights.config.{js,jsx,ts,tsx}',
+	],
 	theme: {
 		colors: {
 			"ark-blue": "#18d1ff",

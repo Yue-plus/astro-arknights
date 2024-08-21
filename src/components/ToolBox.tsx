@@ -1,7 +1,9 @@
 import {useStore} from "@nanostores/react";
 import {isToolBoxOpen} from "./store/rootLayoutStore.ts";
+import arknightsConfig from "../../arknights.config.tsx";
 import {
     IconBiliBili,
+    IconGitHub,
     IconSkland,
     IconSocial,
     IconTapTap,
@@ -12,15 +14,15 @@ import {
 
 export default function ToolBox() {
     const $isToolBoxOpen = useStore(isToolBoxOpen)
-
-    const aClassName: string = "w-[3.375rem] portrait:w-[6.375rem] h-[3.375rem] portrait:h-[6.375rem] text-white"
-        + " bg-black transition duration-300 portrait:border portrait:border-solid portrait:border-white flex flex-none"
-        + " rounded-lg portrait:rounded-2xl cursor-pointer"
+    const {Skland, Bilibili, WeChat, Weibo, TapTap, GitHub} = arknightsConfig.navbar.toolbox
+    const aClassName: string = "w-[3.375rem] portrait:w-[6.375rem] h-[3.375rem] portrait:h-[6.375rem] text-white bg-black transition duration-300 portrait:border portrait:border-solid portrait:border-white flex flex-none rounded-lg portrait:rounded-2xl cursor-pointer"
     const iconClassName: string = "h-auto m-auto pointer-events-none block"
+
     return <div className="w-full h-full absolute top-0 left-0 z-[24] overflow-hidden transition duration-300"
                 style={{opacity: $isToolBoxOpen ? 1 : 0, visibility: $isToolBoxOpen ? "visible" : "hidden"}}>
-        <div className="w-full h-full absolute top-0 left-0 portrait:bg-black portrait:opacity-70 transition duration-300"
-             onClick={() => isToolBoxOpen.set(!$isToolBoxOpen)}/>
+        <div
+            className="w-full h-full absolute top-0 left-0 portrait:bg-black portrait:opacity-70 transition duration-300"
+            onClick={() => isToolBoxOpen.set(!$isToolBoxOpen)}/>
         <div className={`w-[14.75rem] portrait:w-[32.5rem] portrait:h-[50rem] bg-ark-blue portrait:pt-[12.5rem]
                          absolute top-[6.75rem] portrait:top-1/2 right-0 portrait:left-1/2
                          transition duration-300
@@ -49,24 +51,40 @@ export default function ToolBox() {
                     TOOLBOX
                     <span className="ml-[1em] flex-auto h-px bg-white"></span>
                 </div>
-                <div className={"mt-[1rem] portrait:mt-[3.5rem] px-[3rem] portrait:p-0"
-                    + " grid grid-cols-2 portrait:grid-cols-3 gap-[1.75rem]"
-                    + " portrait:gap-x-[3.32rem] portrait:gap-y-[2rem] justify-items-center"}>
-                    <a className={aClassName} aria-label="Skland - 森空岛">
-                        <IconSkland className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
-                    </a>
-                    <a className={aClassName} aria-label="Bilibili - 哔哩哔哩">
-                        <IconBiliBili className={"w-[2.75rem] portrait:w-[5rem] " + iconClassName}/>
-                    </a>
-                    <a className={aClassName} aria-label="WeChat - 微信">
-                        <IconWechat className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
-                    </a>
-                    <a className={aClassName} aria-label="Weibo - 微博">
-                        <IconWeibo className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
-                    </a>
-                    <a className={aClassName} aria-label="TapTap">
-                        <IconTapTap className={"w-[3rem]  portrait:w-[6rem] " + iconClassName}/>
-                    </a>
+                <div
+                    className={"mt-[1rem] portrait:mt-[3.5rem] px-[3rem] portrait:p-0 grid grid-cols-2 portrait:grid-cols-3 gap-[1.75rem] portrait:gap-x-[3.32rem] portrait:gap-y-[2rem] justify-items-center"}>
+                    {
+                        GitHub && <a target="_blank" href={GitHub} className={aClassName} aria-label="GitHub">
+                            <IconGitHub className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
+                        </a>
+                    }
+                    {
+                        Skland && <a target="_blank" href={Skland} className={aClassName} aria-label="Skland - 森空岛">
+                            <IconSkland className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
+                        </a>
+                    }
+                    {
+                        Bilibili &&
+                        <a target="_blank" href={Bilibili} className={aClassName} aria-label="Bilibili - 哔哩哔哩">
+                            <IconBiliBili className={"w-[2.75rem] portrait:w-[5rem] " + iconClassName}/>
+                        </a>
+                    }
+                    {
+                        WeChat && <a target="_blank" href={WeChat} className={aClassName} aria-label="WeChat - 微信">
+                            <IconWechat className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
+                        </a>
+                    }
+                    {
+                        Weibo && <a target="_blank" href={Weibo} className={aClassName} aria-label="Weibo - 微博">
+                            <IconWeibo className={"w-[2rem]  portrait:w-[4rem] " + iconClassName}/>
+                        </a>
+                    }
+                    {
+                        TapTap &&
+                        <a target="_blank" href={TapTap} className={aClassName} aria-label="TapTap">
+                            <IconTapTap className={"w-[3rem]  portrait:w-[6rem] " + iconClassName}/>
+                        </a>
+                    }
                 </div>
             </div>
         </div>

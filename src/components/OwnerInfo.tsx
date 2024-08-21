@@ -1,7 +1,8 @@
 import React from "react";
+import arknightsConfig from "../../arknights.config.tsx";
 import {
     IconArrow,
-    IconBiliBili,
+    IconBiliBili, IconGitHub,
     IconSkland,
     IconTapTap,
     IconWechat,
@@ -36,32 +37,54 @@ function Welcome() {
                      src={import.meta.env.BASE_URL + "images/stroke_text-rhodes_island.png"}
                      alt="Rhodes Island"/>
                 <div className={"text-[1.125rem] portrait:text-[1.875rem]"
-                    + " ml-[2.875rem] portrait:ml-[8rem] mt-[.25rem] font-bold"}>Please login.</div>
+                    + " ml-[2.875rem] portrait:ml-[8rem] mt-[.25rem] font-bold"}>Please login.
+                </div>
                 <div className={"text-[1rem] portrait:text-[1.625rem]"
-                    + " ml-[2.875rem] portrait:ml-[8rem]"}>请先登入您的账号。</div>
+                    + " ml-[2.875rem] portrait:ml-[8rem]"}>请先登入您的账号。
+                </div>
             </div>
         </div>
     </>
 }
 
 function ToolBox() {
-    const aClassName: string = "text-inherit no-underline decoration-0 cursor-pointer flex-1"
-        + " opacity-70 transition-opacity duration-300"
+    const {Skland, Bilibili, WeChat, Weibo, TapTap, GitHub} = arknightsConfig.navbar.toolbox
+    const aClassName: string = "text-inherit no-underline decoration-0 cursor-pointer flex flex-1 opacity-70 transition-opacity duration-300"
     const iconClassName: string = "h-auto m-auto pointer-events-none"
 
     return <>
         <Divider portraitHidden>TOOLBOX</Divider>
-        <div className={"mt-[2rem] pl-[1rem] portrait:hidden"}>
-            <div className={"flex items-center justify-between"}>
-                <a className={aClassName}><IconSkland className={"w-[2rem] " + iconClassName}/></a>
-                <a className={aClassName}><IconBiliBili className={"w-[3rem] " + iconClassName}/></a>
-                <a className={aClassName}><IconWechat className={"w-[2rem] " + iconClassName}/></a>
-            </div>
-            <div className={"flex items-center justify-between mt-[.5rem]"}>
-                <a className={aClassName}><IconWeibo className={"w-[2rem] " + iconClassName}/></a>
-                <a className={aClassName}><IconTapTap className={"w-[3rem] " + iconClassName}/></a>
-                <a className={"flex-1"}/>
-            </div>
+        <div className={"mt-4 pl-4 grid grid-cols-3 gap-y-2 portrait:hidden"}>
+            {
+                GitHub && <a target="_blank" href={GitHub} className={aClassName} aria-label="GitHub">
+                    <IconGitHub className={"w-[2rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Skland && <a target="_blank" href={Skland} className={aClassName} aria-label="Skland - 森空岛">
+                    <IconSkland className={"w-[2rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Bilibili && <a target="_blank" href={Bilibili} className={aClassName} aria-label="Bilibili - 哔哩哔哩">
+                    <IconBiliBili className={"w-[3rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                WeChat && <a target="_blank" href={WeChat} className={aClassName} aria-label="WeChat - 微信">
+                    <IconWechat className={"w-[2rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Weibo && <a target="_blank" href={Weibo} className={aClassName} aria-label="Weibo - 微博">
+                    <IconWeibo className={"w-[2rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                TapTap && <a target="_blank" href={TapTap} className={aClassName} aria-label="TapTap">
+                    <IconTapTap className={"w-[3rem] " + iconClassName}/>
+                </a>
+            }
         </div>
     </>
 }

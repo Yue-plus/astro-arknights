@@ -1,5 +1,5 @@
 import React from "react";
-import {IconBiliBili, IconSkland, IconTapTap, IconWechat, IconWeibo} from "../SvgIcons";
+import {IconBiliBili, IconGitHub, IconSkland, IconTapTap, IconWechat, IconWeibo} from "../SvgIcons";
 import {useStore} from "@nanostores/react";
 import {isNavMenuOpen, viewIndex} from "../store/rootLayoutStore.ts";
 import arknightsConfig from "../../../arknights.config.tsx";
@@ -60,29 +60,46 @@ function Navigation() {
 }
 
 function ToolBox() {
+    const {Skland, Bilibili, WeChat, Weibo, TapTap, GitHub} = arknightsConfig.navbar.toolbox
     const aClassName: string = "text-inherit flex-none cursor-pointer"
     const iconClassName: string = "h-auto m-auto pointer-events-none"
+
     return <div className={"mt-auto pr-9 pb-[4.5rem] pl-[3.375rem]"}>
         <div className={"text-[1.5rem] font-benderBold flex items-center"}>
             <div className={"w-full min-w-0 h-px mr-4 bg-white bg-opacity-30 flex-auto"}/>
             TOOLBOX
         </div>
         <div className={"mt-4 flex items-center justify-between"}>
-            <a className={aClassName} aria-label="Skland - 森空岛">
-                <IconSkland className={"w-[4.5rem] " + iconClassName} />
-            </a>
-            <a className={aClassName} aria-label="Bilibili - 哔哩哔哩">
-                <IconBiliBili className={"w-[4.5rem] " + iconClassName}/>
-            </a>
-            <a className={aClassName} aria-label="WeChat - 微信">
-                <IconWechat className={"w-[3rem] " + iconClassName}/>
-            </a>
-            <a className={aClassName} aria-label="Weibo - 微博">
-                <IconWeibo className={"w-[3rem] " + iconClassName}/>
-            </a>
-            <a className={aClassName} aria-label="TapTap">
-                <IconTapTap className={"w-[4.5rem] " + iconClassName}/>
-            </a>
+            {
+                GitHub && <a target="_blank" href={GitHub} className={aClassName} aria-label="GitHub">
+                    <IconGitHub className={"w-[3rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Skland && <a target="_blank" href={Skland} className={aClassName} aria-label="Skland - 森空岛">
+                    <IconSkland className={"w-[4.5rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Bilibili && <a target="_blank" href={Bilibili} className={aClassName} aria-label="Bilibili - 哔哩哔哩">
+                    <IconBiliBili className={"w-[4.5rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                WeChat && <a target="_blank" href={WeChat} className={aClassName} aria-label="WeChat - 微信">
+                    <IconWechat className={"w-[3rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                Weibo && <a target="_blank" href={Weibo} className={aClassName} aria-label="Weibo - 微博">
+                    <IconWeibo className={"w-[3rem] " + iconClassName}/>
+                </a>
+            }
+            {
+                TapTap && <a target="_blank" href={TapTap} className={aClassName} aria-label="TapTap">
+                    <IconTapTap className={"w-[4.5rem] " + iconClassName}/>
+                </a>
+            }
         </div>
     </div>
 }
