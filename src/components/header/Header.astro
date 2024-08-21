@@ -1,9 +1,10 @@
 ---
+import type {NavbarItem} from "../../_types/ArknightsConfig";
+import arknightsConfig from "../../../arknights.config";
 import {TitleArknights} from "../SvgIcons"
-import NavItem, {type NavItemInfo} from "./NavItem"
+import NavItem from "./NavItem"
 import {Social, Sound, OwnerInfo} from "./NavTools"
 import NavMenu from "./NavMenu"
-import arknightsConfig from "../../../arknights.config";
 ---
 
 <header class="w-full h-[6.75rem] portrait:h-[9.375rem] absolute top-0 left-0 z-[23] flex items-center"
@@ -13,7 +14,7 @@ import arknightsConfig from "../../../arknights.config";
     </a>
     <nav class="portrait:hidden">
         <ul class="flex justify-evenly">{
-            arknightsConfig.navbar.items.map((info: NavItemInfo, index) =>
+            arknightsConfig.navbar.items.map((info: NavbarItem, index) =>
                     <NavItem client:only="react" {...{index, info}}/>)
         }</ul>
     </nav>

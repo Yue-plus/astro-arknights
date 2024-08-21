@@ -1,6 +1,6 @@
-import type {APIContext} from "astro";
-import {getCollection} from "astro:content";
-import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts";
+import type {APIContext} from "astro"
+import {getCollection} from "astro:content"
+import type {BreakingNewsItemProps} from "../../_types/RootPageViews.ts"
 
 /**
  * 该静态文件端点被 ../_views/01-Information.tsx BreakingNewsList 调用

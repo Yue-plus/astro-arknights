@@ -1,10 +1,9 @@
 import {useMemo} from "react";
 import {useStore} from "@nanostores/react";
+import type {NavbarItem} from "../../_types/ArknightsConfig.ts";
 import {viewIndex} from "../store/rootLayoutStore.ts";
 
-export type NavItemInfo = { title: string, subtitle: string, href: string }
-
-export default function NavItem({index, info}: {index: number, info: NavItemInfo}) {
+export default function NavItem({index, info}: {index: number, info: NavbarItem}) {
     const $viewIndex = useStore(viewIndex)
 
     const liClassName = useMemo(() => {

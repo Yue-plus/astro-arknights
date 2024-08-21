@@ -1,5 +1,5 @@
-import type {ArknightsConfig} from "./src/_types/config";
-import {TitleArknights} from "./src/components/SvgIcons.tsx";
+import type {ArknightsConfig} from "./src/_types/ArknightsConfig"
+import {TitleArknights} from "./src/components/SvgIcons"
 
 export default {
     title: "Arknights",

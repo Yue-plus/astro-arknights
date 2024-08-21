@@ -6,7 +6,7 @@ import "swiper/css/autoplay"
 import "swiper/css/scrollbar"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
-import type {BreakingNewsItemProps} from "../../_types/BreakingNewsItemProps.ts"
+import type {BreakingNewsItemProps} from "../../_types/RootPageViews.ts"
 
 const base = import.meta.env.BASE_URL
 
