@@ -6,7 +6,7 @@ import "swiper/css/autoplay"
 import "swiper/css/scrollbar"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
-import type {BreakingNewsItemProps} from "../../_types/RootPageViews.ts"
+import type {BreakingNewsItemProps, SwiperInfoProps} from "../../_types/RootPageViews.ts"
 
 const base = import.meta.env.BASE_URL
 
@@ -88,12 +88,7 @@ function BreakingNewsList() {
     </>
 }
 
-function SwiperInfo({title, subtitle, date, href}: {
-    title?: string,
-    subtitle?: string,
-    date?: string,
-    href?: string
-}) {
+function SwiperInfo({title, subtitle, date, href}: SwiperInfoProps) {
     // TODO: 添加动效
     return <div
         className={"w-[26.5rem] portrait:w-[unset] portrait:static absolute left-[3.875rem] bottom-[-1.875rem]"}>

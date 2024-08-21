@@ -1,4 +1,5 @@
-import React from "react";
+import React from "react"
+import type {HeroActionButtonProps} from "./RootPageViews.ts"
 
 export type NavbarItem = {
     title: string
@@ -21,11 +22,17 @@ export type ArknightsConfig = {
         }
         items: NavbarItem[]
     }
-    rootPage: {
-        views: (() => React.JSX.Element)[]
-    }
     pageTracker: {
         microInfo: string
         labels: string[]
+    }
+    rootPage: {
+        INDEX: {
+            title: string
+            subtitle: string
+            url: string
+            copyright: React.JSX.Element
+            heroActions: HeroActionButtonProps[]
+        }
     }
 }
