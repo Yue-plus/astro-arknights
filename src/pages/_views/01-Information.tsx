@@ -188,7 +188,7 @@ function SwiperScrollbar() {
             backgroundImage: "linear-gradient(90deg, hsla(0, 0%, 67%, 0), hsla(0, 0%, 67%, .7))"
         }}/>
         <div className="swiper-scrollbar-horizontal w-full h-full bg-[#ababab] duration-0">
-            <div className="swiper-scrollbar-drag h-full bg-ark-blue rounded-none relative"/>
+            <div className="swiper-scrollbar-drag" style={{backgroundColor: "#18d1ff", borderRadius: 0}}/>
         </div>
     </div>
 }
