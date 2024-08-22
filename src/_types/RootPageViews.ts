@@ -21,10 +21,10 @@ export type BreakingNewsItemProps = {
 }
 
 export type SwiperData = {
-    title?: string,
+    title: string,
     subtitle?: string,
     date?: string,
     url?: string,
-    href?: string,
+    href: string,
     image?: string,
 }

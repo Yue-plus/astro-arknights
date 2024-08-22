@@ -18,8 +18,7 @@ function BreakingNewsTag({label, active, onClick}: {
 }) {
     // TODO:
     return <div {...{onClick}} className={(active ? "text-black bg-ark-blue " : "hover:text-ark-blue ")
-        + "w-[5.625rem] h-[1.25em] portrait:text-[1.25rem] font-bold"
-        + " pr-2 pl-[.125rem] mr-4 flex items-center cursor-pointer"}>
+        + "w-[5.625rem] h-[1.25em] portrait:text-[1.25rem] font-bold pr-2 pl-[.125rem] mr-4 flex items-center cursor-pointer"}>
         <span>{label}</span>
         <IconArrow className={(active ? "" : "opacity-0 ")
             + "w-[.4375rem] ml-auto flex-none pointer-events-none transition-opacity duration-300"}/>
@@ -90,14 +89,14 @@ function BreakingNewsList() {
 }
 
 function SwiperInfo({swiperIndex}: { swiperIndex: number }) {
-    const swiperInfo = useMemo(() => arknightsConfig.rootPage.INFORMATION.swiperData, [])
+    const swiperData = useMemo(() => arknightsConfig.rootPage.INFORMATION.swiper.data, [])
     const [animeClass, setAnimeClass] = useState("opacity-100 translate-x-0")
     const [{date, title, subtitle, url, href}, setState] = useState({
-        date: swiperInfo[swiperIndex].date ?? "",
-        title: swiperInfo[swiperIndex].title ?? "",
-        subtitle: swiperInfo[swiperIndex].subtitle ?? "",
-        url: swiperInfo[swiperIndex].url ?? "",
-        href: swiperInfo[swiperIndex].href ?? "",
+        date: swiperData[swiperIndex].date ?? "",
+        title: swiperData[swiperIndex].title ?? "",
+        subtitle: swiperData[swiperIndex].subtitle ?? "",
+        url: swiperData[swiperIndex].url ?? "",
+        href: swiperData[swiperIndex].href ?? "",
     })
 
     const handleSwiperIndexChange = useCallback(() => {
@@ -105,15 +104,15 @@ function SwiperInfo({swiperIndex}: { swiperIndex: number }) {
         setTimeout(() => {
             setAnimeClass("opacity-0 translate-x-6")
             setState({
-                date: swiperInfo[swiperIndex].date ?? "",
-                title: swiperInfo[swiperIndex].title ?? "",
-                subtitle: swiperInfo[swiperIndex].subtitle ?? "",
-                url: swiperInfo[swiperIndex].url ?? "",
-                href: swiperInfo[swiperIndex].href ?? "",
+                date: swiperData[swiperIndex].date ?? "",
+                title: swiperData[swiperIndex].title ?? "",
+                subtitle: swiperData[swiperIndex].subtitle ?? "",
+                url: swiperData[swiperIndex].url ?? "",
+                href: swiperData[swiperIndex].href ?? "",
             })
         }, 150)
         setTimeout(() => setAnimeClass("opacity-100 translate-x-0"), 300)
-    }, [swiperIndex, swiperInfo])
+    }, [swiperIndex, swiperData])
 
     useEffect(() => {
         handleSwiperIndexChange()
@@ -124,7 +123,7 @@ function SwiperInfo({swiperIndex}: { swiperIndex: number }) {
             <div className="flex flex-col portrait:flex-col-reverse">
                 <div className="font-benderRegular tracking-[1px] portrait:mt-[1rem]">{date}</div>
                 <div
-                    className="max-h-[2.8em] portrait:max-h-[1.4em] overflow-ellipsis text-[2.25rem] portrait:text-[2.5rem] font-bold tracking-[2px] line-clamp-2 portrait:line-clamp-1">
+                    className="max-h-[2.8em] portrait:max-h-[1.4em] overflow-ellipsis text-[2.25rem] portrait:text-[2.5rem] font-bold font-benderBold tracking-[2px] line-clamp-2 portrait:line-clamp-1">
                     {title}
                 </div>
             </div>
@@ -142,28 +141,49 @@ function SwiperInfo({swiperIndex}: { swiperIndex: number }) {
     </div>
 }
 
+function ImageSlide({image, title}: { image: string, title: string }) {
+    return <div className="w-full h-full relative">
+        <div className="w-full h-full overflow-hidden absolute">
+            <div className="w-full h-full bg-center bg-cover bg-no-repeat blur"
+                 style={{backgroundImage: `url(${image})`}}/>
+        </div>
+        <img src={image} alt={title}
+             className="portrait:h-full portrait:w-auto absolute left-1/2 -translate-x-1/2"/>
+    </div>
+}
+
+function TextSlide({title, subtitle}: { title: string, subtitle: string | undefined }) {
+    return <div className="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-30">
+        <div className="landscape:ml-40 border-l-[1.25rem] border-solid border-ark-blue pl-8">
+            <div className="text-9xl font-benderBold">{title}</div>
+            {subtitle && <div className="text-3xl pt-4 font-benderRegular">{subtitle}</div>}
+        </div>
+    </div>
+}
+
 function SwiperBody({setSwiperIndex}: { setSwiperIndex: React.Dispatch<React.SetStateAction<number>> }) {
-    return <div className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static"
-        + " absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem]"
-        + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
-        + " mask-gradient-90-transparent-to-white portrait:mask-unset"}>
+    const data = useMemo(() => arknightsConfig.rootPage.INFORMATION.swiper.data, [])
+
+    return <div
+        className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem] flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000 mask-gradient-90-transparent-to-white portrait:mask-unset"}>
         {/* See: https://swiperjs.com/react */}
         <Swiper className="w-full h-full"
                 modules={[Autoplay, Scrollbar]}
-                autoplay={{delay: 5000}}
+                autoplay={arknightsConfig.rootPage.INFORMATION.swiper.autoplay ?? true}
                 scrollbar={{el: ".swiper-scrollbar-horizontal", hide: false, draggable: true}}
-                onSlideChange={(e) => setSwiperIndex(e.activeIndex)}>
-            <SwiperSlide className="text-center text-9xl bg-[darkred]">Slide 1</SwiperSlide>
-            <SwiperSlide className="text-center text-9xl bg-[darkgreen]">Slide 2</SwiperSlide>
-            <SwiperSlide className="text-center text-9xl bg-[darkblue]">Slide 3</SwiperSlide>
-        </Swiper>
+                onSlideChange={(e) => setSwiperIndex(e.activeIndex)}>{
+            data.map(({title, subtitle, href, image}, index) => <SwiperSlide key={index}>
+                <a target="_blank" {...{href}}>
+                    {image ? <ImageSlide {...{title, image}}/> : <TextSlide {...{title, subtitle}}/>}
+                </a>
+            </SwiperSlide>)
+        }</Swiper>
     </div>
 }
 
 function SwiperScrollbar() {
-    return <div className={"w-[61rem] portrait:w-full h-[.5rem] portrait:h-[.375rem] portrait:pr-[5.75rem]"
-        + " absolute portrait:flex top-[56.375rem] portrait:top-[33.125rem] right-0"
-        + " z-[4] transition-[visibility,opacity] duration-1000"}>
+    return <div
+        className={"w-[61rem] portrait:w-full h-[.5rem] portrait:h-[.375rem] portrait:pr-[5.75rem] absolute portrait:flex top-[56.375rem] portrait:top-[33.125rem] right-0 z-[4] transition-[visibility,opacity] duration-1000"}>
         <div className={"w-[12rem] h-px absolute top-0 right-full portrait:hidden"} style={{
             backgroundImage: "linear-gradient(90deg, hsla(0, 0%, 67%, 0), hsla(0, 0%, 67%, .7))"
         }}/>

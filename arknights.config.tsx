@@ -78,29 +78,35 @@ export default {
             ],
         },
         INFORMATION: {
-            swiperData: [
-                {
-                    title: "用户文档",
-                    subtitle: "User Documentation",
-                    date: "2024 // 08 / 21",
-                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
-                    href: base + "docs/",
-                },
-                {
-                    title: "开发者文档",
-                    subtitle: "Developer Documentation",
-                    date: "2024 // 08 / 21",
-                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
-                    href: base + "docs/",
-                },
-                {
-                    title: "博客 - Blog",
-                    // subtitle: "Blog",
-                    date: "2024 // 08 / 21",
-                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
-                    href: base + "blog/",
-                },
-            ],
+            swiper: {
+                autoplay: {delay: 5000},
+                data: [
+                    {
+                        title: "用户文档",
+                        subtitle: "User Documentation",
+                        date: "2024 // 08 / 21",
+                        url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                        href: base + "docs/",
+                        image: base + "info-swiper/UserDocumentation.jpg",
+                    },
+                    {
+                        title: "开发者文档",
+                        subtitle: "Developer Documentation",
+                        date: "2024 // 08 / 21",
+                        url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                        href: base + "docs/",
+                        image: base + "info-swiper/DeveloperDocumentation.jpg",
+                    },
+                    {
+                        title: "博客 - Blog",
+                        // subtitle: "Blog",
+                        date: "2024 // 08 / 21",
+                        url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                        href: base + "blog/",
+                        image: base + "info-swiper/Blog.jpg",
+                    },
+                ],
+            },
         },
-    }
+    },
 } as ArknightsConfig

@@ -1,4 +1,5 @@
 import React from "react"
+import type {AutoplayOptions} from "swiper/types";
 import type {HeroActionButtonProps, SwiperData} from "./RootPageViews.ts"
 
 export type NavbarItem = {
@@ -43,7 +44,10 @@ export type ArknightsConfig = {
             heroActions: HeroActionButtonProps[]
         },
         INFORMATION: {
-            swiperData: SwiperData[]
+            swiper: {
+                autoplay?: boolean | AutoplayOptions | undefined
+                data: SwiperData[]
+            }
         },
     }
 }
