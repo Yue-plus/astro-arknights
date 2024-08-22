@@ -1,5 +1,5 @@
 import React from "react"
-import type {HeroActionButtonProps} from "./RootPageViews.ts"
+import type {HeroActionButtonProps, SwiperData} from "./RootPageViews.ts"
 
 export type NavbarItem = {
     title: string
@@ -17,7 +17,7 @@ export type ArknightsConfig = {
     }
     navbar: {
         logo: {
-            element: React.JSX.Element
+            element: () => React.JSX.Element
             alt: string
         }
         items: NavbarItem[]
@@ -41,6 +41,9 @@ export type ArknightsConfig = {
             url: string
             copyright: React.JSX.Element
             heroActions: HeroActionButtonProps[]
-        }
+        },
+        INFORMATION: {
+            swiperData: SwiperData[]
+        },
     }
 }

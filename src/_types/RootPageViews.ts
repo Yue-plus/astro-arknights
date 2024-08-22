@@ -1,6 +1,7 @@
 import React from "react";
 
-// 01-INDEX ==============================
+// 01-INDEX =====================================
+
 export type HeroActionButtonProps = {
     icon: React.JSX.Element
     label: string
@@ -10,7 +11,7 @@ export type HeroActionButtonProps = {
     className?: string
 }
 
-// 02-INFORMATION ==============================
+// 02-INFORMATION ===============================
 
 export type BreakingNewsItemProps = {
     title: string,
@@ -19,9 +20,11 @@ export type BreakingNewsItemProps = {
     category: string,
 }
 
-export type SwiperInfoProps = {
+export type SwiperData = {
     title?: string,
     subtitle?: string,
     date?: string,
-    href?: string
+    url?: string,
+    href?: string,
+    image?: string,
 }

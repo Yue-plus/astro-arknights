@@ -1,16 +1,18 @@
 ---
 import type {NavbarItem} from "../../_types/ArknightsConfig";
 import arknightsConfig from "../../../arknights.config";
-import {TitleArknights} from "../SvgIcons"
 import NavItem from "./NavItem"
 import {Social, Sound, OwnerInfo} from "./NavTools"
 import NavMenu from "./NavMenu"
+
+// TODO: 通过 arknightsConfig.title 文本生成默认 Logo
+const Logo = arknightsConfig?.navbar?.logo?.element
 ---
 
 <header class="w-full h-[6.75rem] portrait:h-[9.375rem] absolute top-0 left-0 z-[23] flex items-center"
         style="background-image: linear-gradient(0deg, transparent, rgba(0, 0, 0, .6), rgba(0, 0, 0, .8))">
-    <a class="w-[7rem] mr-auto ml-[3rem] cursor-pointer" href={"/"} aria-label="首页">
-        <TitleArknights className="w-full h-auto pointer-events-none"/>
+    <a href={"/"} class="w-[7rem] portrait:w-[10.25rem] mr-auto ml-12 portrait:ml-7 cursor-pointer" aria-label="首页">
+        <Logo/>
     </a>
     <nav class="portrait:hidden">
         <ul class="flex justify-evenly">{

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useCallback, useEffect, useMemo, useState} from "react"
 import {Swiper, SwiperSlide} from "swiper/react"
 import {Scrollbar, Autoplay} from "swiper/modules"
 import "swiper/css"
@@ -6,7 +6,8 @@ import "swiper/css/autoplay"
 import "swiper/css/scrollbar"
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask"
 import {IconArrow} from "../../components/SvgIcons"
-import type {BreakingNewsItemProps, SwiperInfoProps} from "../../_types/RootPageViews.ts"
+import type {BreakingNewsItemProps} from "../../_types/RootPageViews.ts"
+import arknightsConfig from "../../../arknights.config.tsx";
 
 const base = import.meta.env.BASE_URL
 
@@ -88,35 +89,60 @@ function BreakingNewsList() {
     </>
 }
 
-function SwiperInfo({title, subtitle, date, href}: SwiperInfoProps) {
-    // TODO: 添加动效
-    return <div
-        className={"w-[26.5rem] portrait:w-[unset] portrait:static absolute left-[3.875rem] bottom-[-1.875rem]"}>
-        <div className="flex flex-col portrait:flex-col-reverse">
-            <div className={"font-benderRegular tracking-[1px] portrait:mt-[1rem]"}>{date ?? "yyyy // MM / dd"}</div>
-            <div
-                className={"max-h-[2.8em] portrait:max-h-[1.4em] overflow-ellipsis text-[2.25rem] portrait:text-[2.5rem] font-bold tracking-[2px] line-clamp-2 portrait:line-clamp-1"}>
-                {title ?? "[SWIPER_TITLE]"}
+function SwiperInfo({swiperIndex}: { swiperIndex: number }) {
+    const swiperInfo = useMemo(() => arknightsConfig.rootPage.INFORMATION.swiperData, [])
+    const [animeClass, setAnimeClass] = useState("opacity-100 translate-x-0")
+    const [{date, title, subtitle, url, href}, setState] = useState({
+        date: swiperInfo[swiperIndex].date ?? "",
+        title: swiperInfo[swiperIndex].title ?? "",
+        subtitle: swiperInfo[swiperIndex].subtitle ?? "",
+        url: swiperInfo[swiperIndex].url ?? "",
+        href: swiperInfo[swiperIndex].href ?? "",
+    })
+
+    const handleSwiperIndexChange = useCallback(() => {
+        setAnimeClass("opacity-0 -translate-x-6")
+        setTimeout(() => {
+            setAnimeClass("opacity-0 translate-x-6")
+            setState({
+                date: swiperInfo[swiperIndex].date ?? "",
+                title: swiperInfo[swiperIndex].title ?? "",
+                subtitle: swiperInfo[swiperIndex].subtitle ?? "",
+                url: swiperInfo[swiperIndex].url ?? "",
+                href: swiperInfo[swiperIndex].href ?? "",
+            })
+        }, 150)
+        setTimeout(() => setAnimeClass("opacity-100 translate-x-0"), 300)
+    }, [swiperIndex, swiperInfo])
+
+    useEffect(() => {
+        handleSwiperIndexChange()
+    }, [swiperIndex, handleSwiperIndexChange]);
+
+    return <div className="w-[26.5rem] portrait:w-[unset] portrait:static absolute left-[3.875rem] bottom-[-1.875rem]">
+        <div className={"transition-[opacity,transform] ease-in-out duration-150 " + animeClass}>
+            <div className="flex flex-col portrait:flex-col-reverse">
+                <div className="font-benderRegular tracking-[1px] portrait:mt-[1rem]">{date}</div>
+                <div
+                    className="max-h-[2.8em] portrait:max-h-[1.4em] overflow-ellipsis text-[2.25rem] portrait:text-[2.5rem] font-bold tracking-[2px] line-clamp-2 portrait:line-clamp-1">
+                    {title}
+                </div>
             </div>
+            <div className="mt-[1rem] text-[1.125rem] font-benderRegular portrait:hidden">{subtitle}</div>
+            <div className="text-[.75rem] portrait:text-[.875rem] font-n15eMedium leading-5 tracking-[2px]">{url}</div>
+            <a {...{href}} target="_blank"
+               className={"w-[14.375rem] h-[3.75rem] pr-7 pl-4 mt-8 text-black no-underline whitespace-nowrap bg-ark-blue hover:bg-white flex items-center cursor-pointer transition-colors duration-300 portrait:hidden"}>
+                <div>
+                    <div className={"text-[1.25rem] font-black"}>更多情报</div>
+                    <div className={"text-[.875rem] font-benderBold"}>READ MORE</div>
+                </div>
+                <IconArrow className={"w-[.5rem] ml-auto flex-none pointer-events-none"}/>
+            </a>
         </div>
-        <div className={"mt-[1rem] text-[1.125rem] portrait:hidden"}>
-            {subtitle ?? "[SWIPER_SUBTITLE]"}
-        </div>
-        <div className={"text-[.75rem] portrait:text-[.875rem] font-n15eMedium leading-5 tracking-[2px]"}>
-            HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/
-        </div>
-        <a {...{href}} target="_blank"
-           className={"w-[14.375rem] h-[3.75rem] pr-7 pl-4 mt-8 text-black no-underline whitespace-nowrap bg-ark-blue hover:bg-white flex items-center cursor-pointer transition-colors duration-300 portrait:hidden"}>
-            <div>
-                <div className={"text-[1.25rem] font-bold"}>更多情报</div>
-                <div className={"text-[.875rem] font-benderBold"}>READ MORE</div>
-            </div>
-            <IconArrow className={"w-[.5rem] ml-auto flex-none pointer-events-none"}/>
-        </a>
     </div>
 }
 
-function SwiperBody() {
+function SwiperBody({setSwiperIndex}: { setSwiperIndex: React.Dispatch<React.SetStateAction<number>> }) {
     return <div className={"w-[83.125rem] portrait:w-[unset] h-[46.875rem] portrait:h-[24.125rem] portrait:static"
         + " absolute top-[9.5rem] right-[14.75rem] portrait:mt-[9.375rem] portrait:pr-[5.75rem]"
         + " flex items-center justify-center overflow-hidden transition-[visibility,opacity] duration-1000"
@@ -125,7 +151,8 @@ function SwiperBody() {
         <Swiper className="w-full h-full"
                 modules={[Autoplay, Scrollbar]}
                 autoplay={{delay: 5000}}
-                scrollbar={{el: ".swiper-scrollbar-horizontal", hide: false, draggable: true}}>
+                scrollbar={{el: ".swiper-scrollbar-horizontal", hide: false, draggable: true}}
+                onSlideChange={(e) => setSwiperIndex(e.activeIndex)}>
             <SwiperSlide className="text-center text-9xl bg-[darkred]">Slide 1</SwiperSlide>
             <SwiperSlide className="text-center text-9xl bg-[darkgreen]">Slide 2</SwiperSlide>
             <SwiperSlide className="text-center text-9xl bg-[darkblue]">Slide 3</SwiperSlide>
@@ -147,28 +174,30 @@ function SwiperScrollbar() {
 }
 
 export default function Information() {
-    return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto"
-        + " transition-opacity duration-100"}>
+    const [swiperIndex, setSwiperIndex] = useState(0)
+
+    return <div
+        className="w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto transition-opacity duration-100">
         <PortraitBottomGradientMask/>
-        <SwiperBody/>
+        <SwiperBody {...{setSwiperIndex}} />
         <SwiperScrollbar/>
-        <div className={"w-full h-full absolute top-0 left-0 bg-[length:100%_100%] pointer-events-none portrait:hidden"}
+        <div className="w-full h-full absolute top-0 left-0 bg-[length:100%_100%] pointer-events-none portrait:hidden"
              style={{backgroundImage: "linear-gradient(0deg, #000 5rem, transparent 20rem)"}}/>
-        <div className={"w-full h-full absolute top-0 left-0 portrait:hidden bg-common-mask bg-[length:100%_100%]"
-            + " mix-blend-overlay pointer-events-none"}/>
-        <div className={"w-[34.375rem] portrait:w-[unset] h-[46.75rem] portrait:h-[unset] portrait:pr-[5.75rem]"
-            + " absolute top-[9.5rem] left-0 portrait:static"}>
-            <div className={"w-full h-full absolute top-0 left-0 bg-black bg-opacity-30 mix-blend-overlay"
-                + " portrait:hidden"}/>
-            <div className={"w-full h-full absolute top-0 left-0 portrait:hidden mix-blend-difference"
-                + " bg-list-texture bg-cover bg-left-top"}/>
-            <div className={"h-full portrait:h-[unset] relative pt-[2.5rem] portrait:pt-[1.25rem]"
-                + " pl-[3.875rem] portrait:pl-[1.75rem] portrait:pr-[1.75rem]"
-                + " transition-[visibility,opacity] duration-1000"}>
-                <div className={"h-[.95em] text-[7rem] text-[#242424] font-oswaldMedium -tracking-wider"
-                    + " whitespace-nowrap overflow-hidden absolute top-full left-[9rem] flex items-end portrait:hidden"}
-                ><span>BREAKING NEWS</span></div>
-                <SwiperInfo/>
+        <div
+            className="w-full h-full absolute top-0 left-0 portrait:hidden bg-common-mask bg-[length:100%_100%] mix-blend-overlay pointer-events-none"/>
+        <div
+            className="w-[34.375rem] portrait:w-[unset] h-[46.75rem] portrait:h-[unset] portrait:pr-[5.75rem] absolute top-[9.5rem] left-0 portrait:static">
+            <div
+                className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-30 mix-blend-overlay portrait:hidden"/>
+            <div
+                className="w-full h-full absolute top-0 left-0 portrait:hidden mix-blend-difference bg-list-texture bg-cover bg-left-top"/>
+            <div
+                className="h-full portrait:h-[unset] relative pt-[2.5rem] portrait:pt-[1.25rem] pl-[3.875rem] portrait:pl-[1.75rem] portrait:pr-[1.75rem] transition-[visibility,opacity] duration-1000">
+                <div
+                    className="h-[.95em] text-[7rem] text-[#242424] font-oswaldMedium -tracking-wider whitespace-nowrap overflow-hidden absolute top-full left-[9rem] flex items-end portrait:hidden">
+                    <span>BREAKING NEWS</span>
+                </div>
+                <SwiperInfo {...{swiperIndex}}/>
                 <BreakingNewsList/>
             </div>
         </div>

@@ -2,6 +2,8 @@ import type {ArknightsConfig} from "./src/_types/ArknightsConfig"
 import {CopyrightMini, IconArchive, IconGitHub, TitleArknights} from "./src/components/SvgIcons"
 import React from "react";
 
+const base = import.meta.env.BASE_URL
+
 export default {
     title: "Arknights",
     description: "",
@@ -10,20 +12,20 @@ export default {
         autoplay: false,
 
         // https://web.hycdn.cn/arknights/official/_next/static/media/audio/bgm.ea4286.mp3
-        src: import.meta.env.BASE_URL + "audios/bgm.mp3"
+        src: base + "audios/bgm.mp3"
     },
     navbar: {
         logo: {
-            element: <TitleArknights className="pointer-events-none"/>,
+            element: () => <TitleArknights className="w-full h-auto pointer-events-none"/>,
             alt: "Arknights Logo"
         },
         items: [
-            {title: "INDEX", subtitle: "首页", href: import.meta.env.BASE_URL + "#index"},
-            {title: "INFORMATION", subtitle: "情报", href: import.meta.env.BASE_URL + "#information"},
-            {title: "OPERATOR", subtitle: "干员", href: import.meta.env.BASE_URL + "#operator"},
-            {title: "WORLD", subtitle: "设定", href: import.meta.env.BASE_URL + "#world"},
-            {title: "MEDIA", subtitle: "泰拉万象", href: import.meta.env.BASE_URL + "#media"},
-            {title: "MORE", subtitle: "更多内容", href: import.meta.env.BASE_URL + "#more"},
+            {title: "INDEX", subtitle: "首页", href: base + "#index"},
+            {title: "INFORMATION", subtitle: "情报", href: base + "#information"},
+            {title: "OPERATOR", subtitle: "干员", href: base + "#operator"},
+            {title: "WORLD", subtitle: "设定", href: base + "#world"},
+            {title: "MEDIA", subtitle: "泰拉万象", href: base + "#media"},
+            {title: "MORE", subtitle: "更多内容", href: base + "#more"},
         ],
         toolbox: {
             Skland: "https://www.skland.com/",
@@ -50,7 +52,7 @@ export default {
                     label: "文档",
                     subLabel: "Documentation",
                     target: "_self",
-                    href: import.meta.env.BASE_URL + "docs/",
+                    href: base + "docs/",
                     className: "text-black bg-ark-blue border-[#2bf] hover:border-white font-bold font-benderBold",
                 },
                 {
@@ -63,7 +65,7 @@ export default {
                     label: "博客 - Blog",
                     // subLabel: "Blog",
                     target: "_self",
-                    href: import.meta.env.BASE_URL + "blog/",
+                    href: base + "blog/",
                     className: "text-black bg-end-yellow border-[#fe2] hover:border-white font-bold font-benderBold",
                 },
                 {
@@ -76,7 +78,29 @@ export default {
             ],
         },
         INFORMATION: {
-            swiperInfoProps: []
+            swiperData: [
+                {
+                    title: "用户文档",
+                    subtitle: "User Documentation",
+                    date: "2024 // 08 / 21",
+                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                    href: base + "docs/",
+                },
+                {
+                    title: "开发者文档",
+                    subtitle: "Developer Documentation",
+                    date: "2024 // 08 / 21",
+                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                    href: base + "docs/",
+                },
+                {
+                    title: "博客 - Blog",
+                    // subtitle: "Blog",
+                    date: "2024 // 08 / 21",
+                    url: "HTTPS://ARKNIGHTS.ASTRO.YUE.ZONE/",
+                    href: base + "blog/",
+                },
+            ],
         },
     }
 } as ArknightsConfig
