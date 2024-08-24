@@ -22,7 +22,7 @@ const tabTitle = entry?.data?.title ?? "无标题"
 <InfoLayout title="DOCS" subTitle="文档" tabTitle={tabTitle + " - 文档"}>
     <DocsLeftAside slot="left-aside"/>
 
-    <article class="max-w-[80.75rem] mx-auto">
+    <article class="max-w-[80.75rem] h-full mx-auto overflow-y-auto">
         <!--<Debug {allDocs}/>-->
         <Content/>
     </article>

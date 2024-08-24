@@ -10,7 +10,9 @@ const allDocs = await getCollection("docs");
     <ul class="p-4 text-2xl">{allDocs.map(({id, slug, body, collection, data}, index) =>
             <li class="hover:text-ark-blue duration-300">
                 <!-- TODO: 按文件夹分层可折叠 -->
-                <a href={base + "docs/" + slug.split("-").slice(1).join("-")}>{data.title ?? id}</a>
+                <a target="_self" href={base + "docs/" + slug.split("-").slice(1).join("-")}>
+                    {data.title ?? id}
+                </a>
             </li>
     )}</ul>
 </nav>

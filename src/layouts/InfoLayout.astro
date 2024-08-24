@@ -21,7 +21,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
 
 <RootLayout title={tabTitle}>
     <!-- TODO: Canvas 动态背景 -->
-    <PageTracker client:only="react"/>
+    <div class="landscape:hidden"><PageTracker client:only="react"/></div>
     <LineDecorator client:only="react"/>
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
         {
@@ -43,7 +43,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
             </div>
         </main>
 
-        <aside class="w-[25.5rem] flex flex-col justify-between portrait:hidden">
+        <aside class="w-[25.5rem] flex flex-col items-end justify-between portrait:hidden">
             <header class="overflow-y-auto grow portrait:hidden">
                 <slot name="aside-header"/>
             </header>
