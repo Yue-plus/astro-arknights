@@ -29,8 +29,8 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
                 </aside>
         }
 
-        <main class="flex-auto pb-[4.5rem] portrait:pt-[2.5rem] portrait:px-[1.875rem] portrait:pb-[12rem] flex">
-            <div class="w-[80.75rem] portrait:w-auto mx-auto flex-none flex-col portrait:flex-auto overflow-x-hidden overflow-y-auto">
+        <main class="w-full h-full pb-[4.5rem] portrait:pt-[2.5rem] px-8 portrait:px-[1.875rem] portrait:pb-[12rem] box-border flex flex-auto">
+            <div class="w-[80.75rem] portrait:w-full h-full mx-auto flex-none flex-col portrait:flex-auto overflow-x-hidden overflow-y-auto">
                 <slot/>
             </div>
         </main>
@@ -82,6 +82,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
   // TODO: Markdown CSS
 
   article {
+    width: 100%;
     font-size: 18px;
     font-family: "Source Han Sans", "微软雅黑", sans-serif;
 
@@ -93,11 +94,13 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
     h2 {
       font-size: 48px;
       font-weight: 800;
+      padding-top: 2rem;
     }
 
     h3 {
       font-size: 42px;
       font-weight: 700;
+      padding-top: 1.5rem;
     }
 
     h4 {
@@ -113,6 +116,24 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
     h6 {
       font-size: 32px;
       font-weight: 400;
+    }
+
+    h4, h5, h6 {
+      padding-top: 1rem;
+    }
+
+    p {
+      padding-bottom: 1rem;
+    }
+
+    ul {
+      margin: 1rem 0;
+      padding-left: 2.5rem;
+      list-style: disc;
+
+      ul {
+        margin: 0;
+      }
     }
 
     a {
@@ -143,14 +164,20 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
       box-sizing: border-box;
     }
 
+    p, th, td {
+      code {
+        background-color: rgba(255, 255, 255, 0.125);
+        padding: 0 3px;
+
+      }
+    }
+
     .astro-code {
+      max-width: 100%;
       margin: 1rem 0;
       padding: 1rem 2rem;
       box-sizing: border-box;
-    }
-
-    code {
-      /* TODO: 中英文等宽字体 */
+      /* TODO: 中英文等宽字体、复制代码按钮、切换自动换行按钮 */
     }
   }
 </style>
