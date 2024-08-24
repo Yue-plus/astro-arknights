@@ -10,7 +10,7 @@ const allBlog = await getCollection("blog");
 
 <InfoLayout title="BLOG" subTitle="博客" tabTitle="博客">
     <div class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
-        <nav class="">
+        <nav class="max-w-[80.75rem] mx-auto">
             {
                 (allBlog.length > 0) && allBlog.map((item, index) =>
                             <InfoCard {...{index, item}}/>)
