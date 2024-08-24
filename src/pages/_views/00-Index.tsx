@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useStore} from "@nanostores/react"
 import type {HeroActionButtonProps} from "../../_types/RootPageViews.ts"
 import {viewIndex} from "../../components/store/rootLayoutStore.ts"
@@ -20,29 +20,31 @@ function HeroActionButton({icon, label, subLabel, target, href, className}: Hero
 export default function Index() {
     const {title, subtitle, url, copyright} = arknightsConfig.rootPage.INDEX
     const $viewIndex = useStore(viewIndex)
+    const [active, setActive] = useState(false)
 
     useEffect(() => {
-        if ($viewIndex === 0) directions.set({top: false, right: true, bottom: true, left: false})
+        if ($viewIndex === 0) {
+            directions.set({top: false, right: true, bottom: true, left: false})
+            setActive(true)
+        } else {
+            setActive(false)
+        }
     }, [$viewIndex])
 
-    // TODO: 添加动效
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
         + " transition-opacity duration-100"}>
         <div className={"w-full h-full absolute top-0 left-0 bg-index bg-center bg-cover bg-no-repeat"
             + " transition-opacity duration-1000"}/>
         {/* TODO: <video> <canvas> */}
-        <div className={"w-[52.5rem] portrait:w-[18.75rem] h-[60.75rem] portrait:h-[12rem] absolute left-0 bottom-0"
-            + " bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-[100%_0]"
-            + " opacity-[.78] transition-opacity duration-[2s]"}/>
-        <div className={"w-[52.5rem] portrait:w-[5.75rem] h-[60.75rem] portrait:h-[12rem]"
-            + " absolute left-full bottom-0 opacity-25 transition-opacity delay-[2.3s] duration-[.6s]"
-            + " bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-no-repeat"
-            + " translate-x-[-14.75rem] portrait:translate-x-[-3.75rem]"}/>
+        <div className={"w-[52.5rem] portrait:w-[18.75rem] h-[60.75rem] portrait:h-[12rem] absolute left-0 bottom-0 bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-[100%_0] transition-opacity duration-[.6s] ease-linear "
+            + (active ? "delay-[2s] opacity-[.78]" : "opacity-0")}/>
+        <div className={"w-[52.5rem] portrait:w-[5.75rem] h-[60.75rem] portrait:h-[12rem] absolute left-full bottom-0 bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-no-repeat translate-x-[-14.75rem] portrait:translate-x-[-3.75rem] transition-opacity duration-[.6s] ease-linear "
+            + (active ? "delay-[2.3s] opacity-25" : "opacity-0")}/>
         <PortraitBottomGradientMask/>
         <div className={"absolute left-[4.5rem] portrait:left-[2rem] bottom-[2.75rem] portrait:bottom-[3rem]"
             + " transition-transform duration-1000"}/>
-        <div className={"absolute left-[4.5rem] portrait:left-[2rem] bottom-[2.75rem] portrait:bottom-[3rem]"
-            + " transition-transform duration-1000"}>
+        <div className={"absolute left-[4.5rem] portrait:left-[2rem] bottom-[2.75rem] portrait:bottom-[3rem] transition-transform duration-1000 "
+            + (active ? "translate-y-0" : "translate-y-[11.5rem]")}>
             <div className={"flex"}>
                 <div className={"leading-[.75] text-[5.5rem] portrait:text-[2.375rem] font-n15eUltraBold"
                     + " mr-[2rem] portrait:mr-[1rem]"}>{title ?? ""}</div>
