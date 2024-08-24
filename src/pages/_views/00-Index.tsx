@@ -1,5 +1,8 @@
-import React from "react";
-import type {HeroActionButtonProps} from "../../_types/RootPageViews.ts";
+import React, {useEffect} from "react";
+import {useStore} from "@nanostores/react"
+import type {HeroActionButtonProps} from "../../_types/RootPageViews.ts"
+import {viewIndex} from "../../components/store/rootLayoutStore.ts"
+import {directions} from "../../components/store/lineDecoratorStore"
 import arknightsConfig from "../../../arknights.config.tsx";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
 
@@ -16,6 +19,11 @@ function HeroActionButton({icon, label, subLabel, target, href, className}: Hero
 
 export default function Index() {
     const {title, subtitle, url, copyright} = arknightsConfig.rootPage.INDEX
+    const $viewIndex = useStore(viewIndex)
+
+    useEffect(() => {
+        if ($viewIndex === 0) directions.set({top: false, right: true, bottom: true, left: false})
+    }, [$viewIndex])
 
     // TODO: 添加动效
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
