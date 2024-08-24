@@ -8,7 +8,7 @@ export default function PageTracker() {
     // TODO: 添加动效
     return <div className={"w-[10rem] portrait:w-[4rem] absolute top-[44.4444444444%] portrait:top-[auto]"
         + " right-[7.375rem] portrait:right-[2.875rem] portrait:bottom-[12.5rem]"
-        + " translate-x-1/2 z-[6] whitespace-nowrap leading-[normal]"}>
+        + " translate-x-1/2 z-[6] whitespace-nowrap leading-[normal] select-none"}>
         <div className={"font-n15eDemiBold"}></div>
         <div className={"text-ark-blue text-[5.4rem] portrait:text-[3.6rem] portrait:text-center font-n15eDemiBold"
             + " leading-[.55] overflow-hidden"}

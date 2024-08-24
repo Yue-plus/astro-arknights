@@ -1,6 +1,8 @@
 ---
-import RootLayout from "./RootLayout.astro";
-import {IconArrow} from "../components/SvgIcons";
+import RootLayout from "./RootLayout.astro"
+import {IconArrow} from "../components/SvgIcons"
+import LineDecorator from "../components/LineDecorator"
+import PageTracker from "../components/PageTracker"
 
 interface Props {
     title?: string
@@ -19,36 +21,49 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
 
 <RootLayout title={tabTitle}>
     <!-- TODO: Canvas 动态背景 -->
+    <PageTracker client:only="react"/>
+    <LineDecorator client:only="react"/>
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
-        <!-- TODO: 装饰线 -->
         {
+            // TODO: 左侧栏竖屏适配
+
             hasLeftAsideSlot &&
-                <aside class="w-[16vw] relative top-0 bottom-0 right-0 mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 portrait:hidden">
-                    <!-- TODO: 左侧栏竖屏适配 -->
+                <aside class="w-[18rem] mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 overflow-y-auto portrait:hidden">
                     <slot name="left-aside"/>
                 </aside>
         }
 
-        <main class="w-full h-full pb-[4.5rem] portrait:pt-[2.5rem] px-8 portrait:px-[1.875rem] portrait:pb-[12rem] box-border flex flex-auto">
-            <div class="w-[80.75rem] portrait:w-full h-full mx-auto flex-none flex-col portrait:flex-auto overflow-x-hidden overflow-y-auto">
+        <main class="max-w-[80.75rem] pb-[4.5rem] portrait:pt-[2.5rem] pl-8 portrait:pl-[1.875rem] portrait:pb-[12rem] box-border grow break-words hyphens-auto overflow-y-auto">
+            <div class="w-full h-full overflow-y-auto"
+                 style={{
+                     // TODO: 上边框也添加渐变
+                     mask: "linear-gradient(0deg, transparent, #000 1rem)"
+                 }}>
                 <slot/>
             </div>
         </main>
 
-        <aside class="w-[25.5rem] portrait:w-auto mt-auto mb-[9.5rem] flex-none portrait:absolute portrait:right-0 portrait:bottom-[5.625rem] portrait:mb-0 select-none">
+        <aside class="w-[25.5rem] flex flex-col justify-between portrait:hidden">
+            <header class="overflow-y-auto grow portrait:hidden">
+                <slot name="aside-header"/>
+            </header>
 
-            <!-- TODO: 调整位置，与正文顶部对齐 -->
-            <slot name="aside-header"/>
-
-            <div class="relative text-right">
-                <div class="text-[1.25rem] text-ark-blue font-black pr-9 portrait:hidden">{subTitle}</div>
-                <!-- TODO: 竖屏模式也半透明显示在左下角 -->
-                <div class="text-[#5f5f5f] text-[12.5rem] leading-none font-oswaldMedium tracking-[-.625rem] pr-8 portrait:hidden">{title}</div>
+            <div class="text-right select-none">
+                <div class="text-[1.25rem] text-ark-blue font-black pr-9">
+                    {subTitle}
+                </div>
+                <div class="text-[#5f5f5f] text-[12.5rem] leading-none font-oswaldMedium tracking-[-.625rem] pr-8">
+                    <!-- TODO: 竖屏模式也半透明显示在左下角 -->
+                    {title}
+                </div>
             </div>
-            <div class="mt-8 pr-[2.625rem] flex flex-col items-end">
+
+            <footer class="mt-8 pr-[2.625rem] box-border flex flex-col items-end">
                 <slot name="aside-footer"/>
-            </div>
-            <div class="flex justify-end">
+            </footer>
+
+            <!-- TODO: 修改布局，竖屏时显示按钮组 -->
+            <div class="flex justify-end mb-[9.5rem]">
                 <a href={goBackHref ? goBackHref : base} target="_self"
                    class="w-[14.875rem] h-[3.75rem] text-inherit no-underline px-[2.5rem] bg-[#5a5a5a] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
                     <IconArrow className="w-2 rotate-180 pointer-events-none"/>
@@ -73,16 +88,26 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
 </RootLayout>
 
 <script>
-    import {viewIndex} from "../components/store/rootLayoutStore";
+    import {viewIndex} from "../components/store/rootLayoutStore"
+    import {directions} from "../components/store/lineDecoratorStore"
 
     viewIndex.set(1)
+
+    function handleWindowsResize() {
+        if (window.innerWidth > window.innerHeight)
+            directions.set({top: true, right: false, bottom: false, left: false})
+        else
+            directions.set({top: true, right: true, bottom: true, left: false})
+    }
+
+    handleWindowsResize()
+    window.addEventListener("resize", handleWindowsResize)
 </script>
 
 <style lang="scss" is:global>
   // TODO: Markdown CSS
 
   article {
-    width: 100%;
     font-size: 18px;
     font-family: "Source Han Sans", "微软雅黑", sans-serif;
 
@@ -173,7 +198,6 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
     }
 
     .astro-code {
-      max-width: 100%;
       margin: 1rem 0;
       padding: 1rem 2rem;
       box-sizing: border-box;
