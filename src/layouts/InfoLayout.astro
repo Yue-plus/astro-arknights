@@ -58,32 +58,31 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
                 </div>
             </div>
 
-            <footer class="mt-8 pr-[2.625rem] box-border flex flex-col items-end">
+            <footer class="w-full mt-8 mb-[13.25rem] pr-[2.625rem] box-border flex flex-col items-end">
                 <slot name="aside-footer"/>
             </footer>
+        </aside>
+    </div>
 
-            <!-- TODO: 修改布局，竖屏时显示按钮组 -->
-            <div class="flex justify-end mb-[9.5rem]">
-                <a href={goBackHref ? goBackHref : base} target="_self"
-                   class="w-[14.875rem] h-[3.75rem] text-inherit no-underline hover:text-black hover:bg-white bg-[#5a5a5a] px-[2.5rem] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
-                    <IconArrow className="w-2 rotate-180 pointer-events-none"/>
+    <div class="flex justify-end mb-[9.5rem] portrait:mb-[5.75rem] fixed bottom-0 right-0 z-10">
+        <a href={goBackHref ? goBackHref : base} target="_self"
+           class="w-[14.875rem] h-[3.75rem] text-inherit no-underline hover:text-black hover:bg-white bg-[#5a5a5a] px-[2.5rem] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
+            <IconArrow className="w-2 rotate-180 pointer-events-none"/>
+            <div>
+                <div class="text-[1.25rem] font-bold">{goBackHref ? "返回列表" : "返回首页"}</div>
+                <div class="text-[.875rem] font-benderBold">GO BACK</div>
+            </div>
+        </a>
+        {
+            goBackHref &&
+                <a href={base} target="_self"
+                   class="w-[10.5rem] h-[3.75rem] text-inherit no-underline hover:text-black hover:bg-white bg-[#3f3f3f] px-[2.25rem] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
                     <div>
-                        <div class="text-[1.25rem] font-bold">{goBackHref ? "返回列表" : "返回首页"}</div>
-                        <div class="text-[.875rem] font-benderBold">GO BACK</div>
+                        <div class="text-[1.25rem] font-bold">返回首页</div>
+                        <div class="text-[.875rem] font-benderBold">HOMEPAGE</div>
                     </div>
                 </a>
-                {
-                    goBackHref &&
-                        <a href={base} target="_self"
-                           class="w-[10.5rem] h-[3.75rem] text-inherit no-underline hover:text-black hover:bg-white bg-[#3f3f3f] px-[2.25rem] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">
-                            <div>
-                                <div class="text-[1.25rem] font-bold">返回首页</div>
-                                <div class="text-[.875rem] font-benderBold">HOMEPAGE</div>
-                            </div>
-                        </a>
-                }
-            </div>
-        </aside>
+        }
     </div>
 </RootLayout>
 
@@ -97,7 +96,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
         if (window.innerWidth > window.innerHeight)
             directions.set({top: true, right: false, bottom: false, left: false})
         else
-            directions.set({top: true, right: true, bottom: true, left: false})
+            directions.set({top: true, right: true, bottom: false, left: false})
     }
 
     handleWindowsResize()
