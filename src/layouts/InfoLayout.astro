@@ -28,7 +28,7 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
             // TODO: 左侧栏竖屏适配
 
             hasLeftAsideSlot &&
-                <aside class="w-[18rem] mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 overflow-y-auto portrait:hidden">
+                <aside class="mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 shrink-0 overflow-y-auto hidden sm:block">
                     <slot name="left-aside"/>
                 </aside>
         }

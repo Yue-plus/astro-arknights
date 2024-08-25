@@ -1,13 +1,13 @@
 ---
-import {getCollection} from "astro:content";
-import InfoLayout from "../layouts/InfoLayout.astro";
+import {getCollection} from "astro:content"
+import DocsLeftAsideSwitch from "./DocsLeftAsideSwitch"
 
 const base = import.meta.env.BASE_URL
 const allDocs = await getCollection("docs");
 ---
 
-<nav>
-    <ul class="p-4 text-2xl">
+<nav class="h-full flex flex-col">
+    <ul id="docs-nav-list" class="w-[18rem] p-8 text-2xl grow overflow-y-auto">
         <li class="hover:text-ark-blue duration-300">
             <a target="_self" href={base + "docs/"}>开始</a>
         </li>
@@ -20,4 +20,5 @@ const allDocs = await getCollection("docs");
                 </li>
         )}
     </ul>
+    <DocsLeftAsideSwitch client:load/>
 </nav>
