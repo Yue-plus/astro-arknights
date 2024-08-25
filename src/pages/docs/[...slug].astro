@@ -2,8 +2,8 @@
 import {getCollection, getEntry} from 'astro:content'
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
-import DocsLeftAside from "../../components/DocsLeftAside.astro";
-
+import DocsLeftAside from "../../components/DocsLeftAside.astro"
+import DocumentIndexUL from "../../components/DocumentIndexUL.astro"
 
 export async function getStaticPaths() {
     const allDocs = await getCollection("docs");
@@ -22,7 +22,14 @@ const tabTitle = entry?.data?.title ?? "无标题"
 <InfoLayout title="DOCS" subTitle="文档" tabTitle={tabTitle + " - 文档"}>
     <DocsLeftAside slot="left-aside"/>
 
-    <article class="max-w-[80.75rem] h-full mx-auto overflow-y-auto">
+    <details class="pb-8 landscape:hidden">
+        <summary class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">
+            Document Index - 文档索引
+        </summary>
+        <DocumentIndexUL {...{headings}} />
+    </details>
+
+    <article class="max-w-[80.75rem] landscape:h-full mx-auto overflow-y-auto transition-[height] duration-300">
         <!--<Debug {allDocs}/>-->
         <Content/>
     </article>
@@ -31,14 +38,6 @@ const tabTitle = entry?.data?.title ?? "无标题"
         <h2 class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">
             Document Index - 文档索引
         </h2>
-
-        <!-- TODO: 跟随正文滚动、当前阅读段落标题高亮 -->
-        <ul class="h-full mt-[.8rem] overflow-x-hidden overflow-y-auto">{headings.map((item, index) =>
-                <li class="hover:text-ark-blue" style={{paddingLeft: .8 * item.depth + "rem"}}>
-                    <a href={"#" + item.slug} class="text-2xl">
-                        {item.text}
-                    </a>
-                </li>
-        )}</ul>
+        <DocumentIndexUL {...{headings}} />
     </nav>
 </InfoLayout>

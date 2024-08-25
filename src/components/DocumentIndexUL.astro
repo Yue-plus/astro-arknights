@@ -1,0 +1,21 @@
+---
+import type {MarkdownHeading} from "astro";
+
+interface Props {
+    headings: MarkdownHeading[]
+}
+
+const headings = Astro.props.headings
+
+// TODO: 添加类似 header/NavMenu 的动效
+// TODO: 跟随正文滚动、当前阅读段落标题高亮
+---
+
+<ul class="h-full text-[18px] mt-[.8rem] overflow-x-hidden overflow-y-auto">
+    {headings.map((item, index) =>
+            <li class="hover:text-ark-blue" style={{paddingLeft: 1.45 * item.depth + "rem"}}>
+                <a target="_self" href={"#" + item.slug}>
+                    {item.text}
+                </a>
+            </li>)}
+</ul>
