@@ -23,12 +23,8 @@ export default function Index() {
     const [active, setActive] = useState(false)
 
     useEffect(() => {
-        if ($viewIndex === 0) {
-            directions.set({top: false, right: true, bottom: true, left: false})
-            setActive(true)
-        } else {
-            setActive(false)
-        }
+        setActive($viewIndex === 0)
+        active && directions.set({top: false, right: true, bottom: true, left: false})
     }, [$viewIndex])
 
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
