@@ -12,7 +12,7 @@ export default function NavItem({index, info}: {index: number, info: NavbarItem}
     }, [$viewIndex])
 
     return <li className={liClassName} onClick={() => viewIndex.set(index)}>
-        <a href={info.href} className="text-left">
+        <a target="_self" href={info.href} className="text-left">
             <div className="font-oswaldMedium text-[1.375rem]">{info.title}</div>
             <div className="text-[0.875rem]">{info.subtitle}</div>
         </a>
