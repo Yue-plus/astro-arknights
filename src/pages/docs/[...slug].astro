@@ -27,18 +27,21 @@ const tabTitle = entry?.data?.title ?? "无标题"
         <DocsLeftAsideSwitch client:load/>
     </nav>
 
-    <details class="pb-8 landscape:hidden">
-        <summary class="text-black bg-white text-[24px] font-bold px-3 font-oswaldMedium">
-            Document Index - 文档索引
-        </summary>
-        <DocsLeftAside/>
-        <hr/>
-        <DocumentIndexUL {...{headings}} />
-    </details>
-    <article class="max-w-[80.75rem] landscape:h-full mx-auto overflow-y-auto transition-[height] duration-300">
+    <div id="docs-content"
+         class="max-w-[80.75rem] h-full mx-auto overflow-y-auto transition-[height] duration-300">
         <!--<Debug {allDocs}/>-->
-        <Content/>
-    </article>
+        <details class="pb-8 landscape:hidden">
+            <summary class="text-black bg-white text-[24px] font-bold px-3 font-oswaldMedium">
+                Document Index - 文档索引
+            </summary>
+            <DocsLeftAside/>
+            <hr/>
+            <DocumentIndexUL {...{headings}} />
+        </details>
+        <article>
+            <Content/>
+        </article>
+    </div>
 
     <nav slot="aside-header">
         <h2 class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">

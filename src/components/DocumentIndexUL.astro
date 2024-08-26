@@ -13,7 +13,7 @@ const headings = Astro.props.headings
 
 <ul class="h-full text-[18px] mt-[.8rem] overflow-x-hidden overflow-y-auto">
     {headings.map((item, index) =>
-            <li class="hover:text-ark-blue" style={{paddingLeft: 1.45 * item.depth + "rem"}}>
+            <li class="hover:text-ark-blue line-clamp-3" style={{paddingLeft: 1.45 * item.depth + "rem"}}>
                 <a target="_self" href={"#" + item.slug}>
                     {item.text}
                 </a>

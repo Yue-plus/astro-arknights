@@ -24,18 +24,20 @@ const goBackHref = Astro.props.goBackHref
         <PageTracker client:only="react"/>
     </div>
     <LineDecorator client:only="react"/>
-    <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
+    <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem] break-words hyphens-auto text-ellipsis">
         {
             // TODO: 左侧栏竖屏适配
 
             Astro.slots.has("left-aside") &&
-                <aside class="shrink-0 overflow-y-auto hidden sm:block">
+                <aside id="info-layout-left-aside-slot"
+                       class="shrink-0 overflow-y-auto hidden sm:block">
                     <slot name="left-aside"/>
                 </aside>
         }
 
-        <main class="pb-[4.5rem] portrait:pt-[2.5rem] pl-8 portrait:pl-[1.875rem] portrait:pb-[12rem] box-border grow break-words hyphens-auto overflow-y-auto">
-            <div class="w-full h-full overflow-x-hidden overflow-y-auto"
+        <main class="pb-[4.5rem] portrait:pt-[2.5rem] pl-8 portrait:pl-[1.875rem] portrait:pb-[12rem] box-border grow overflow-y-auto">
+            <div id="info-layout-main-slot"
+                 class="w-full h-full overflow-x-hidden overflow-y-auto"
                  style={{
                      // TODO: 上边框也添加渐变
                      mask: "linear-gradient(0deg, transparent, #000 1rem)"
@@ -45,7 +47,8 @@ const goBackHref = Astro.props.goBackHref
         </main>
 
         <aside class="w-[25.5rem] flex flex-col items-end justify-between portrait:hidden">
-            <header class="overflow-y-auto grow portrait:hidden">
+            <header id="info-layout-right-aside-header-slot"
+                    class="w-full h-full overflow-y-auto grow portrait:hidden">
                 <slot name="aside-header"/>
             </header>
 
@@ -59,7 +62,8 @@ const goBackHref = Astro.props.goBackHref
                 </div>
             </div>
 
-            <footer class="w-full mt-8 mb-[13.25rem] pr-[2.625rem] box-border flex flex-col items-end">
+            <footer id="info-layout-right-aside-footer-slot"
+                    class="w-full mt-8 mb-[13.25rem] pr-[2.625rem] box-border flex flex-col items-end">
                 <slot name="aside-footer"/>
             </footer>
         </aside>
@@ -67,10 +71,10 @@ const goBackHref = Astro.props.goBackHref
 
     {
         Astro.slots.has("tool-panel") &&
-            <div class="h-[3.75rem] mb-[5.75rem] fixed bottom-0 left-0 landscape:left-auto landscape:right-0">
+            <div id="info-layout-tool-panel-slot"
+                 class="h-[3.75rem] mb-[5.75rem] fixed bottom-0 left-0 landscape:left-auto landscape:right-0">
                 <slot name="tool-panel"/>
             </div>
-
     }
 
     <div class="flex justify-end mb-[9.5rem] portrait:mb-[5.75rem] fixed bottom-0 right-0 z-10">
