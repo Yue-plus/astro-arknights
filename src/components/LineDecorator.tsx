@@ -12,7 +12,8 @@ export default function LineDecorator() {
     const bottomClassName = useMemo(() =>
         base + (bottom ? "bottom-[11.25rem] portrait:bottom-[12rem] " : "-bottom-px ") + "w-full h-px", [bottom])
 
-    return <div className="w-full h-full absolute top-0 left-0 z-[3] pointer-events-none overflow-hidden">
+    return <div id="line-decorator"
+                className="w-full h-full absolute top-0 left-0 z-[3] pointer-events-none overflow-hidden">
         <div className={topClassName}/>
         <div className={rightClassName}/>
         <div className={bottomClassName}/>
