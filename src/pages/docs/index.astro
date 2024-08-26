@@ -3,15 +3,19 @@ import {getCollection, getEntry} from 'astro:content'
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
 import DocsLeftAside from "../../components/DocsLeftAside.astro"
+import DocsLeftAsideSwitch from "../../components/DocsLeftAsideSwitch";
 
 const base = import.meta.env.BASE_URL
 ---
 <InfoLayout title="DOCS" subTitle="文档" tabTitle="文档">
-    <DocsLeftAside slot="left-aside"/>
+    <nav slot="left-aside" class="h-full mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 flex flex-col">
+        <DocsLeftAside/>
+        <DocsLeftAsideSwitch client:load/>
+    </nav>
 
     <article class="h-full flex flex-col justify-center">
         <!--<Debug/>-->
-        <h1>Astro Arknights 文档</h1>
-        <p>指南、资源和 API 参考，帮助你使用 Astro 进行构建。</p>
+        <h1 class="font-benderBold">Astro Arknights 文档</h1>
+        <p class="font-benderRegular">指南、资源和 API 参考，帮助你使用 Astro 进行构建。</p>
     </article>
 </InfoLayout>

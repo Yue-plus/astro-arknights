@@ -36,7 +36,7 @@ function Navigation() {
         // TODO: 此处可以服务端渲染
         arknightsConfig.navbar.items.map((item, index) => {
             delay += 70
-            return <a key={index} href={item.href}
+            return <a key={index} target="_self" href={item.href}
                       onClick={_ => isNavMenuOpen.set(!$isNavMenuOpen)}
                       className={"h-[7.5rem] flex items-center justify-between transition ease-in-out duration-200"}
                       aria-label={item.title + " - " + item.subtitle}

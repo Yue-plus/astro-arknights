@@ -16,19 +16,20 @@ const title = Astro.props.title ?? "INFO"
 const subTitle = Astro.props.subTitle ?? "情报中心"
 const tabTitle = Astro.props.tabTitle ?? "情报中心"
 const goBackHref = Astro.props.goBackHref
-const hasLeftAsideSlot = Astro.slots.has("left-aside")
 ---
 
 <RootLayout title={tabTitle}>
     <!-- TODO: Canvas 动态背景 -->
-    <div class="landscape:hidden"><PageTracker client:only="react"/></div>
+    <div class="landscape:hidden">
+        <PageTracker client:only="react"/>
+    </div>
     <LineDecorator client:only="react"/>
     <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem]">
         {
             // TODO: 左侧栏竖屏适配
 
-            hasLeftAsideSlot &&
-                <aside class="mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 shrink-0 overflow-y-auto hidden sm:block">
+            Astro.slots.has("left-aside") &&
+                <aside class="shrink-0 overflow-y-auto hidden sm:block">
                     <slot name="left-aside"/>
                 </aside>
         }
@@ -63,6 +64,14 @@ const hasLeftAsideSlot = Astro.slots.has("left-aside")
             </footer>
         </aside>
     </div>
+
+    {
+        Astro.slots.has("tool-panel") &&
+            <div class="h-[3.75rem] mb-[5.75rem] fixed bottom-0 left-0 landscape:left-auto landscape:right-0">
+                <slot name="tool-panel"/>
+            </div>
+
+    }
 
     <div class="flex justify-end mb-[9.5rem] portrait:mb-[5.75rem] fixed bottom-0 right-0 z-10">
         <a href={goBackHref ? goBackHref : base} target="_self"

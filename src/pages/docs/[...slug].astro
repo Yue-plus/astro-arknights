@@ -3,7 +3,9 @@ import {getCollection, getEntry} from 'astro:content'
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
 import DocsLeftAside from "../../components/DocsLeftAside.astro"
+import DocsToolPanel from "../../components/DocsToolPanel"
 import DocumentIndexUL from "../../components/DocumentIndexUL.astro"
+import DocsLeftAsideSwitch from "../../components/DocsLeftAsideSwitch";
 
 export async function getStaticPaths() {
     const allDocs = await getCollection("docs");
@@ -20,15 +22,19 @@ const tabTitle = entry?.data?.title ?? "无标题"
 ---
 
 <InfoLayout title="DOCS" subTitle="文档" tabTitle={tabTitle + " - 文档"}>
-    <DocsLeftAside slot="left-aside"/>
+    <nav slot="left-aside" class="h-full mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 flex flex-col">
+        <DocsLeftAside/>
+        <DocsLeftAsideSwitch client:load/>
+    </nav>
 
     <details class="pb-8 landscape:hidden">
         <summary class="text-black bg-white text-[24px] font-bold px-3 font-oswaldMedium">
             Document Index - 文档索引
         </summary>
+        <DocsLeftAside/>
+        <hr/>
         <DocumentIndexUL {...{headings}} />
     </details>
-
     <article class="max-w-[80.75rem] landscape:h-full mx-auto overflow-y-auto transition-[height] duration-300">
         <!--<Debug {allDocs}/>-->
         <Content/>
@@ -40,4 +46,6 @@ const tabTitle = entry?.data?.title ?? "无标题"
         </h2>
         <DocumentIndexUL {...{headings}} />
     </nav>
+
+    <DocsToolPanel slot="tool-panel" client:load/>
 </InfoLayout>
