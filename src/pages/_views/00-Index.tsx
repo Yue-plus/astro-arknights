@@ -20,11 +20,12 @@ function HeroActionButton({icon, label, subLabel, target, href, className}: Hero
 export default function Index() {
     const {title, subtitle, url, copyright} = arknightsConfig.rootPage.INDEX
     const $viewIndex = useStore(viewIndex)
-    const [active, setActive] = useState(false)
+    const [active, setActive] = useState($viewIndex === 0)
 
     useEffect(() => {
-        setActive($viewIndex === 0)
-        active && directions.set({top: false, right: true, bottom: true, left: false})
+        const isActive = $viewIndex === 0
+        if (isActive) directions.set({top: false, right: true, bottom: true, left: false})
+        setActive(isActive)
     }, [$viewIndex])
 
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
