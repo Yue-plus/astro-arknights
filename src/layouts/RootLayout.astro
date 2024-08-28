@@ -1,4 +1,5 @@
 ---
+import type {SubNavigationItem} from "../_types/SubNavigationItem";
 import "../_styles/base.css"
 import FontFace from "../_styles/FontFace.astro"
 import Scrollbar from "../_styles/Scrollbar.astro"
@@ -13,10 +14,11 @@ interface Props {
     lang?: string
     title?: string
     description?: string
+    subNavigationItems?: SubNavigationItem[]
 }
 
 const base = import.meta.env.BASE_URL
-const {lang, title, description} = Astro.props;
+const {lang, title, description, subNavigationItems} = Astro.props
 ---
 
 <!DOCTYPE html>
@@ -38,7 +40,7 @@ const {lang, title, description} = Astro.props;
     <div class="relative w-full h-full m-auto max-w-[180rem]">
         <Header/>
         <slot/>
-        <Menu client:only="react"/>
+        <Menu client:only="react" {...{subNavigationItems}}/>
         <ToolBox client:load/>
         <OwnerInfo client:load/>
     </div>

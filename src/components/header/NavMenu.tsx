@@ -1,8 +1,9 @@
-import React from "react";
-import {IconBiliBili, IconGitHub, IconSkland, IconTapTap, IconWechat, IconWeibo} from "../SvgIcons";
-import {useStore} from "@nanostores/react";
-import {isNavMenuOpen, viewIndex} from "../store/rootLayoutStore.ts";
-import arknightsConfig from "../../../arknights.config.tsx";
+import React, {useEffect, useState} from "react"
+import {useStore} from "@nanostores/react"
+import type {SubNavigationItem} from "../../_types/SubNavigationItem.ts"
+import {IconArrow, IconBiliBili, IconGitHub, IconSkland, IconTapTap, IconWechat, IconWeibo} from "../SvgIcons"
+import {isNavMenuOpen, viewIndex} from "../store/rootLayoutStore.ts"
+import arknightsConfig from "../../../arknights.config.tsx"
 
 export default function NavMenu() {
     const LineClassName: React.ComponentProps<"div">["className"] =
@@ -27,9 +28,14 @@ export default function NavMenu() {
     </div>
 }
 
-function Navigation() {
+function Navigation({showSubNavigation}: { showSubNavigation: boolean }) {
     const $viewIndex = useStore(viewIndex)
     const $isNavMenuOpen = useStore(isNavMenuOpen)
+    const [showItems, setShowItems] = useState(false)
+
+    useEffect(() => {
+        setShowItems($isNavMenuOpen && !showSubNavigation)
+    }, [$isNavMenuOpen, showSubNavigation])
 
     let delay = -70
     return <div className="pt-[1.25rem] pr-[2.25rem] pb-0 pl-[3.375rem]">{
@@ -44,19 +50,39 @@ function Navigation() {
                           color: $viewIndex === index ? "#19d1ff" : "inherit",
                           borderBottom: "1px solid hsla(0, 0%, 100%, .3)",
                           transitionDelay: delay + "ms",
-                          opacity: $isNavMenuOpen ? 1 : 0,
-                          transform: `translateX(${$isNavMenuOpen ? "0" : "20%"})`,
+                          opacity: showItems ? 1 : 0,
+                          transform: `translateX(${showItems ? "0" : "20%"})`,
                       }}>
                 <div className={`transition duration-300 text-4xl font-oswaldMedium`}>
                     {item.title}
                 </div>
                 <div className="h-full text-[1.75rem] relative flex items-center transition duration-300">
                     {item.subtitle}
-                    <div className="w-full h-[.375rem] absolute right-0 bottom-[-.1875rem] bg-[currentColor]"></div>
+                    <div className="w-full h-[.375rem] absolute right-0 bottom-[-.1875rem] bg-[currentColor]"/>
                 </div>
             </a>
         })
     }</div>
+}
+
+function SubNavigation({items, setShowSubNavigation}: {
+    items: SubNavigationItem[]
+    setShowSubNavigation: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+    return <div className="text-4xl font-benderBold overflow-y-auto">
+        <button className="w-full h-[4.5rem] text-left bg-[#5a5a5a] bg-opacity-80 block pl-[3.375rem]"
+                onClick={() => setShowSubNavigation(false)}>
+            <IconArrow className="h-[2.25rem] rotate-180 inline-block pl-9"/>
+            回到主菜单
+        </button>
+        <ul className="pt-[1.25rem] pr-[2.25rem] pb-0 pl-[3.375rem]">
+            {
+                items.map(({title, href}, index) => <li key={index} className="h-[4.5rem]">
+                    <a target="_self" {...{href}}>{title}</a>
+                </li>)
+            }
+        </ul>
+    </div>
 }
 
 function ToolBox() {
@@ -104,16 +130,26 @@ function ToolBox() {
     </div>
 }
 
-export function Menu() {
+export function Menu({subNavigationItems}: { subNavigationItems?: SubNavigationItem[] }) {
     const $isNavMenuOpen = useStore(isNavMenuOpen)
+    const [showSubNavigation, setShowSubNavigation] = useState(false)
+
+    useEffect(() => {
+        subNavigationItems && subNavigationItems.length > 0 && $isNavMenuOpen && setShowSubNavigation(true)
+    }, [$isNavMenuOpen]);
+
     return <div className={"w-full h-full absolute top-0 left-0 z-[22] overflow-hidden bg-black bg-opacity-90"
         + " transition-[opacity,visibility] ease-in-out duration-[600ms]"}
                 style={{opacity: $isNavMenuOpen ? 1 : 0, visibility: $isNavMenuOpen ? "visible" : "hidden"}}>
-        <div className="w-full h-px absolute left-0 top-[9.375rem] bg-[#4f4f4f]"></div>
+        <div className="w-full h-px absolute left-0 top-[9.375rem] bg-[#4f4f4f]"/>
         <div className="w-full h-full pt-[9.375rem] pr-[5.75rem] flex flex-col">
-            <Navigation/>
+            {
+                showSubNavigation && subNavigationItems && subNavigationItems.length > 0
+                    ? <SubNavigation items={subNavigationItems} {...{setShowSubNavigation}}/>
+                    : <Navigation {...{showSubNavigation}}/>
+            }
             <ToolBox/>
         </div>
-        <div className="w-px h-full absolute top-0 right-[5.75rem] bg-[#4f4f4f]"></div>
+        <div className="w-px h-full absolute top-0 right-[5.75rem] bg-[#4f4f4f]"/>
     </div>
 }
