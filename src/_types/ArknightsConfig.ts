@@ -8,6 +8,12 @@ export type NavbarItem = {
     href: string
 }
 
+export type OwnerInfoFooterLink = {
+    label: string,
+    url: string,
+    portraitHidden?: boolean
+}
+
 export type ArknightsConfig = {
     title: string
     description: string
@@ -29,6 +35,11 @@ export type ArknightsConfig = {
             Weibo?: string
             TapTap?: string
             GitHub?: string
+        }
+        ownerInfo: {
+            name?: string
+            slogan?: string
+            footerLinks?: OwnerInfoFooterLink[]
         }
     }
     pageTracker: {

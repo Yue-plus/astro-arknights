@@ -1,16 +1,18 @@
-import React from "react";
-import arknightsConfig from "../../arknights.config.tsx";
+import React from "react"
+import type {OwnerInfoFooterLink} from "../_types/ArknightsConfig.ts"
+import arknightsConfig from "../../arknights.config.tsx"
 import {
     IconArrow,
-    IconBiliBili, IconGitHub,
+    IconBiliBili,
+    IconGitHub,
     IconSkland,
     IconTapTap,
     IconWechat,
     IconWeibo,
-    LogoRhodesIsland
-} from "./SvgIcons";
-import {isOwnerInfoOpen} from "./store/rootLayoutStore.ts";
-import {useStore} from "@nanostores/react";
+    LogoRhodesIsland,
+} from "./SvgIcons"
+import {isOwnerInfoOpen} from "./store/rootLayoutStore.ts"
+import {useStore} from "@nanostores/react"
 
 
 function Divider({children, portraitHidden}: {
@@ -26,22 +28,44 @@ function Divider({children, portraitHidden}: {
 }
 
 function Welcome() {
+    const name = arknightsConfig?.navbar?.ownerInfo?.name
+        ? <div className="pb-5">
+            <img className="w-[12.5625rem] portrait:w-[21rem] h-auto ml-[1.5rem] portrait:ml-[5.5rem] block"
+                 src={import.meta.env.BASE_URL + "images/passport.png"}
+                 alt="通行证"/>
+            <div
+                className="text-[1rem] portrait:text-[1.75rem] mt-[-3.5rem] portrait:mt-[-5.75rem] ml-8 portrait:ml-[6.5rem]">
+                <div className="h-6 portrait:h-8 bg-[#232323] px-3 inline-flex items-center"
+                     style={{boxShadow: "0 .75rem .5rem rgba(0, 0, 0, .5)"}}>
+                    {arknightsConfig.navbar.ownerInfo.name}
+                </div>
+            </div>
+        </div>
+        : <img
+            className="w-[12.5625rem] portrait:w-[21rem] h-auto ml-[1.5rem] portrait:ml-[5.5rem] block"
+            src={import.meta.env.BASE_URL + "images/no_account_info.png"}
+            alt="无账号信息"/>
+
+    const slogan = arknightsConfig?.navbar?.ownerInfo?.slogan
+        ? <div
+            className="w-[10.75rem] portrait:w-[17.75rem] text-[1rem] portrait:text-[1.625rem] font-bold mt-8 ml-11 portrait:ml-[8.5rem] break-words hyphens-auto text-ellipsis">
+            {/* TODO: 换个字体 */}
+            {arknightsConfig.navbar.ownerInfo.slogan}
+        </div>
+        : <img className="w-[10.75rem] portrait:w-[17.75rem] h-auto ml-[2.875rem] portrait:ml-[8rem] block"
+               src={import.meta.env.BASE_URL + "images/stroke_text-rhodes_island.png"}
+               alt="Rhodes Island"/>
+
     return <>
         <Divider>WELCOME</Divider>
         <div className={"h-[24rem] portrait:h-[32rem] relative"}>
             <div className={"w-full absolute top-[2.375rem] portrait:top-[1rem]"}>
-                <img className={"w-[12.5625rem] portrait:w-[21rem] h-auto ml-[1.5rem] portrait:ml-[5.5rem] block"}
-                     src={import.meta.env.BASE_URL + "images/no_account_info.png"}
-                     alt="无账号信息"/>
-                <img className={"w-[10.75rem] portrait:w-[17.75rem] h-auto ml-[2.875rem] portrait:ml-[8rem] block"}
-                     src={import.meta.env.BASE_URL + "images/stroke_text-rhodes_island.png"}
-                     alt="Rhodes Island"/>
-                <div className={"text-[1.125rem] portrait:text-[1.875rem]"
-                    + " ml-[2.875rem] portrait:ml-[8rem] mt-[.25rem] font-bold"}>Please login.
-                </div>
-                <div className={"text-[1rem] portrait:text-[1.625rem]"
-                    + " ml-[2.875rem] portrait:ml-[8rem]"}>请先登入您的账号。
-                </div>
+                {name}
+                {slogan}
+                {/*
+                <div className="text-[1.125rem] portrait:text-[1.875rem] ml-[2.875rem] portrait:ml-[8rem] mt-[.25rem] font-bold">Please login.</div>
+                <div className="text-[1rem] portrait:text-[1.625rem] ml-[2.875rem] portrait:ml-[8rem]">请先登入您的账号。</div>
+                */}
             </div>
         </div>
     </>
@@ -89,17 +113,10 @@ function ToolBox() {
     </>
 }
 
-function BoxButton({label, url, portraitHidden}: {
-    label: string
-    url: string
-    portraitHidden?: boolean
-}) {
-    return <a href={url} className={"h-[1.5rem] portrait:h-[2.5rem]"
-        + " mt-[1rem] portrait:mt-[1.5rem] px-[1.25rem] portrait:px-[2rem]"
-        + " text-white hover:text-black bg-black hover:bg-white flex items-center justify-between"
-        + " transition duration-300 cursor-pointer portrait:text-[1.625rem]"
-        + (portraitHidden ? " portrait:hidden" : "")}>
-        <span style={{fontFamily: "SourceHanSans-Medium"}}>{label}</span>
+function FooterLink({label, url, portraitHidden}: OwnerInfoFooterLink) {
+    return <a href={url} className={(portraitHidden ? "portrait:hidden " : "")
+        + "h-[1.5rem] portrait:h-[2.5rem] mt-[1rem] portrait:mt-[1.5rem] px-[1.25rem] portrait:px-[2rem] text-white portrait:text-[1.625rem] hover:text-black bg-black hover:bg-white flex items-center justify-between transition duration-300 cursor-pointer"}>
+        <span className="font-benderBold">{label}</span>
         <IconArrow className="w-[.5rem] pointer-events-none"/>
     </a>
 }
@@ -139,9 +156,17 @@ export default function OwnerInfo(): React.JSX.Element {
             <div className={"w-full absolute left-0 bottom-0 portrait:static portrait:mb-[3.75rem]"}>
                 <div className={"relative portrait:static pl-[2.5rem] pr-[1.25rem]"
                     + " portrait:pl-[8rem] portrait:pr-[6.75rem]"}>
+                    {
+                        // TODO: 感觉有点和上面 <ToolBox/> 功能重复
+                        arknightsConfig?.navbar?.ownerInfo?.footerLinks?.map((item, index) =>
+                            <FooterLink key={index} {...item}/>) ?? null
+                    }
+
+                    {/*
                     <BoxButton label="客服中心" url="" portraitHidden/>
                     <BoxButton label="立即登入" url=""/>
                     <BoxButton label="前往注册" url=""/>
+                    */}
                 </div>
                 <CloseButton/>
             </div>

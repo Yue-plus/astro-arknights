@@ -79,7 +79,7 @@ const subNavigationItems = Astro.props.subNavigationItems
                 <slot name="tool-panel"/>
             </div>
     }
-
+    <!-- TODO: ↑↓ 两个合并为一个 ToolPanel 统一布局 -->
     <div class="flex justify-end mb-[9.5rem] portrait:mb-[5.75rem] fixed bottom-0 right-0 z-10">
         <a href={goBackHref ? goBackHref : base} target="_self"
            class="w-[14.875rem] h-[3.75rem] text-inherit no-underline hover:text-black hover:bg-white bg-[#5a5a5a] px-[2.5rem] flex items-center justify-between cursor-pointer transition-[color,background-color] duration-300">

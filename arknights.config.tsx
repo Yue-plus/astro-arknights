@@ -35,6 +35,14 @@ export default {
             TapTap: "https://www.taptap.cn/",
             GitHub: "https://github.com/Yue-plus/astro-arknights",
         },
+        ownerInfo: {
+            name: "Yue_plus",
+            slogan: "一切不如意终将远去，未来风景独好。",
+            footerLinks: [
+                {label: "GitHub", url: "https://github.com/Yue-plus"},
+                {label: "Bilibili", url: "https://space.bilibili.com/28606851"},
+            ]
+        }
     },
     pageTracker: {
         microInfo: "ARKNIGHTS",
