@@ -1,6 +1,6 @@
-import {useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef} from "react";
 import {useStore} from "@nanostores/react";
-import {viewIndex} from "../../components/store/rootLayoutStore.ts";
+import {viewIndex, viewIndexSetNext, viewIndexSetPrev} from "../../components/store/rootLayoutStore.ts";
 import arknightsConfig from "../../../arknights.config.tsx";
 import RootPageViewTemplate from "./RootPageViewTemplate.tsx";
 import Index from "./00-Index.tsx";
@@ -13,7 +13,7 @@ import More from "./05-More.tsx";
 export default function RootPageViews() {
     const $viewIndex = useStore(viewIndex)
 
-    // 首次挂载组件通过当前锚点设置 viewIndex
+//// 首次挂载组件通过当前锚点设置 viewIndex
     useEffect(() => {
         const HASH = location.hash.split("#")[1];
         const INDEX = arknightsConfig.navbar.items.findIndex(item =>
@@ -21,10 +21,31 @@ export default function RootPageViews() {
         viewIndex.set(INDEX === -1 ? 0 : INDEX)
     }, [])
 
+//// 响应移动端上下滑动手势
+    const startTouchY = useRef(0)
+
+    const handleTouchStart = useCallback((event: TouchEvent) => startTouchY.current = event.touches[0].clientY, [])
+
+    const handleTouchEnd = useCallback((event: TouchEvent) => {
+        const diffY = startTouchY.current - event.changedTouches[0].clientY
+        if (Math.abs(diffY) > 160) diffY > 0 ? viewIndexSetNext() : viewIndexSetPrev()
+    }, [viewIndexSetNext, viewIndexSetPrev])
+
+    useEffect(() => {
+        const rootElement = document.getElementById("root-page-views")
+
+        rootElement!.addEventListener("touchstart", handleTouchStart)
+        rootElement!.addEventListener("touchend", handleTouchEnd)
+
+        return () => {
+            rootElement!.removeEventListener("touchstart", handleTouchStart)
+            rootElement!.removeEventListener("touchend", handleTouchEnd)
+        }
+    }, [handleTouchStart, handleTouchEnd])
+
+//// 响应鼠标滚轮
     // 上次鼠标滚轮使用时间戳
     const lastScrollTime = useRef(0);
-
-    // TODO: 响应移动端上下滑动手势
 
     // 监听鼠标滚轮修改 viewIndex；限制修改间隔为一秒；
     useEffect(() => {
@@ -46,7 +67,7 @@ export default function RootPageViews() {
         return () => document.getElementById("root-page-views")!.removeEventListener("wheel", handleScroll);
     }, [$viewIndex])
 
-    // 监听锚点链接改变修改 viewIndex
+//// 监听锚点链接改变修改 viewIndex
     useEffect(() => {
         const handleHashChange = (hce: HashChangeEvent) => {
             const index: number = arknightsConfig.navbar.items.findIndex(item =>
