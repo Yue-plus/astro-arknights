@@ -6,9 +6,9 @@ const allDocs = await getCollection("docs");
 ---
 
 <ul id="docs-nav-list" class="w-[18rem] p-8 text-[18px] grow overflow-y-auto">
-    <li class="hover:text-ark-blue duration-300">
-        <a target="_self" href={base + "docs/"}>开始</a>
-    </li>
+    <!--<li class="hover:text-ark-blue duration-300">-->
+    <!--    <a target="_self" href={base + "docs/"}>开始</a>-->
+    <!--</li>-->
     {allDocs.map(({id, slug, body, collection, data}, index) =>
             <li class="hover:text-ark-blue line-clamp-3 duration-300">
                 <!-- TODO: 按文件夹分层可折叠 -->

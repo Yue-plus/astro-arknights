@@ -128,7 +128,7 @@ const subNavigationItems = Astro.props.subNavigationItems
 
     ::selection {
       color: black;
-      background-color: #18deff;
+      background-color: #fe2;
     }
 
     h1 {
@@ -168,7 +168,11 @@ const subNavigationItems = Astro.props.subNavigationItems
     }
 
     p {
-      padding-bottom: 1rem;
+      margin: .3rem 0;
+
+      img {
+        display: inline-block;
+      }
     }
 
     ul {
@@ -181,9 +185,16 @@ const subNavigationItems = Astro.props.subNavigationItems
       }
     }
 
+    ol {
+      margin: 1rem 0;
+      padding-left: 2.5rem;
+      list-style: decimal outside;
+    }
+
     a {
       color: #18d1ff;
       padding: 0 3px;
+      display: inline-block;
       transition: color, background-color;
       transition-duration: 300ms;
 
@@ -202,10 +213,10 @@ const subNavigationItems = Astro.props.subNavigationItems
     }
 
     blockquote {
-      background-color: rgba(black, .3);
-      margin: 2rem 0;
-      border-left: .5rem solid #18d1ff;
-      padding: 1rem 2rem;
+      /*background-color: rgba(black, .2);*/
+      margin: .5rem 0;
+      border-left: .25rem solid #5a5a5a;
+      padding: .3rem .6rem;
       box-sizing: border-box;
     }
 
@@ -213,7 +224,6 @@ const subNavigationItems = Astro.props.subNavigationItems
       code {
         background-color: rgba(255, 255, 255, 0.125);
         padding: 0 3px;
-
       }
     }
 
@@ -221,7 +231,7 @@ const subNavigationItems = Astro.props.subNavigationItems
       margin: 1rem 0;
       padding: 1rem 2rem;
       box-sizing: border-box;
-      /* TODO: 中英文等宽字体、复制代码按钮、切换自动换行按钮 */
+      /* TODO: 显示行号、可设置高亮行、中英文等宽字体、复制代码按钮、切换自动换行按钮、可折叠、 */
     }
   }
 </style>
