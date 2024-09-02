@@ -23,7 +23,7 @@ The project is under development... / 项目开发中……
 [![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/Yue-plus/astro-arknights)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Yue-plus/astro-arknights)
 
-## Try Localhost
+## Try Localhost - 本地运行
 
 ```shell
 git clone https://github.com/Yue-plus/astro-arknights.git --depth=1
@@ -34,6 +34,29 @@ pnpm dev
 
 <http://localhost:4321>
 
+## License - 许可证
+
+The code part uses [MIT License];
+代码部分使用 [MIT License]；
+
+All content in the [Content Collections (`src/content`)](https://github.com/Yue-plus/astro-arknights/tree/main/src/content) uses
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">
+    CC BY-NC-SA 4.0
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt="">
+</a>；
+[内容集合（`src/content`）](https://github.com/Yue-plus/astro-arknights/tree/main/src/content) 内的所有内容使用
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">
+    CC BY-NC-SA 4.0
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt="">
+    <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt="">
+</a>；
+
 
 
 [AstroArknights]: https://github.com/Yue-plus/astro-arknights
+[MIT License]: https://github.com/Yue-plus/astro-arknights/blob/main/LICENSE
