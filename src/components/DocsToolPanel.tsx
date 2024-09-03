@@ -1,4 +1,5 @@
 import {IconArrow} from "./SvgIcons.tsx";
+import GoBackTool from "./GoBackTool.tsx";
 
 function ToTop() {
     return <div
@@ -12,6 +13,7 @@ function ToTop() {
 export default function DocsToolPanel() {
     // TODO: 文档索引、回到顶部、沉浸模式
     return <>
+        <GoBackTool/>
         <ToTop/>
     </>
 }

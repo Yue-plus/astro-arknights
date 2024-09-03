@@ -1,0 +1,55 @@
+---
+import type {MarkdownHeading} from "astro"
+import type {SubNavigationItem} from "../_types/SubNavigationItem"
+import InfoLayout from "./InfoLayout.astro"
+import DocsLeftAside from "../components/DocsLeftAside.astro"
+import DocsLeftAsideSwitch from "../components/DocsLeftAsideSwitch"
+import DemoSubNavigationItems from "../components/DemoSubNavigationItems"
+import DocumentIndexUL from "../components/DocumentIndexUL.astro"
+import DocsToolPanel from "../components/DocsToolPanel"
+
+interface Props {
+    title?: string
+    subNavigationItems?: SubNavigationItem[]
+    headings?: MarkdownHeading[]
+}
+
+const {title, subNavigationItems, headings} = Astro.props
+const tabTitle = title ? title + " - 文档" : "文档"
+---
+
+<InfoLayout title="DOCS" subTitle="文档" {...{tabTitle, subNavigationItems}}>
+    <nav slot="left-aside"
+         class="h-full mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 flex flex-col">
+        <DocsLeftAside/>
+        <DocsLeftAsideSwitch client:load/>
+    </nav>
+
+
+    <div id="docs-content"
+         class="max-w-[80.75rem] h-full mx-auto overflow-y-auto transition-[height] duration-300">
+        {/* TODO: 面包屑导航 */}
+        {
+            headings && headings.length > 0 &&
+                <details class="pb-8 landscape:hidden">
+                    <summary class="text-black bg-white text-[24px] font-bold px-3 font-oswaldMedium">
+                        Document Index - 文档索引
+                    </summary>
+                    <DocumentIndexUL {...{headings}}/>
+                </details>
+        }
+        <slot/>
+    </div>
+
+    {
+        headings && headings.length > 0 &&
+            <nav slot="aside-header">
+                <h2 class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">
+                    Document Index - 文档索引
+                </h2>
+                <DocumentIndexUL {...{headings}}/>
+            </nav>
+    }
+
+    <DocsToolPanel slot="tool-panel" client:load/>
+</InfoLayout>

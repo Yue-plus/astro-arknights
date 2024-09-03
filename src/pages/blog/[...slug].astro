@@ -2,6 +2,7 @@
 import {getCollection} from "astro:content";
 // import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro";
+import GoBackTool from "../../components/GoBackTool";
 
 export async function getStaticPaths() {
     const allBlog = await getCollection("blog")
@@ -18,9 +19,11 @@ const goBackHref = import.meta.env.BASE_URL + "blog"
 const tabTitle = entry?.data?.title ?? "无标题"
 ---
 
-<InfoLayout title="BLOG" subTitle="博客" {...{tabTitle, goBackHref}}>
+<InfoLayout title="BLOG" subTitle="博客" {...{tabTitle}}>
     <article class="max-w-[80.75rem] mx-auto">
         <Content/>
     </article>
     <!--<Debug {entry} />-->
+
+    <GoBackTool slot="tool-panel" client:load {...{goBackHref}}/>
 </InfoLayout>

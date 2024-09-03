@@ -2,10 +2,8 @@
 import {getCollection} from 'astro:content'
 // import {Debug} from 'astro:components'
 import type {SubNavigationItem} from "../../_types/SubNavigationItem"
-import InfoLayout from "../../layouts/InfoLayout.astro"
-import DocsLeftAside from "../../components/DocsLeftAside.astro"
+import DocsLayout from "../../layouts/DocsLayout.astro"
 import DocsToolPanel from "../../components/DocsToolPanel"
-import DocumentIndexUL from "../../components/DocumentIndexUL.astro"
 import DocsLeftAsideSwitch from "../../components/DocsLeftAsideSwitch"
 
 export async function getStaticPaths() {
@@ -18,7 +16,7 @@ export async function getStaticPaths() {
 const base = import.meta.env.BASE_URL
 const {entry} = Astro.props
 const {Content, headings} = await entry.render()
-const tabTitle = entry?.data?.title ?? "无标题"
+const title = entry?.data?.title ?? "无标题"
 const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
     .map(({id, slug, body, collection, data}, index) => ({
         title: data.title ?? id,
@@ -26,34 +24,9 @@ const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
     }))
 ---
 
-<InfoLayout title="DOCS" subTitle="文档" tabTitle={tabTitle + " - 文档"} {...{subNavigationItems}}>
-    <nav slot="left-aside"
-         class="h-full mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 flex flex-col">
-        <DocsLeftAside/>
-        <DocsLeftAsideSwitch client:load/>
-    </nav>
-
-    <div id="docs-content"
-         class="max-w-[80.75rem] h-full mx-auto overflow-y-auto transition-[height] duration-300">
+<DocsLayout {...{title, subNavigationItems, headings}}>
         <!--<Debug {allDocs}/>-->
-        <!-- TODO: 面包屑导航 -->
-        <details class="pb-8 landscape:hidden">
-            <summary class="text-black bg-white text-[24px] font-bold px-3 font-oswaldMedium">
-                Document Index - 文档索引
-            </summary>
-            <DocumentIndexUL {...{headings}}/>
-        </details>
         <article>
             <Content/>
         </article>
-    </div>
-
-    <nav slot="aside-header">
-        <h2 class="text-black bg-white text-[1.75rem] font-bold px-3 font-oswaldMedium">
-            Document Index - 文档索引
-        </h2>
-        <DocumentIndexUL {...{headings}}/>
-    </nav>
-
-    <DocsToolPanel slot="tool-panel" client:load/>
-</InfoLayout>
+</DocsLayout>

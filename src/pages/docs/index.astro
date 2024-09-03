@@ -2,7 +2,7 @@
 import {getCollection} from 'astro:content'
 // import {Debug} from 'astro:components'
 import type {SubNavigationItem} from "../../_types/SubNavigationItem"
-import InfoLayout from "../../layouts/InfoLayout.astro"
+import DocsLayout from "../../layouts/DocsLayout.astro"
 import DocsLeftAside from "../../components/DocsLeftAside.astro"
 import DocsLeftAsideSwitch from "../../components/DocsLeftAsideSwitch"
 import {IconArrow} from "../../components/SvgIcons"
@@ -15,13 +15,7 @@ const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
     }))
 ---
 
-<InfoLayout title="DOCS" subTitle="文档" tabTitle="文档" {...{subNavigationItems}}>
-    <nav slot="left-aside"
-         class="h-full mix-blend-difference bg-list-texture bg-cover bg-center bg-opacity-30 flex flex-col">
-        <DocsLeftAside/>
-        <DocsLeftAsideSwitch client:load/>
-    </nav>
-
+<DocsLayout title="首页" {...{subNavigationItems}}>
     <article class="h-full flex flex-col justify-center">
         <!--<Debug/>-->
         <h1 class="font-benderBold">Astro Arknights 文档</h1>
@@ -35,4 +29,4 @@ const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
             <IconArrow className="w-2 pointer-events-none"/>
         </a>
     </article>
-</InfoLayout>
+</DocsLayout>

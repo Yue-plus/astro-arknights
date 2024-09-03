@@ -2,12 +2,10 @@
 import InfoLayout from "../../layouts/InfoLayout.astro";
 import DemoSlotBlock from "../../components/DemoSlotBlock.astro";
 import {SubNavigationItem} from "../../_types/SubNavigationItem";
-
-const subNavigationItems: SubNavigationItem[] = [...Array(100)]
-    .map((item, index): SubNavigationItem => ({title: `子导航项 - ${index}`, href: ""}))
+import DemoSubNavigationItems from "../../components/DemoSubNavigationItems";
 ---
 
-<InfoLayout {...{subNavigationItems}}>
+<InfoLayout subNavigationItems={DemoSubNavigationItems}>
     <DemoSlotBlock slot="left-aside" title="LeftAsideSlot" fontSize="3rem"
                    background="linear-gradient(to bottom right, darkblue, darksalmon)"/>
 
