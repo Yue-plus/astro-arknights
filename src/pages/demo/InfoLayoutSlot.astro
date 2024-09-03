@@ -1,0 +1,25 @@
+---
+import InfoLayout from "../../layouts/InfoLayout.astro";
+import DemoSlotBlock from "../../components/DemoSlotBlock.astro";
+import {SubNavigationItem} from "../../_types/SubNavigationItem";
+
+const subNavigationItems: SubNavigationItem[] = [...Array(100)]
+    .map((item, index): SubNavigationItem => ({title: `子导航项 - ${index}`, href: ""}))
+---
+
+<InfoLayout {...{subNavigationItems}}>
+    <DemoSlotBlock slot="left-aside" title="LeftAsideSlot" fontSize="3rem"
+                   background="linear-gradient(to bottom right, darkblue, darksalmon)"/>
+
+    <DemoSlotBlock title="Slot" fontSize="25rem"
+                   background="linear-gradient(to bottom right, darkred, darkgreen)"/>
+
+    <DemoSlotBlock slot="aside-header" title="AsideHeaderSlot" fontSize="3rem"
+                   background="linear-gradient(to bottom right, DarkSlateGray, DarkOrchid)"/>
+
+    <DemoSlotBlock slot="aside-footer" title="AsideFooterSlot" fontSize="3rem"
+                   background="linear-gradient(to bottom right, DarkMagenta, DarkOliveGreen )"/>
+
+    <DemoSlotBlock slot="tool-panel" title="ToolPanelSlot" fontSize="3rem"
+                   background="linear-gradient(to bottom right, DarkGoldenRod, Crimson)"/>
+</InfoLayout>

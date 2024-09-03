@@ -75,7 +75,7 @@ const subNavigationItems = Astro.props.subNavigationItems
     {
         Astro.slots.has("tool-panel") &&
             <div id="info-layout-tool-panel-slot"
-                 class="h-[3.75rem] mb-[5.75rem] fixed bottom-0 left-0 landscape:left-auto landscape:right-0">
+                 class="h-[3.75rem] mb-[5.75rem] absolute bottom-0 right-0 z-10">
                 <slot name="tool-panel"/>
             </div>
     }

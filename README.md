@@ -47,6 +47,7 @@ All content in the [Content Collections (`src/content`)](https://github.com/Yue-
     <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt="">
     <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt="">
 </a>；
+
 [内容集合（`src/content`）](https://github.com/Yue-plus/astro-arknights/tree/main/src/content) 内的所有内容使用
 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">
     CC BY-NC-SA 4.0

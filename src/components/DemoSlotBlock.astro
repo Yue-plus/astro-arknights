@@ -1,0 +1,14 @@
+---
+interface Props {
+    title: string,
+    fontSize: string,
+    background: string,
+}
+
+const {title, fontSize, background} = Astro.props
+---
+
+<div class="w-full h-full font-benderBold flex items-center justify-center select-none"
+     style=`background: ${background}; font-size: ${fontSize};`>
+    {title}
+</div>
