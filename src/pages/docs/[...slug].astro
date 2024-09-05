@@ -3,12 +3,14 @@ import {getCollection} from 'astro:content'
 // import {Debug} from 'astro:components'
 import type {SubNavigationItem} from "../../_types/SubNavigationItem"
 import DocsLayout from "../../layouts/DocsLayout.astro"
-import DocsToolPanel from "../../components/DocsToolPanel"
-import DocsLeftAsideSwitch from "../../components/DocsLeftAsideSwitch"
 
 export async function getStaticPaths() {
     return (await getCollection("docs")).map(entry => ({
-        params: {slug: entry.slug.split("-").slice(1).join("-")},
+        params: {
+            slug: entry.slug.split("/").map((item, index, array) => {
+                return item.includes("_") ? item.split("_").slice(1).join() : item
+            }).join("/"),
+        },
         props: {entry},
     }))
 }
@@ -20,13 +22,15 @@ const title = entry?.data?.title ?? "无标题"
 const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
     .map(({id, slug, body, collection, data}, index) => ({
         title: data.title ?? id,
-        href: base + "docs/" + slug.split("-").slice(1).join("-"),
+        href: base + "docs/" + slug.split("/").map((item, index, array) => {
+            return item.includes("_") ? item.split("_").slice(1).join() : item
+        }).join("/"),
     }))
 ---
 
 <DocsLayout {...{title, subNavigationItems, headings}}>
-        <!--<Debug {allDocs}/>-->
-        <article>
-            <Content/>
-        </article>
+    <!--<Debug {allDocs}/>-->
+    <article>
+        <Content/>
+    </article>
 </DocsLayout>

@@ -12,7 +12,9 @@ const allDocs = await getCollection("docs");
     {allDocs.map(({id, slug, body, collection, data}, index) =>
             <li class="hover:text-ark-blue line-clamp-3 duration-300">
                 <!-- TODO: 按文件夹分层可折叠 -->
-                <a target="_self" href={base + "docs/" + slug.split("-").slice(1).join("-")}>
+                <a target="_self" href={base + "docs/" + slug.split("/").map((item, index, array) => {
+                    return item.includes("_") ? item.split("_").slice(1).join() : item
+                }).join("/")}>
                     {data.title ?? id}
                 </a>
             </li>
