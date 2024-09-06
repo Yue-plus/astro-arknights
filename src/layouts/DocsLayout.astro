@@ -4,18 +4,18 @@ import type {SubNavigationItem} from "../_types/SubNavigationItem"
 import InfoLayout from "./InfoLayout.astro"
 import DocsLeftAside from "../components/DocsLeftAside.astro"
 import DocsLeftAsideSwitch from "../components/DocsLeftAsideSwitch"
-import DemoSubNavigationItems from "../components/DemoSubNavigationItems"
 import DocumentIndexUL from "../components/DocumentIndexUL.astro"
 import DocsToolPanel from "../components/DocsToolPanel"
+import { getDocsSubNavigationItems } from "../components/DocsCollectionsUtils"
 
 interface Props {
     title?: string
-    subNavigationItems?: SubNavigationItem[]
     headings?: MarkdownHeading[]
 }
 
-const {title, subNavigationItems, headings} = Astro.props
+const {title, headings} = Astro.props
 const tabTitle = title ? title + " - 文档" : "文档"
+const subNavigationItems = getDocsSubNavigationItems()
 ---
 
 <InfoLayout title="DOCS" subTitle="文档" {...{tabTitle, subNavigationItems}}>
@@ -24,7 +24,6 @@ const tabTitle = title ? title + " - 文档" : "文档"
         <DocsLeftAside/>
         <DocsLeftAsideSwitch client:load/>
     </nav>
-
 
     <div id="docs-content"
          class="max-w-[80.75rem] h-full mx-auto overflow-y-auto transition-[height] duration-300">

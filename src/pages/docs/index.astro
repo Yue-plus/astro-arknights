@@ -1,22 +1,9 @@
 ---
-import {getCollection} from 'astro:content'
-// import {Debug} from 'astro:components'
-import type {SubNavigationItem} from "../../_types/SubNavigationItem"
 import DocsLayout from "../../layouts/DocsLayout.astro"
 import {IconArrow} from "../../components/SvgIcons"
-
-const base = import.meta.env.BASE_URL
-const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
-    .map(({id, slug, body, collection, data}, index) => ({
-        title: data.title ?? id,
-        href: base + "docs/" + slug.split("/").map((item, index, array) => {
-            return item.includes("_") ? item.split("_").slice(1).join() : item
-        }).join("/"),
-    }))
 ---
 
-<DocsLayout title="首页" {...{subNavigationItems}}>
-    <!--<Debug />-->
+<DocsLayout title="首页">
     <article class="h-full flex flex-col justify-center">
         <h1 class="font-benderBold">Astro Arknights 文档</h1>
         <p class="font-benderRegular">指南、资源和 API 参考，帮助你使用 Astro 进行构建。</p>

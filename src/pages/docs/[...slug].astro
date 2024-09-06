@@ -1,35 +1,23 @@
 ---
 import {getCollection} from 'astro:content'
 // import {Debug} from 'astro:components'
-import type {SubNavigationItem} from "../../_types/SubNavigationItem"
 import DocsLayout from "../../layouts/DocsLayout.astro"
+import {trimSlugPrefix} from '../../components/DocsCollectionsUtils'
 
 export async function getStaticPaths() {
     return (await getCollection("docs")).map(entry => ({
-        params: {
-            slug: entry.slug.split("/").map((item, index, array) => {
-                return item.includes("_") ? item.split("_").slice(1).join() : item
-            }).join("/"),
-        },
+        params: {slug: trimSlugPrefix(entry.slug)},
         props: {entry},
     }))
 }
 
-const base = import.meta.env.BASE_URL
 const {entry} = Astro.props
 const {Content, headings} = await entry.render()
-const title = entry?.data?.title ?? "无标题"
-const subNavigationItems: SubNavigationItem[] = (await getCollection("docs"))
-    .map(({id, slug, body, collection, data}, index) => ({
-        title: data.title ?? id,
-        href: base + "docs/" + slug.split("/").map((item, index, array) => {
-            return item.includes("_") ? item.split("_").slice(1).join() : item
-        }).join("/"),
-    }))
+const title = entry?.data?.title ?? headings[0]?.text ?? "无标题"
 ---
 
-<DocsLayout {...{title, subNavigationItems, headings}}>
-    <!--<Debug {allDocs}/>-->
+<DocsLayout {...{title, headings}}>
+    <!-- <Debug {entry}/> -->
     <article>
         <Content/>
     </article>
