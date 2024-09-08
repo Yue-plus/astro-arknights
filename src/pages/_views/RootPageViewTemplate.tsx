@@ -16,6 +16,9 @@ export default function RootPageViewTemplate({selfIndex, children}: { selfIndex:
         if (selfIndex > $viewIndex) return setLeft("auto")
     }, [selfIndex, $viewIndex])
 
-    return <div style={{width, left}} className={"w-0 h-full absolute top-0 right-0 bottom-0 left-0"
-        + " overflow-hidden transition-[width] duration-1000"}>{children}</div>
+    return <div
+        className="w-0 h-full absolute top-0 right-0 bottom-0 left-0 overflow-hidden transition-[width] duration-1000"
+        style={{width, left}}>
+        {children}
+    </div>
 }
