@@ -1,10 +1,8 @@
 ---
-import DocsLayout from "../../layouts/DocsLayout.astro";
-import DemoSlotBlock from "../../components/DemoSlotBlock.astro";
-import DemoSubNavigationItems from "../../components/DemoSubNavigationItems";
+import DocsLayout from "../../layouts/DocsLayout.astro"
+import DemoSlotBlock from "../../components/DemoSlotBlock.astro"
 ---
 
-<DocsLayout subNavigationItems={DemoSubNavigationItems}>
-    <DemoSlotBlock title="Slot" fontSize="25rem"
-                   background="linear-gradient(to bottom right, darkred, darkgreen)"/>
+<DocsLayout>
+    <DemoSlotBlock title="Slot" fontSize="25rem" background="linear-gradient(to bottom right, darkred, darkgreen)"/>
 </DocsLayout>
