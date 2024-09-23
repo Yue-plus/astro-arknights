@@ -206,6 +206,7 @@ export default function Information() {
 
     return <div
         className="w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto transition-opacity duration-100">
+        {/* TODO: 淡入淡出效果 */}
         <PortraitBottomGradientMask/>
         <SwiperBody {...{setSwiperIndex}} />
         <SwiperScrollbar/>

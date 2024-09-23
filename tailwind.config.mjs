@@ -42,6 +42,7 @@ export default {
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
 				"gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+				"2": `url(${astroConfig.base ?? ""}/images/bg2.png)`,
 				"index": `url(${astroConfig.base ?? ""}/images/index-bg.jpg)`,
 				"layout": `url(${astroConfig.base ?? ""}/images/layout-bg.jpg)`,
 				"common-mask": `url(${astroConfig.base ?? ""}/images/common_mask.png)`,
