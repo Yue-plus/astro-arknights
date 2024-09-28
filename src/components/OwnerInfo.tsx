@@ -136,13 +136,14 @@ export default function OwnerInfo(): React.JSX.Element {
         </div>
     }
 
-    return <aside className={"w-full h-full absolute top-0 left-0 z-[24] overflow-hidden transition duration-300"}
+    return <aside className={"w-full h-full absolute top-0 left-0 z-[24] overflow-hidden transition-opacity duration-300"}
                   style={{opacity: $isOwnerInfoOpen ? 1 : 0, visibility: $isOwnerInfoOpen ? "visible" : "hidden"}}>
         <div className={"w-full h-full absolute top-0 left-0 portrait:bg-black portrait:opacity-70"
-            + " transition duration-300"} onClick={() => isOwnerInfoOpen.set(!$isOwnerInfoOpen)}/>
+            + " transition-opacity duration-300"} onClick={() => isOwnerInfoOpen.set(!$isOwnerInfoOpen)}/>
         <div className={"w-[14.75rem] portrait:w-[32.5rem] h-full portrait:h-auto bg-ark-blue overflow-hidden"
-            + " absolute top-0 portrait:top-1/2 right-0 portrait:left-1/2 transition duration-300"
-            + " portrait:-translate-x-1/2 portrait:-translate-y-1/2 portrait:scale-100"}>
+            + " absolute top-0 portrait:top-1/2 right-0 portrait:left-1/2 transition-all duration-300"
+            + " portrait:-translate-x-1/2 portrait:-translate-y-1/2 portrait:scale-100"
+            + (($isOwnerInfoOpen ? "" : " translate-x-full portrait:translate-y-full"))}>
             <div className="w-full h-full absolute top-0 left-0">
                 <div className={"h-[59.375rem] portrait:h-[55rem] text-[#06bbff]"
                     + " absolute top-[-2rem] left-[-18.75rem] portrait:left-[-5rem] portrait:z-[-1]"}>

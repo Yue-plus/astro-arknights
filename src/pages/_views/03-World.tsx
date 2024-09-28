@@ -1,8 +1,116 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useStore} from "@nanostores/react";
-import {viewIndex} from "../../components/store/rootLayoutStore.ts";
-import {directions} from "../../components/store/lineDecoratorStore.ts";
-import {IconArrow} from "../../components/SvgIcons.tsx";
+import React, { useEffect, useRef, useState } from "react";
+import { useStore } from "@nanostores/react";
+import { viewIndex } from "../../components/store/rootLayoutStore.ts";
+import { directions } from "../../components/store/lineDecoratorStore.ts";
+import { IconArrow } from "../../components/SvgIcons.tsx";
+
+function List() {
+    const listRef = useRef<HTMLDivElement>(null);
+    const [activeImage, setActiveImage] = useState<string | null>(null);
+    const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
+    const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
+    const animationFrameRef = useRef<number | null>(null);
+    const isFirstMove = useRef(true); // 用一个变量来修复首次加载会导致图片位置错误的问题
+
+    const items = [
+        {title: "源石", subTitle: "ORIGINIUMS", imageUrl: "/images/03-world/originiums.png"},
+        {title: "源石技艺", subTitle: "ORIGINIUM ARTS", imageUrl: "/images/03-world/originium_arts.png"},
+        {title: "整合运动", subTitle: "REUNION", imageUrl: "/images/03-world/reunion.png"},
+        {title: "感染者", subTitle: "INFECTED", imageUrl: "/images/03-world/infected.png"},
+        {title: "移动城邦", subTitle: "NOMADIC CITY", imageUrl: "/images/03-world/nomadic_city.png"},
+        {title: "罗德岛", subTitle: "RHODES ISLAND", imageUrl: "/images/03-world/rhodes_island.png"},
+    ];
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (listRef.current) {
+            const rect = listRef.current.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const imgWidth = 1024;
+            const imgHeight = 1024;
+
+            const newPosition = {
+                x: x - imgWidth / 2 + 345,
+                y: y - imgHeight / 2
+            };
+
+            if (isFirstMove.current) {
+                setImagePosition(newPosition);
+                isFirstMove.current = false;
+            }
+
+            setTargetPosition(newPosition);
+
+            const itemHeight = rect.height / items.length;
+            const index = Math.floor(y / itemHeight);
+            if (index >= 0 && index < items.length) {
+                setActiveImage(items[index].imageUrl);
+            } else {
+                setActiveImage(null);
+            }
+        }
+    };
+
+    const handleMouseLeave = () => {
+        setActiveImage(null);
+        isFirstMove.current = true;
+    };
+
+    useEffect(() => {
+        const animatePosition = () => {
+            setImagePosition(prevPos => {
+                const dx = targetPosition.x - prevPos.x;
+                const dy = targetPosition.y - prevPos.y;
+                return {
+                    x: prevPos.x + dx * 0.1,
+                    y: prevPos.y + dy * 0.1
+                };
+            });
+            animationFrameRef.current = requestAnimationFrame(animatePosition);
+        };
+
+        if (activeImage) {
+            animationFrameRef.current = requestAnimationFrame(animatePosition);
+        }
+
+        return () => {
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+        };
+    }, [targetPosition, activeImage]);
+
+    return (
+        <div 
+            ref={listRef}
+            className="w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-[opacity,visibility] duration-[600ms] portrait:invisible portrait:opacity-0 z-[3]"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            {items.map(({title, subTitle}, index) => (
+                <Item key={index} delay={index * 200} title={title} subTitle={subTitle} />
+            ))}
+            {activeImage && (
+                <img 
+                    src={activeImage} 
+                    alt="Active item"
+                    className="absolute pointer-events-none transition-opacity duration-300 ease-out"
+                    style={{
+                        width: '1024px',
+                        height: '1024px',
+                        objectFit: 'cover',
+                        left: `${imagePosition.x}px`,
+                        top: `${imagePosition.y}px`,
+                        opacity: 1,
+                        zIndex: -1,
+                        filter: 'blur(0.2px)',
+                    }}
+                />
+            )}
+        </div>
+    );
+}
 
 function Item({title, subTitle, delay}: { title: string; subTitle: string, delay: number }) {
     const $viewIndex = useStore(viewIndex)
@@ -16,46 +124,45 @@ function Item({title, subTitle, delay}: { title: string; subTitle: string, delay
             : itemDom.current!.classList.add("-translate-x-full", "opacity-0")
     }, [$viewIndex]);
 
-    return <div ref={itemDom}
-                className="h-[6rem] pb-[.75rem] leading-[1] flex items-end relative transition-[transform,opacity] duration-[800ms] ease-in-out -translate-x-full opacity-0 cursor-pointer"
+    return (
+        <div 
+            ref={itemDom}
+            className="h-[6rem] pb-[.75rem] leading-[1] flex items-end relative transition-[transform,opacity] duration-[800ms] ease-in-out -translate-x-full opacity-0 cursor-pointer"
+            style={{
+                borderBottom: "1px solid #fff",
+                transitionDelay: delay + "ms",
+            }}
+            onMouseEnter={() => setActive(true)}
+            onMouseLeave={() => setActive(false)}
+        >
+            <div
+                className="text-[4.5rem] text-[rgba(24,209,255,.25)] font-n15eBold absolute right-[.75rem] bottom-[.75rem] transition-opacity duration-300"
+                style={{opacity: active ? "100" : "0"}}
+            >
+                {subTitle}
+            </div>
+            <div 
+                className="text-[2.5rem] font-bold relative transition-[color,transform] duration-300"
                 style={{
-                    borderBottom: "1px solid #fff",
-                    transitionDelay: delay + "ms",
+                    textShadow: "0 0 1em #000,0 0 1em #000",
+                    transform: active ? "translateX(2rem)" : "translateX(0)",
+                    color: active ? "#fff" : "#ababab",
                 }}
-                onMouseEnter={() => setActive(true)}
-                onMouseLeave={() => setActive(false)}>
-        <div
-            className="text-[4.5rem] text-[rgba(24,209,255,.25)] font-n15eBold absolute right-[.75rem] bottom-[.75rem] transition-opacity duration-300"
-            style={{opacity: active ? "100" : "0"}}>{subTitle}</div>
-        <div className="text-[2.5rem] font-bold relative transition-[color,transform] duration-300"
-             style={{
-                 textShadow: "0 0 1em #000,0 0 1em #000",
-                 transform: active ? "translateX(2rem)" : "translateX(0)",
-                 color: active ? "#fff" : "#ababab",
-             }}>{title}</div>
-        <div className="text-[1.25rem] font-n15eBold ml-[1.5rem] relative transition-[color,transform] duration-300"
-             style={{
-                 textShadow: "0 0 1em #000,0 0 1em #000",
-                 transform: active ? "translateX(2rem)" : "translateX(0)",
-                 color: active ? "#fff" : "#ababab",
-             }}>{subTitle}</div>
-    </div>
-}
-
-function List() {
-    return <div
-        className="w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-[opacity,visibility] duration-[600ms] portrait:invisible portrait:opacity-0 z-[3]">
-        {
-            [
-                {title: "源石", subTitle: "ORIGINIUMS"},
-                {title: "源石技艺", subTitle: "ORIGINIUM ARTS"},
-                {title: "整合运动", subTitle: "REUNION"},
-                {title: "感染者", subTitle: "INFECTED"},
-                {title: "移动城邦", subTitle: "NOMADIC CITY"},
-                {title: "罗德岛", subTitle: "RHODES ISLAND"},
-            ].map(({title, subTitle}, index) => <Item key={index} delay={index * 200} {...{title, subTitle}}/>)
-        }
-    </div>
+            >
+                {title}
+            </div>
+            <div 
+                className="text-[1.25rem] font-n15eBold ml-[1.5rem] relative transition-[color,transform] duration-300"
+                style={{
+                    textShadow: "0 0 1em #000,0 0 1em #000",
+                    transform: active ? "translateX(2rem)" : "translateX(0)",
+                    color: active ? "#fff" : "#ababab",
+                }}
+            >
+                {subTitle}
+            </div>
+        </div>
+    )
 }
 
 function Details({title, subTitle, description}: { title: string, subTitle: string, description: string }) {
@@ -118,6 +225,97 @@ function Details({title, subTitle, description}: { title: string, subTitle: stri
     </>
 }
 
+function AshParticles({ count = 20 }: { count?: number }) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles: {
+            x: number;
+            y: number;
+            size: number;
+            speed: number;
+            initialY: number;
+        }[] = [];
+
+        for (let i = 0; i < count; i++) {
+            const y = canvas.height + Math.random() * 100;
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: y,
+                initialY: y,
+                size: Math.random() * 1 + 1.2,
+                speed: Math.random() * 0.2
+            });
+        }
+
+        function easeOutCubic(t: number): number {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function animate() {
+            if (!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+            particles.forEach(particle => {
+                // 主粒子
+                ctx.globalAlpha = 0.7;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 模糊
+                for (let i = 0; i < 3; i++) {
+                    ctx.globalAlpha = 0.01;
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size + i * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                const totalDistance = canvas.height * 0.2;
+                const currentDistance = particle.initialY - particle.y;
+                const progress = Math.min(currentDistance / totalDistance, 1);
+                const easeProgress = easeOutCubic(progress);
+
+                const speed = particle.speed * (10 - 9 * easeProgress);
+                particle.y -= speed;
+
+                if (particle.y < 0) {
+                    particle.y = canvas.height;
+                    particle.x = Math.random() * canvas.width;
+                    particle.initialY = particle.y;
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        const handleResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [count]);
+
+    return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-[1]" />;
+}
+
 export default function World() {
     const $viewIndex = useStore(viewIndex)
     const world = useRef<HTMLDivElement>(null)
@@ -134,7 +332,7 @@ export default function World() {
     return <div
         className="w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto bg-[#272727] bg-2 bg-cover bg-[50%] transition-opacity duration-100">
         <div className="w-full h-full absolute left-0 bottom-0 bg-[#101010] opacity-85 pointer-events-none"/>
-        {/* TODO: <canvas/> */}
+        <AshParticles count={20} />
         <div
             className="w-full h-full absolute left-0 bottom-0 bg-common-mask bg-[length:100%_100%] mix-blend-overlay pointer-events-none z-[2]"/>
         <List/>
@@ -143,6 +341,6 @@ export default function World() {
             WORLD
         </div>
         <Details title="源石" subTitle="ORIGINIUMS"
-                 description="大地被起因不明的天灾四处肆虐，经由天灾席卷过的土地上出现了大量的神秘矿物——“源石”。依赖于技术的进步，源石蕴含的能量投入工业后使得文明顺利迈入现代，与此同时，源石本身也催生出“感染者”的存在。"/>
+                 description='大地被起因不明的天灾四处肆虐，经由天灾卷过的土地上出现了大量的神秘矿物——"源石"。依赖于技术的进步，源石蕴含的能量投入工业后使得文明顺利迈入现代，与此同时，源石本身也催生出"感染者"的存在。'/>
     </div>
 }
