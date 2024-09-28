@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
-import { viewIndex } from "../../components/store/rootLayoutStore.ts";
+import { viewIndex, readyToTouch } from "../../components/store/rootLayoutStore.ts";
 import { directions } from "../../components/store/lineDecoratorStore.ts";
 import { IconArrow } from "../../components/SvgIcons.tsx";
+import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
 
 const items = [
     {title: "源石", subTitle: "ORIGINIUMS", imageUrl: "/images/03-world/originiums.png", description: '大地被起因不明的天灾四处肆虐，经由天灾卷过的土地上出现了大量的神秘矿物——"源石"。依赖于技术的进步，源石蕴含的能量投入工业后使得文明顺利迈入现代，与此同时，源石本身也催生出"感染者"的存在。'},
@@ -31,9 +32,14 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
             const imgWidth = 1024;
             const imgHeight = 1024;
 
+            // TODO: 一个奇怪的偏移，需要更好的方法
+            const imgOffsetX = 350;
+            const imgOffsetY = 0;
+            const imgOffsetXPercentage = 75;
+            const imgOffsetYPercentage = 0;
             const newPosition = {
-                x: x - imgWidth / 2 + 345,
-                y: y - imgHeight / 2
+                x: x - imgWidth / 2 + (imgOffsetX * imgOffsetXPercentage / 100),
+                y: y - imgHeight / 2 + (imgOffsetY * imgOffsetYPercentage / 100)
             };
 
             if (isFirstMove.current) {
@@ -95,7 +101,7 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
     return (
         <div 
             ref={listRef}
-            className={`w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-all duration-500 ${isExiting ? '-translate-x-full opacity-0' : ''}`}
+            className={`w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-all duration-500 ${isExiting ? '-translate-x-full opacity-0' : ''} z-10`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -351,17 +357,18 @@ function AshParticles({ count = 20 }: { count?: number }) {
 
 export default function World() {
     const $viewIndex = useStore(viewIndex)
+    const $readyToTouch = useStore(readyToTouch)
     const world = useRef<HTMLDivElement>(null)
     const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);
+    const [active, setActive] = useState(false);
 
     useEffect(() => {
-        if ($viewIndex === 3) {
+        const isActive = $viewIndex === 3 && $readyToTouch;
+        if (isActive) {
             directions.set({top: false, right: true, bottom: true, left: false})
-            world.current!.classList.remove("opacity-0")
-        } else {
-            world.current!.classList.add("opacity-0")
         }
-    }, [$viewIndex])
+        setActive(isActive);
+    }, [$viewIndex, $readyToTouch])
 
     const handleItemSelect = (index: number) => {
         setSelectedItemIndex(index);
@@ -383,36 +390,42 @@ export default function World() {
         );
     };
 
-    return <div className="w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto bg-[#272727] bg-2 bg-cover bg-[50%] transition-opacity duration-100">
-        <div className="w-full h-full absolute left-0 bottom-0 bg-[#101010] opacity-85 pointer-events-none"/>
-        <AshParticles count={20} />
-        <div
-            className="w-full h-full absolute left-0 bottom-0 bg-common-mask bg-[length:100%_100%] mix-blend-overlay pointer-events-none z-[2]"/>
-        {selectedItemIndex === null ? (
-            <List onItemSelect={handleItemSelect} />
-        ) : (
-            <Details 
-                item={items[selectedItemIndex]} 
-                onBack={handleBack}
-                onPrevious={handlePrevious}
-                onNext={handleNext}
-            />
-        )}
-        <div ref={world}
-             className="h-[.95em] text-[#242424] text-[7rem] font-oswaldMedium whitespace-nowrap tracking-tighter absolute bottom-[11.25rem] left-[9rem] portrait:left-[4.25rem] portrait:bottom-[18.2908545727%] flex items-end translate-y-full overflow-hidden transition-opacity opacity-0 z-[2]">
-            WORLD
-        </div>
-        <div
-            className="w-full h-2 pr-[17.25rem] portrait:pr-[5.75rem] absolute left-0 bottom-[11.25rem] portrait:bottom-[18.2908545727%] flex translate-y-full transition-[opacity,visibility] duration-[600ms] z-[2]">
-            <div className="w-full h-full relative flex flex-auto">
-                {items.map((_, index) => (
-                    <div
-                        key={index}
-                        className={`min-w-0 w-full h-full ${selectedItemIndex === index ? 'bg-ark-blue' : 'bg-[#5a5a5a] hover:bg-[#ababab]'} flex-1 transition-colors duration-300 cursor-pointer`}
-                        onClick={() => handleItemSelect(index)}
-                    />
-                ))}
+    return (
+        <div 
+            ref={world}
+            className={`w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto bg-[#272727] bg-2 bg-cover bg-[50%] transition-all duration-1000 ${active ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        >
+            <div className="w-full h-full absolute left-0 bottom-0 bg-[#101010] opacity-85 pointer-events-none"/>
+            <AshParticles count={20} />
+            <div
+                className="w-full h-full absolute left-0 bottom-0 bg-common-mask bg-[length:100%_100%] mix-blend-overlay pointer-events-none z-[2]"/>
+            {selectedItemIndex === null ? (
+                <List onItemSelect={handleItemSelect} />
+            ) : (
+                <Details 
+                    item={items[selectedItemIndex]} 
+                    onBack={handleBack}
+                    onPrevious={handlePrevious}
+                    onNext={handleNext}
+                />
+            )}
+            <div
+                className="h-[.95em] text-[#242424] text-[7rem] font-oswaldMedium whitespace-nowrap tracking-tighter absolute bottom-[11.25rem] left-[9rem] portrait:left-[4.25rem] portrait:bottom-[18.2908545727%] flex items-end translate-y-full overflow-hidden transition-opacity opacity-0 z-[2]">
+                WORLD
             </div>
+            <div
+                className="w-full h-2 pr-[17.25rem] portrait:pr-[5.75rem] absolute left-0 bottom-[11.25rem] portrait:bottom-[18.2908545727%] flex translate-y-full transition-[opacity,visibility] duration-[600ms] z-[2]">
+                <div className="w-full h-full relative flex flex-auto">
+                    {items.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`min-w-0 w-full h-full ${selectedItemIndex === index ? 'bg-ark-blue' : 'bg-[#5a5a5a] hover:bg-[#ababab]'} flex-1 transition-colors duration-300 cursor-pointer`}
+                            onClick={() => handleItemSelect(index)}
+                        />
+                    ))}
+                </div>
+            </div>
+            <PortraitBottomGradientMask />
         </div>
-    </div>
+    )
 }

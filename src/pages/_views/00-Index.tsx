@@ -5,6 +5,7 @@ import {viewIndex} from "../../components/store/rootLayoutStore.ts"
 import {directions} from "../../components/store/lineDecoratorStore"
 import arknightsConfig from "../../../arknights.config.tsx";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
+import {readyToTouch} from "../../components/store/rootLayoutStore.ts"
 
 function HeroActionButton({icon, label, subLabel, target, href, className}: HeroActionButtonProps) {
     return <a target={target ?? "_blank"} href={href}
@@ -20,13 +21,14 @@ function HeroActionButton({icon, label, subLabel, target, href, className}: Hero
 export default function Index() {
     const {title, subtitle, url, copyright} = arknightsConfig.rootPage.INDEX
     const $viewIndex = useStore(viewIndex)
+    const $readyToTouch = useStore(readyToTouch)
     const [active, setActive] = useState($viewIndex === 0)
 
     useEffect(() => {
-        const isActive = $viewIndex === 0
+        const isActive = $viewIndex === 0 && $readyToTouch
         if (isActive) directions.set({top: false, right: true, bottom: true, left: false})
         setActive(isActive)
-    }, [$viewIndex])
+    }, [$viewIndex, $readyToTouch])
 
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
         + " transition-opacity duration-100"}>
