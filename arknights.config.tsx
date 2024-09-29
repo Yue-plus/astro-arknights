@@ -116,5 +116,15 @@ export default {
                 ],
             },
         },
+        WORLD: {
+            items: [
+                {title: "源石", subTitle: "ORIGINIUMS", imageUrl: "/images/03-world/originiums.png", description: '大地被起因不明的天灾四处肆虐，经由天灾卷过的土地上出现了大量的神秘矿物——"源石"。依赖于技术的进步，源石蕴含的能量投入工业后使得文明顺利迈入现代，与此同时，源石本身也催生出"感染者"的存在。'},
+                {title: "源石技艺", subTitle: "ORIGINIUM ARTS", imageUrl: "/images/03-world/originium_arts.png", description: "源石技艺的描述..."},
+                {title: "整合运动", subTitle: "REUNION", imageUrl: "/images/03-world/reunion.png", description: "整合运动的描述..."},
+                {title: "感染者", subTitle: "INFECTED", imageUrl: "/images/03-world/infected.png", description: "感染者的描述..."},
+                {title: "移动城邦", subTitle: "NOMADIC CITY", imageUrl: "/images/03-world/nomadic_city.png", description: "移动城邦的描述..."},
+                {title: "罗德岛", subTitle: "RHODES ISLAND", imageUrl: "/images/03-world/rhodes_island.png", description: "罗德岛的描述..."},
+            ],
+        },
     },
 } as ArknightsConfig
