@@ -1,33 +1,49 @@
-import React, { useRef, useState, useEffect } from 'react';
 // TODO : 在粒子生成动画中应用鼠标影响
 // TODO : caven尺寸改变时只需要让粒子改变
 
+import React, { useRef, useState, useEffect } from 'react';
+
+// 全局常量
+const width = 400;
+const height = 400;
+const animateTime = 40;
+const opacityStep = 1 / animateTime;
+const Radius = 30;
+const Inten = 0.25;
+const LargeRadius = 400;
+const LargeInten = 0.00005;
+const BaseParticleRadius = 0.6;
+const ParticleDensity = 7;
+
+// 全局变量
+/** 粒子对鼠标的敏感度 */
+let mouseSensitivity = 5;
+/** 明度阈值 (0-255) */
+let brightnessThreshold = 100;
+/** 透明度阈值 (0-255) */
+let alphaThreshold = 16;
+/** 整体缩放因子 */
+let scale = 4;
+
+// Logo 数据
 const logos = [
   { label: "kazimierz", url: "/images/03-world/infected.png" },
   { label: "rhine", url: "/images/03-world/nomadic_city.png" },
   { label: "rhodes", url: "/images/03-world/originium_arts.png" },
   { label: "victoria", url: "/images/03-world/originiums.png" },
   { label: "yan", url: "/images/03-world/reunion.png" },
-  { label: "test", url: "favicon.svg" },
+  { label: "island", url: "/images/rhodes_island.png" },
 ];
 
-const width = 400;
-const height = 400;
+// 辅助函数
+function lerp(start: number, end: number, t: number): number {
+  return start * (1 - t) + end * t;
+}
 
-const animateTime = 40;
-const opacityStep = 1 / animateTime;
-
-const Radius = 30;
-const Inten = 0.2;
-const LargeRadius = 400;
-const LargeInten = 0.00005;
-
-/** 粒子半径 */
-const BaseParticleRadius = 0.5;
-/** 粒子密度 */
-const ParticleDensity = 10;
-/** 整体缩放因子 */
-let scale = 4;
+function easeOutLog(t: number): number {
+  // TODO: We need a better function
+  return 1 - Math.pow(1.8, -12 * t);
+}
 
 /** 粒子类 */
 class Particle {
@@ -52,6 +68,8 @@ class Particle {
   offsetX: number;
   offsetY: number;
   grayColor: number;
+  exitVx?: number;
+  exitVy?: number;
 
   constructor(totalX: number, totalY: number, time: number, color: number[]) {
     this.x = totalX;
@@ -63,7 +81,7 @@ class Particle {
     this.color = [...color];
     this.opacity = 0;
     const angle = Math.random() * Math.PI * 2;
-    const radius = Math.random() * Math.min(width, height) / 2;
+    const radius = Math.random() * Math.min(width, height) / 1.2; // 粒子初始位置范围
     this.initialX = width / 2 + Math.cos(angle) * radius;
     this.initialY = height / 2 + Math.sin(angle) * radius;
     this.x = this.initialX;
@@ -72,7 +90,7 @@ class Particle {
     this.opacity = this.initialOpacity;
     this.progress = 0;
     this.animationProgress = 0;
-    this.animationDuration = 3400;
+    this.animationDuration = 3000; // 出场动画持续时间
     this.offsetX = (Math.random() - 0.5) * 1;
     this.offsetY = (Math.random() - 0.5) * 1;
     this.grayColor = Math.round(0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]);
@@ -123,8 +141,8 @@ class Particle {
           let largeAngle = Math.atan2(dy, dx);
           let largeCos = Math.cos(largeAngle);
           let largeSin = Math.sin(largeAngle);
-          let largeRepX = largeCos * largeDisPercent * -LargeInten;
-          let largeRepY = largeSin * largeDisPercent * -LargeInten;
+          let largeRepX = largeCos * largeDisPercent * -LargeInten * mouseSensitivity;
+          let largeRepY = largeSin * largeDisPercent * -LargeInten * mouseSensitivity;
           this.vx += largeRepX;
           this.vy += largeRepY;
         }
@@ -134,8 +152,8 @@ class Particle {
         let angle = Math.atan2(dy, dx);
         let cos = Math.cos(angle);
         let sin = Math.sin(angle);
-        let repX = cos * disPercent * -Inten;
-        let repY = sin * disPercent * -Inten;
+        let repX = cos * disPercent * -Inten * mouseSensitivity;
+        let repY = sin * disPercent * -Inten * mouseSensitivity;
         this.vx += repX;
         this.vy += repY;
       }
@@ -161,14 +179,6 @@ class Particle {
     this.totalY = lerp(this.totalY, targetParticle.totalY, progress);
     this.color = this.color.map((c, i) => lerp(c, targetParticle.color[i], progress));
   }
-}
-
-function lerp(start: number, end: number, t: number): number {
-  return start * (1 - t) + end * t;
-}
-
-function easeOutLog(t: number): number {
-  return 1 - Math.pow(2, -10 * t);
 }
 
 /** Logo图片类 */
@@ -212,8 +222,8 @@ class LogoImg {
           const g = imgData![index + 1];
           const b = imgData![index + 2];
           const a = imgData![index + 3];
-          const sum = r + g + b + a;
-          if (sum >= 100) {
+          const brightness = Math.max(r, g, b);
+          if (brightness >= brightnessThreshold && a >= alphaThreshold) {
             const offsetX = (Math.random() * 2 - 1) / scale;
             const offsetY = (Math.random() * 2 - 1) / scale;
             const particle = new Particle((x / scale) + offsetX, (y / scale) + offsetY, animateTime, [r, g, b, a]);
@@ -288,6 +298,10 @@ class ParticleCanvas {
   targetParticles: Particle[];
   private animationFrameId: number | null = null;
   private scale: number;
+  private exitAnimationDuration: number = 1000; // 离场动画持续时间
+  private newImageDelay: number = 100; // 新图片加载延迟
+  private isExiting: boolean = false;
+  private nextLogo: LogoImg | null = null;
 
   constructor(
     target: HTMLCanvasElement,
@@ -307,7 +321,7 @@ class ParticleCanvas {
     this.particleAreaWidth = particleAreaWidth;
     this.particleAreaHeight = particleAreaHeight;
     this.lastUpdateTime = performance.now();
-    this.debug = true;
+    this.debug = false;
     this.isGrayscale = isGrayscale;
     this.particleAreaX = particleAreaX ?? this.width - this.particleAreaWidth - 50;
     this.particleAreaY = particleAreaY ?? (this.height - this.particleAreaHeight) / 2;
@@ -334,33 +348,38 @@ class ParticleCanvas {
 
   changeImg(img: LogoImg) {
     if (this.currentLogo && this.currentLogo !== img) {
-      this.startTransition(img);
+      this.nextLogo = img;
+      this.triggerExitAnimation();
     } else {
-      this.currentLogo = img;
-      this.updateParticles();
+      this.loadNewImage(img);
     }
   }
 
-  updateParticles() {
-    if (!this.currentLogo) {
-      return;
-    }
-    if (this.ParticleArr.length === 0) {
-      this.ParticleArr = this.currentLogo.particleData.map(
-        (item) => new Particle(item.totalX, item.totalY, animateTime, item.color)
-      );
-    } else {
-      this.startTransition(this.currentLogo);
-    }
-  }
-
-  startTransition(newLogo: LogoImg) {
-    this.isTransitioning = true;
+  triggerExitAnimation() {
+    this.isExiting = true;
     this.transitionProgress = 0;
-    this.targetParticles = newLogo.particleData.map(
+    
+    this.ParticleArr.forEach(particle => {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 2 + 2;
+      particle.exitVx = Math.cos(angle) * speed;
+      particle.exitVy = Math.sin(angle) * speed;
+    });
+
+    setTimeout(() => {
+      if (this.nextLogo) {
+        this.loadNewImage(this.nextLogo);
+        this.nextLogo = null;
+      }
+    }, this.exitAnimationDuration + this.newImageDelay);
+  }
+
+  loadNewImage(img: LogoImg) {
+    this.currentLogo = img;
+    this.ParticleArr = img.particleData.map(
       (item) => new Particle(item.totalX, item.totalY, animateTime, item.color)
     );
-    this.currentLogo = newLogo;
+    this.isExiting = false;
   }
 
   drawCanvas() {
@@ -390,11 +409,28 @@ class ParticleCanvas {
         }
       }
 
+      if (this.isExiting) {
+        this.transitionProgress += deltaTime / this.exitAnimationDuration;
+        if (this.transitionProgress >= 1) {
+          this.ParticleArr = [];
+        } else {
+          this.ParticleArr.forEach(particle => {
+            particle.x += particle.exitVx!;
+            particle.y += particle.exitVy!;
+            particle.opacity = Math.max(0, 1 - this.transitionProgress);
+          });
+        }
+      } else {
+        // 正常更新粒子
+        this.ParticleArr.forEach(particle => {
+          particle.update(deltaTime, relativeMouseX, relativeMouseY);
+        });
+      }
+
       this.ctx.save();
       this.ctx.translate(particleAreaX, particleAreaY);
       
       this.ParticleArr.forEach(particle => {
-        particle.update(deltaTime, relativeMouseX, relativeMouseY);
         particle.draw(this.ctx, this.isGrayscale);
       });
 
@@ -412,7 +448,10 @@ class ParticleCanvas {
 
       this.ctx.restore();
     } else if (this.currentLogo && this.currentLogo.particleData.length > 0) {
-      this.updateParticles();
+      // 如果当前没有粒子但有新的 logo 数据，则创建新的粒子
+      this.ParticleArr = this.currentLogo.particleData.map(
+        (item) => new Particle(item.totalX, item.totalY, animateTime, item.color)
+      );
     }
 
     this.animationFrameId = window.requestAnimationFrame(() => this.drawCanvas());
@@ -441,6 +480,14 @@ class ParticleCanvas {
       particle.r = BaseParticleRadius * scale;
     });
   }
+
+  setBrightnessThreshold(threshold: number) {
+    brightnessThreshold = Math.max(0, Math.min(255, threshold));
+  }
+
+  setAlphaThreshold(threshold: number) {
+    alphaThreshold = Math.max(0, Math.min(255, threshold));
+  }
 }
 
 interface ParticleSystemProps {
@@ -451,6 +498,9 @@ interface ParticleSystemProps {
   particleAreaX?: number;
   particleAreaY?: number;
   scale?: number;
+  brightnessThreshold?: number;
+  alphaThreshold?: number;
+  debug?: boolean;
 }
 
 const ParticleFactory: React.FC<ParticleSystemProps> = ({ 
@@ -461,12 +511,17 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
   particleAreaX, 
   particleAreaY,
   scale: initialScale,
+  brightnessThreshold: initialBrightnessThreshold,
+  alphaThreshold: initialAlphaThreshold,
+  debug = true,
 }) => {
   const [activeLogo, setActiveLogo] = useState<LogoImg | null>(null);
   const [logoImgs, setLogoImgs] = useState<LogoImg[]>([]);
   const [particleCanvas, setParticleCanvas] = useState<ParticleCanvas | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particleCanvasRef = useRef<ParticleCanvas | null>(null);
 
+  // 初始化效果
   useEffect(() => {
     const newLogoImgs = logos.map(item => new LogoImg(item.url, item.label));
     setLogoImgs(newLogoImgs);
@@ -489,16 +544,42 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
         initialScale
       );
       setParticleCanvas(newParticleCanvas);
+      particleCanvasRef.current = newParticleCanvas;
+      newParticleCanvas.debug = debug;
+      if (initialBrightnessThreshold !== undefined) {
+        newParticleCanvas.setBrightnessThreshold(initialBrightnessThreshold);
+      }
+      if (initialAlphaThreshold !== undefined) {
+        newParticleCanvas.setAlphaThreshold(initialAlphaThreshold);
+      }
       newParticleCanvas.drawCanvas();
+
+      // 将 ParticleCanvas 实例暴露到全局对象
+      (window as any).particleCanvas = newParticleCanvas;
+
+      // 添加控制台指令
+      (window as any).changeLogoByLabel = (label: string) => {
+        const selectedLogo = newLogoImgs.find(logo => logo.name === label);
+        if (selectedLogo) {
+          newParticleCanvas.changeImg(selectedLogo);
+          console.log(`切换到标签: ${label}`);
+        } else {
+          console.log(`未找到标签: ${label}`);
+        }
+      };
     }
 
     return () => {
       if (particleCanvas) {
         particleCanvas.stop();
       }
+      // 清理全局对象
+      delete (window as any).particleCanvas;
+      delete (window as any).changeLogoByLabel;
     };
-  }, [width, height, isGrayscale, particleAreaX, particleAreaY, initialScale]);
+  }, [width, height, isGrayscale, particleAreaX, particleAreaY, initialScale, initialBrightnessThreshold, initialAlphaThreshold, debug]);
 
+  // 处理 activeLabel 变化
   useEffect(() => {
     if (activeLabel && logoImgs.length > 0 && particleCanvas) {
       const selectedLogo = logoImgs.find(logo => logo.name === activeLabel);
@@ -508,6 +589,7 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
     }
   }, [activeLabel, logoImgs, particleCanvas]);
 
+  // 处理 Logo 点击
   const handleLogoClick = (logoItem: LogoImg) => {
     setActiveLogo(logoItem);
     if (particleCanvas) {
@@ -515,9 +597,10 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
     }
   };
 
+  // 设置 Logo
   useEffect(() => {
     if (logoImgs.length > 0 && particleCanvas) {
-      const defaultLogo = logoImgs.find(logo => logo.name === "test");
+      const defaultLogo = logoImgs.find(logo => logo.name === activeLabel);
       if (defaultLogo) {
         handleLogoClick(defaultLogo);
       } else {
@@ -526,12 +609,14 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
     }
   }, [logoImgs, particleCanvas]);
 
+  // 处理灰度模式变化
   useEffect(() => {
     if (particleCanvas) {
       particleCanvas.setGrayscale(isGrayscale);
     }
   }, [isGrayscale, particleCanvas]);
 
+  // 切换调试模式
   const toggleDebug = () => {
     if (particleCanvas) {
       particleCanvas.toggleDebug();
