@@ -86,20 +86,20 @@ export function Init() {
     }, [incrementProgress, loadedResources, stopObserving, isObserving]);
 
     useEffect(() => {
-        let interval: NodeJS.Timeout;
+        let interval: number;
         if ($isInitialized && progress < 100) {
-            interval = setInterval(() => {
+            interval = window.setInterval(() => {
                 setProgress(prevProgress => {
                     const newProgress = prevProgress + 100;
                     if (newProgress >= 100) {
-                        clearInterval(interval);
+                        window.clearInterval(interval);
                         return 100;
                     }
                     return newProgress;
                 });
             }, 50);
         }
-        return () => clearInterval(interval);
+        return () => window.clearInterval(interval);
     }, [$isInitialized, progress]);
 
     useEffect(() => {
@@ -139,8 +139,7 @@ export function Init() {
                 
                 <div className="flex items-center justify-center mb-[2vw]">
                     <TitleArknights
-                        className="w-[13vw] h-[17vw] max-w-full"
-                        color={commonColor}
+                        className={`w-[13vw] h-[17vw] max-w-full text-[${commonColor}]`}
                     />
                 </div>
                 
