@@ -45,7 +45,7 @@ export function Init() {
                         // console.log("资源加载成功:", resourceName);
                         setLoadedResources(prev => new Set(prev).add(resourceName));
                         incrementProgress();
-                        
+
                         if (resourceName.endsWith('/images/index-bg.jpg')) {
                             isInitialized.set(true);
                             stopObserving();
@@ -133,26 +133,26 @@ export function Init() {
             <div className={`absolute top-0 bottom-0 w-[0.05vw] bg-[#686767] transition-all duration-1000 ease-in-out ${
                 isFadingOut ? 'right-[-5vw]' : 'right-[5vw]'
             }`} />
-            
+
             <div className="flex flex-col items-center justify-center h-full w-full">
                 <div className="flex-grow" />
-                
+
                 <div className="flex items-center justify-center mb-[2vw]">
                     <TitleArknights
                         className={`w-[13vw] h-[17vw] max-w-full text-[${commonColor}]`}
                     />
                 </div>
-                
+
                 <div className="flex-grow" />
-                
+
                 <div className="w-full max-w-[90vw] px-[2vw] absolute" style={{ top: '75%' }}>
                     <div className={`flex items-start ${isPortrait ? 'flex-col' : ''}`}>
-                        <div 
+                        <div
                             className={`whitespace-nowrap ${
                                 isPortrait 
                                     ? 'fixed bottom-[1%] left-[1%] text-[10px]' ////idk,反正就是text-[1vw]
                                     : 'mr-[15vw] text-[1.2vw]'
-                            }`} 
+                            }`}
                             style={{ color: commonColor }}
                         >
                             <span>© YUE_PLUS</span>
@@ -162,14 +162,14 @@ export function Init() {
                                 <div className="absolute left-0 w-[0.3vw] h-[0.3vw]" style={{ backgroundColor: commonColor }}></div>
                                 <div className="absolute right-0 w-[0.3vw] h-[0.3vw]" style={{ backgroundColor: commonColor }}></div>
                                 <div className="absolute top-[0.1vw] left-0 right-0 h-[0.1vw]" style={{ backgroundColor: commonColor }}></div>
-                                <div 
-                                    className="absolute top-0 left-0 h-[0.3vw] transition-all duration-300 ease-linear" 
+                                <div
+                                    className="absolute top-0 left-0 h-[0.3vw] transition-all duration-300 ease-linear"
                                     style={{ width: `${progress}%`, backgroundColor: loadingColor }}
                                 />
                             </div>
                             <div className="flex justify-between items-center mt-[0.8vw]">
                                 <div className="flex items-center text-[0.8vw]" style={{ color: loadingColorText }}>
-                                    <IconDblArrow className="w-[0.8vw] h-[0.8vw] mr-[0.4vw]" color={loadingColorText} />
+                                    <IconDblArrow className="w-[0.8vw] h-[0.8vw] mr-[0.4vw]"/>
                                     <span>{`LOADING - ${Math.round(progress)}%`}</span>
                                 </div>
                                 <div className={`flex items-center text-[0.8vw]`} style={{ color: commonColor }}>
@@ -184,8 +184,8 @@ export function Init() {
 
                 <div className="flex-grow" />
             </div>
-            
-            <div 
+
+            <div
                 ref={listRef}
                 className="absolute bottom-[2vw] left-[2vw] text-[0.8vw] text-white max-h-[20vh] overflow-y-auto opacity-50"
             >

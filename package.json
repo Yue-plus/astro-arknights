@@ -14,15 +14,15 @@
     "@astrojs/react": "^3.6.2",
     "@astrojs/tailwind": "^5.1.1",
     "@nanostores/react": "^0.7.3",
-    "@types/react": "^18.3.8",
+    "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.15.8",
+    "astro": "^4.15.9",
     "nanostores": "^0.11.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "sass": "^1.79.3",
+    "sass": "^1.79.4",
     "swiper": "^11.1.14",
-    "tailwindcss": "^3.4.12",
+    "tailwindcss": "^3.4.13",
     "typescript": "^5.6.2"
   }
 }
