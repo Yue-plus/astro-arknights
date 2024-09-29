@@ -19,16 +19,51 @@ export function Social() {
 
 export function Sound() {
     const [active, setActive] = useState(arknightsConfig?.bgm?.autoplay ?? false)
+    const [volume, setVolume] = useState(active ? 1 : 0)
     const audioRef = useRef<HTMLAudioElement>(null)
+    const [isFading, setIsFading] = useState(false);
+    const fadeIntervalRef = useRef<number | null>(null);
 
     useEffect(() => {
         if (audioRef.current) {
-            if (active) audioRef.current.play().catch(e => console.error(e));
-            else audioRef.current.pause()
-        }
-    }, [active])
+            const audio = audioRef.current;
+            
+            const handleFade = (targetVolume: number) => {
+                setIsFading(true);
+                if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+                
+                fadeIntervalRef.current = setInterval(() => {
+                    if ((targetVolume === 1 && audio.volume < 1) || (targetVolume === 0 && audio.volume > 0)) {
+                        audio.volume = Math.max(0, Math.min(1, audio.volume + (targetVolume === 1 ? 0.25 : -0.25)));
+                        setVolume(audio.volume);
+                    } else {
+                        if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+                        setIsFading(false);
+                        if (targetVolume === 0) audio.pause();
+                    }
+                }, 100) as unknown as number;
+            };
 
-    return <div className={BoxClassName} onClick={_ => setActive(!active)}>
+            if (active) {
+                audio.play().catch(e => console.error(e));
+                handleFade(1);
+            } else {
+                handleFade(0);
+            }
+        }
+
+        return () => {
+            if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+        };
+    }, [active]);
+
+    const handleClick = () => {
+        if (!isFading) {
+            setActive(!active);
+        }
+    };
+
+    return <div className={BoxClassName} onClick={handleClick}>
         <IconSound className={SvgClassName} style={{
             color: active ? ActiveColor : InactiveColor,
             transition: "transform .3s",
