@@ -10,7 +10,7 @@ import {IconArrow} from "../../components/SvgIcons"
 import type {BreakingNewsItemProps} from "../../_types/RootPageViews.ts"
 import arknightsConfig from "../../../arknights.config.tsx";
 import {directions} from "../../components/store/lineDecoratorStore.ts"
-import {viewIndex} from "../../components/store/rootLayoutStore.ts"
+import {viewIndex, readyToTouch} from "../../components/store/rootLayoutStore.ts"
 
 const base = import.meta.env.BASE_URL
 
@@ -199,10 +199,14 @@ function SwiperScrollbar() {
 export default function Information() {
     const [swiperIndex, setSwiperIndex] = useState(0)
     const $viewIndex = useStore(viewIndex)
+    const $readyToTouch = useStore(readyToTouch)
+    const [active, setActive] = useState($viewIndex === 1)
 
     useEffect(() => {
-        if ($viewIndex === 1) directions.set({top: true, right: true, bottom: false, left: false})
-    }, [$viewIndex])
+        const isActive = $viewIndex === 1 && $readyToTouch
+        if (isActive) directions.set({top: true, right: true, bottom: false, left: false})
+        setActive(isActive)
+    }, [$viewIndex, $readyToTouch])
 
     return <div
         className="w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto transition-opacity duration-100">

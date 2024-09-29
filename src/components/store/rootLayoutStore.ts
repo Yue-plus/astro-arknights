@@ -16,3 +16,5 @@ export function viewIndexSetPrev() {
 export const isNavMenuOpen = atom<boolean>(false)
 export const isToolBoxOpen = atom<boolean>(false)
 export const isOwnerInfoOpen = atom<boolean>(false)
+export const isInitialized = atom(false)
+export const readyToTouch = atom(false) // TODO: 和isInitialized合并
