@@ -27,11 +27,11 @@ let scale = 4;
 
 // Logo 数据
 const logos = [
-  { label: "kazimierz", url: "/images/03-world/infected.png" },
-  { label: "rhine", url: "/images/03-world/nomadic_city.png" },
-  { label: "rhodes", url: "/images/03-world/originium_arts.png" },
-  { label: "victoria", url: "/images/03-world/originiums.png" },
-  { label: "yan", url: "/images/03-world/reunion.png" },
+  { label: "infected", url: "/images/03-world/infected.png" },
+  { label: "nomadic_city", url: "/images/03-world/nomadic_city.png" },
+  { label: "originium_arts", url: "/images/03-world/originium_arts.png" },
+  { label: "originiums", url: "/images/03-world/originiums.png" },
+  { label: "reunion", url: "/images/03-world/reunion.png" },
   { label: "island", url: "/images/rhodes_island.png" },
 ];
 
