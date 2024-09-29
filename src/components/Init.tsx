@@ -139,7 +139,7 @@ export function Init() {
                 
                 <div className="flex items-center justify-center mb-[2vw]">
                     <TitleArknights
-                        className={`w-[13vw] h-[17vw] max-w-full text-[${commonColor}]`}
+                        className={`w-[13vw] h-[17vw] max-w-full text-[rgb(164,164,164)]`}
                     />
                 </div>
                 
@@ -169,7 +169,7 @@ export function Init() {
                             </div>
                             <div className="flex justify-between items-center mt-[0.8vw]">
                                 <div className="flex items-center text-[0.8vw]" style={{ color: loadingColorText }}>
-                                    <IconDblArrow className="w-[0.8vw] h-[0.8vw] mr-[0.4vw]" color={loadingColorText} />
+                                    <IconDblArrow className="w-[0.8vw] h-[0.8vw] mr-[0.4vw]" />
                                     <span>{`LOADING - ${Math.round(progress)}%`}</span>
                                 </div>
                                 <div className={`flex items-center text-[0.8vw]`} style={{ color: commonColor }}>
