@@ -513,7 +513,7 @@ const ParticleFactory: React.FC<ParticleSystemProps> = ({
   scale: initialScale,
   brightnessThreshold: initialBrightnessThreshold,
   alphaThreshold: initialAlphaThreshold,
-  debug = true,
+  debug = false,
 }) => {
   const [activeLogo, setActiveLogo] = useState<LogoImg | null>(null);
   const [logoImgs, setLogoImgs] = useState<LogoImg[]>([]);

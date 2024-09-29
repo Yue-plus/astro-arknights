@@ -60,5 +60,13 @@ export type ArknightsConfig = {
                 data: SwiperData[]
             }
         },
+        WORLD: {
+            items: {
+                title: string
+                subTitle: string
+                imageUrl: string
+                description: string
+            }[]
+        }
     }
 }
