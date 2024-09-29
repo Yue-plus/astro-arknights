@@ -5,6 +5,7 @@ import { directions } from "../../components/store/lineDecoratorStore.ts";
 import { IconArrow } from "../../components/SvgIcons.tsx";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
 import config from "../../../arknights.config.tsx";
+import ParticleFactory from '../../components/ParticleFactory.tsx';
 
 const items = config.rootPage.WORLD!.items
 
@@ -405,6 +406,23 @@ export default function World() {
   const world = useRef<HTMLDivElement>(null)
   const [selectedItemIndex, setSelectedItemIndex] = useState<number | null>(null);
   const [active, setActive] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const [isWorldReady, setIsWorldReady] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    // 初始设置
+    handleResize();
+
+    // 添加事件监听器
+    window.addEventListener('resize', handleResize);
+
+    // 清理函数
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const isActive = $viewIndex === 3 && $readyToTouch;
@@ -413,6 +431,19 @@ export default function World() {
     }
     setActive(isActive);
   }, [$viewIndex, $readyToTouch])
+
+  useEffect(() => {
+    if (active && windowSize.width > 0 && windowSize.height > 0) {
+      // 给一个小延迟，确保其他元素都已经渲染完成
+      const timer = setTimeout(() => {
+        setIsWorldReady(true);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    } else {
+      setIsWorldReady(false); // 确保在非活动状态下停止粒子系统
+    }
+  }, [active, windowSize]);
 
   const handleItemSelect = useCallback((index: number) => {
     setSelectedItemIndex(index);
@@ -453,27 +484,22 @@ export default function World() {
           onNext={handleNext}
         />
       )}
-      <div
-        className="h-[.95em] text-[#242424] text-[7rem] font-oswaldMedium whitespace-nowrap tracking-tighter absolute bottom-[11.25rem] left-[9rem] portrait:left-[4.25rem] portrait:bottom-[18.2908545727%] flex items-end translate-y-full overflow-hidden transition-opacity opacity-0 z-[2]">
-        WORLD
-      </div>
-      <div
-        className="w-full h-2 pr-[17.25rem] portrait:pr-[5.75rem] absolute left-0 bottom-[11.25rem] portrait:bottom-[18.2908545727%] flex translate-y-full transition-[opacity,visibility] duration-[600ms] z-[2]">
-        <div className="w-full h-full relative flex flex-auto">
-          {items.map((_: any, index: React.Key | null | undefined) => (
-            <a
-              key={index}
-              href="#"
-              className={`min-w-0 w-full h-full ${selectedItemIndex === index ? 'bg-ark-blue' : 'bg-[#5a5a5a] hover:bg-[#ababab]'} flex-1 transition-colors duration-300 cursor-pointer`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleItemSelect(index as number);
-              }}
-              aria-label={`选择项目 ${index as number + 1}`}
-            />
-          ))}
+
+      {/* 粒子系统 */}
+      {isWorldReady && (
+        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-[1]">
+          <ParticleFactory
+            activeLabel="island"
+            width={windowSize.width}
+            height={windowSize.height}
+            isGrayscale={false}
+            scale={1.7}
+            particleAreaX={windowSize.width / 2 + 60}
+            particleAreaY={windowSize.height / 2 - 150}
+          />
         </div>
-      </div>
+      )}
+
       <PortraitBottomGradientMask />
     </div>
   )

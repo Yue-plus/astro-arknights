@@ -139,7 +139,7 @@ export function Init() {
 
                 <div className="flex items-center justify-center mb-[2vw]">
                     <TitleArknights
-                        className={`w-[13vw] h-[17vw] max-w-full text-[${commonColor}]`}
+                        className={`w-[13vw] h-[17vw] max-w-full text-[rgb(164,164,164)]`}
                     />
                 </div>
 
@@ -185,7 +185,7 @@ export function Init() {
                 <div className="flex-grow" />
             </div>
 
-            <div
+            {/* <div
                 ref={listRef}
                 className="absolute bottom-[2vw] left-[2vw] text-[0.8vw] text-white max-h-[20vh] overflow-y-auto opacity-50"
             >
@@ -199,7 +199,7 @@ export function Init() {
                     {$isInitialized ? "背景图片加载成功" : "正在加载背景图片..."}
                 </p>
                 <p>加载进度：{Math.round(progress)}%</p>
-            </div>
+            </div> */}
         </div>
     );
 }
