@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useStore} from "@nanostores/react"
 import type {HeroActionButtonProps} from "../../_types/RootPageViews.ts"
 import {viewIndex} from "../../components/store/rootLayoutStore.ts"
@@ -6,6 +6,7 @@ import {directions} from "../../components/store/lineDecoratorStore"
 import arknightsConfig from "../../../arknights.config.tsx";
 import PortraitBottomGradientMask from "../../components/PortraitBottomGradientMask";
 import {readyToTouch} from "../../components/store/rootLayoutStore.ts"
+import Hls from 'hls.js';
 
 function HeroActionButton({icon, label, subLabel, target, href, className}: HeroActionButtonProps) {
     return <a target={target ?? "_blank"} href={href}
@@ -23,18 +24,69 @@ export default function Index() {
     const $viewIndex = useStore(viewIndex)
     const $readyToTouch = useStore(readyToTouch)
     const [active, setActive] = useState($viewIndex === 0)
+    const [videoLoaded, setVideoLoaded] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [hls, setHls] = useState<Hls | null>(null);
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (Hls.isSupported()) {
+                const newHls = new Hls();
+                newHls.loadSource('/videos/PV04_landscape/PV04_landscape.m3u8');
+                newHls.attachMedia(videoRef.current);
+                newHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    setVideoLoaded(true);
+                    if ($viewIndex === 0 && $readyToTouch) {
+                        videoRef.current?.play();
+                    }
+                });
+                setHls(newHls);
+            } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+                videoRef.current.src = '/videos/PV04_landscape/PV04_landscape.m3u8';
+                videoRef.current.addEventListener('loadedmetadata', () => {
+                    setVideoLoaded(true);
+                    if ($viewIndex === 0 && $readyToTouch) {
+                        videoRef.current?.play();
+                    }
+                });
+            }
+        }
+
+        return () => {
+            if (hls) {
+                hls.destroy();
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const isActive = $viewIndex === 0 && $readyToTouch
-        if (isActive) directions.set({top: false, right: true, bottom: true, left: false})
+        if (isActive) {
+            directions.set({top: false, right: true, bottom: true, left: false})
+            videoRef.current?.play();
+        } else {
+            videoRef.current?.pause();
+        }
         setActive(isActive)
     }, [$viewIndex, $readyToTouch])
-
+    // TODO: 使用m3u8
     return <div className={"w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-0 z-[2]"
         + " transition-opacity duration-100"}>
         <div className={"w-full h-full absolute top-0 left-0 bg-index bg-center bg-cover bg-no-repeat"
             + " transition-opacity duration-1000"}/>
-        {/* TODO: <video> <canvas> */}
+        <video
+            ref={videoRef}
+            className={`absolute top-0 left-0 w-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+            style={{ 
+                height: 'calc(100vh + (100vh * 2.35 / 16 * 9 - 100vh) * 1.2)', // 官网使用的缩放比会更大一些 所以在计算基础上继续增加了1.2倍的缩放
+                objectPosition: '50% 0%',
+                transform: 'translateY(calc((100vh * 2.35 / 16 * 9 - 100vh) * 1.2 / -2))'
+            }}
+            loop 
+            muted 
+            playsInline
+        />
+        {/* TODO: <canvas> */}
         <div className={"w-[52.5rem] portrait:w-[18.75rem] h-[60.75rem] portrait:h-[12rem] absolute left-0 bottom-0 bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-[100%_0] transition-opacity duration-[.6s] ease-linear "
             + (active ? "delay-[2s] opacity-[.78]" : "opacity-0")}/>
         <div className={"w-[52.5rem] portrait:w-[5.75rem] h-[60.75rem] portrait:h-[12rem] absolute left-full bottom-0 bg-mask-block portrait:bg-mask-block-m bg-[auto_110%] portrait:bg-[auto_100%] bg-no-repeat translate-x-[-14.75rem] portrait:translate-x-[-3.75rem] transition-opacity duration-[.6s] ease-linear "

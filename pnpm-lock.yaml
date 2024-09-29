@@ -29,6 +29,9 @@ importers:
       astro:
         specifier: ^4.15.9
         version: 4.15.9(rollup@4.22.5)(sass@1.79.4)(typescript@5.6.2)
+      hls.js:
+        specifier: ^1.4.0
+        version: 1.5.15
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
@@ -1177,6 +1180,9 @@ packages:
 
   hastscript@8.0.0:
     resolution: {integrity: sha512-dMOtzCEd3ABUeSIISmrETiKuyydk1w0pa+gE/uormcTpSYuaNJPbX1NU3JLyscSLjwAQM8bWMhhIlnCqnRvDTw==}
+
+  hls.js@1.5.15:
+    resolution: {integrity: sha512-6cD7xN6bycBHaXz2WyPIaHn/iXFizE5au2yvY5q9aC4wfihxAr16C9fUy4nxh2a3wOw0fEgLRa9dN6wsYjlpNg==}
 
   html-escaper@3.0.3:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
@@ -3468,6 +3474,8 @@ snapshots:
       hast-util-parse-selector: 4.0.0
       property-information: 6.5.0
       space-separated-tokens: 2.0.2
+
+  hls.js@1.5.15: {}
 
   html-escaper@3.0.3: {}
 
