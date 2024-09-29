@@ -7,7 +7,7 @@ import PortraitBottomGradientMask from "../../components/PortraitBottomGradientM
 import config from "../../../arknights.config.tsx";
 import ParticleFactory from '../../components/ParticleFactory.tsx';
 
-const items = config.rootPage.WORLD.items;
+const items = config.rootPage.WORLD!.items
 
 // 将 AshParticles 的动画逻辑抽离到自定义 hook
 function useAshParticlesAnimation(count: number, canvasRef: React.RefObject<HTMLCanvasElement>) {
@@ -123,7 +123,7 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
       const rect = listRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       const imgWidth = 1024;
       const imgHeight = 1024;
 
@@ -157,7 +157,7 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
   const handleMouseLeave = () => {
     setActiveImage(null);
     isFirstMove.current = true;
-  };    
+  };
 
   useEffect(() => {
     const animatePosition = () => {
@@ -196,11 +196,11 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
   };
 
   const memoizedItems = useMemo(() => items.map(({title, subTitle}: {title: string, subTitle: string}, index: number) => (
-    <MemoizedItem 
-      key={index} 
+    <MemoizedItem
+      key={index}
       delay={isFirstLoad.current ? initialDelay + index * itemAnimationDelay : index * itemAnimationDelay}
-      title={title} 
-      subTitle={subTitle} 
+      title={title}
+      subTitle={subTitle}
       onClick={() => handleItemClick(index)}
       isExiting={isExiting}
       exitingIndex={exitingIndex}
@@ -215,41 +215,39 @@ function List({ onItemSelect }: { onItemSelect: (index: number) => void }) {
   }, []);
 
   return (
-    <div className="flex">
-      <div 
-        ref={listRef}
-        className={`w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-all duration-500 ${isExiting ? '-translate-x-full opacity-0' : ''} z-10`}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        {memoizedItems}
-        {activeImage && (
-          <img 
-            src={activeImage} 
-            alt="Active item"
-            className="absolute pointer-events-none transition-opacity duration-300 ease-out"
-            style={{
-              width: '1024px',
-              height: '1024px',
-              objectFit: 'cover',
-              left: `${imagePosition.x}px`,
-              top: `${imagePosition.y}px`,
-              opacity: 1,
-              zIndex: -1,
-              filter: 'blur(0.2px)',
-            }}
-          />
-        )}
-      </div>
+    <div
+      ref={listRef}
+      className={`w-[39.875rem] absolute top-[20.3703703704%] left-[9rem] transition-all duration-500 ${isExiting ? '-translate-x-full opacity-0' : ''} z-10`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {memoizedItems}
+      {activeImage && (
+        <img
+          src={activeImage}
+          alt="Active item"
+          className="absolute pointer-events-none transition-opacity duration-300 ease-out"
+          style={{
+            width: '1024px',
+            height: '1024px',
+            objectFit: 'cover',
+            left: `${imagePosition.x}px`,
+            top: `${imagePosition.y}px`,
+            opacity: 1,
+            zIndex: -1,
+            filter: 'blur(0.2px)',
+          }}
+        />
+      )}
     </div>
   );
 }
 
-function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}: { 
-  title: string; 
-  subTitle: string, 
-  delay: number, 
-  onClick: () => void, 
+function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}: {
+  title: string;
+  subTitle: string,
+  delay: number,
+  onClick: () => void,
   isExiting: boolean,
   exitingIndex: number | null,
   index: number
@@ -273,7 +271,7 @@ function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}:
   const exitDelay = isExiting ? (index - (exitingIndex ?? 0)) * 50 : 0;
 
   return (
-    <a 
+    <a
       ref={itemRef}
       href="#"
       className={`h-24 pb-3 leading-none flex items-end relative transition-all duration-300 ease-out cursor-pointer
@@ -297,7 +295,7 @@ function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}:
       >
         {subTitle}
       </div>
-      <div 
+      <div
         className="text-[2.5rem] font-bold relative transition-[color,transform] duration-300"
         style={{
           textShadow: "0 0 1em #000,0 0 1em #000",
@@ -307,7 +305,7 @@ function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}:
       >
         {title}
       </div>
-      <div 
+      <div
         className="text-[1.25rem] font-n15eBold ml-[1.5rem] relative transition-[color,transform] duration-300"
         style={{
           textShadow: "0 0 1em #000,0 0 1em #000",
@@ -321,8 +319,8 @@ function Item({title, subTitle, delay, onClick, isExiting, exitingIndex, index}:
   )
 }
 
-function Details({item, onBack, onPrevious, onNext}: { 
-  item: typeof items[0], 
+function Details({item, onBack, onPrevious, onNext}: {
+  item: typeof items[0],
   onBack: () => void,
   onPrevious: () => void,
   onNext: () => void
@@ -456,19 +454,19 @@ export default function World() {
   }, []);
 
   const handlePrevious = useCallback(() => {
-    setSelectedItemIndex((prevIndex) => 
+    setSelectedItemIndex((prevIndex) =>
       prevIndex === null ? null : (prevIndex - 1 + items.length) % items.length
     );
   }, []);
 
   const handleNext = useCallback(() => {
-    setSelectedItemIndex((prevIndex) => 
+    setSelectedItemIndex((prevIndex) =>
       prevIndex === null ? null : (prevIndex + 1) % items.length
     );
   }, []);
 
   return (
-    <div 
+    <div
       ref={world}
       className={`w-[100vw] max-w-[180rem] h-full absolute top-0 right-0 bottom-0 left-auto bg-[#272727] bg-2 bg-cover bg-[50%] transition-all duration-1000 ${active ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
     >
@@ -479,8 +477,8 @@ export default function World() {
       {selectedItemIndex === null ? (
         <List onItemSelect={handleItemSelect} />
       ) : (
-        <Details 
-          item={items[selectedItemIndex]} 
+        <Details
+          item={items[selectedItemIndex]}
           onBack={handleBack}
           onPrevious={handlePrevious}
           onNext={handleNext}
@@ -490,7 +488,7 @@ export default function World() {
       {/* 粒子系统 */}
       {isWorldReady && (
         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-[1]">
-          <ParticleFactory 
+          <ParticleFactory
             activeLabel="island"
             width={windowSize.width}
             height={windowSize.height}

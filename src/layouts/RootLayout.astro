@@ -9,7 +9,6 @@ import {Menu} from "../components/header/NavMenu"
 import ToolBox from "../components/ToolBox"
 import OwnerInfo from "../components/OwnerInfo"
 import {SvgDefs} from "../components/SvgIcons"
-import {Init} from "../components/Init";
 
 interface Props {
     lang?: string
@@ -37,7 +36,6 @@ const {lang, title, description, subNavigationItems} = Astro.props
     <ResponsiveFontSize/>
 </head>
 <body class="w-full h-full text-white bg-black m-0 overflow-hidden">
-  <Init client:load />
   <div class="w-full h-full relative bg-layout bg-center bg-cover bg-no-repeat">
     <div class="relative w-full h-full m-auto max-w-[180rem]">
         <Header/>

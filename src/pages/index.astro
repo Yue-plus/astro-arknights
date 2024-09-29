@@ -5,9 +5,11 @@ import LineDecorator from "../components/LineDecorator"
 import ScrollTip from "../components/ScrollTip"
 import arknightsConfig from "../../arknights.config"
 import RootPageViews from "./_views/RootPageViews";
+import {Init} from "../components/Init";
 ---
 
 <RootLayout lang={arknightsConfig.language} title={arknightsConfig.title} description={arknightsConfig.description}>
+    <Init client:load />
     <PageTracker client:load/>
     <main id="root-page-views" class="w-full h-full relative select-none">
         {/* TODO: 使用 <ViewTransitions /> 优化，完全服务端渲染

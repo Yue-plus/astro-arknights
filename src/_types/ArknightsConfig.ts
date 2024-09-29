@@ -62,10 +62,10 @@ export type ArknightsConfig = {
         },
         WORLD: {
             items: {
-                title: string
-                subTitle: string
-                imageUrl: string
-                description: string
+                title: string,
+                subTitle: string,
+                imageUrl: string,
+                description: string,
             }[]
         }
     }
