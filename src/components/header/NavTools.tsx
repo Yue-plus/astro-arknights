@@ -21,17 +21,19 @@ export function Sound() {
     const [active, setActive] = useState(arknightsConfig?.bgm?.autoplay ?? false)
     const [volume, setVolume] = useState(active ? 1 : 0)
     const audioRef = useRef<HTMLAudioElement>(null)
+    const lastTapRef = useRef<number>(0)
     const [isFading, setIsFading] = useState(false);
     const fadeIntervalRef = useRef<number | null>(null);
 
     useEffect(() => {
         if (audioRef.current) {
             const audio = audioRef.current;
-            
+            active ? audioRef.current.play().catch(console.error) : audioRef.current.pause()
+
             const handleFade = (targetVolume: number) => {
                 setIsFading(true);
                 if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-                
+
                 fadeIntervalRef.current = setInterval(() => {
                     if ((targetVolume === 1 && audio.volume < 1) || (targetVolume === 0 && audio.volume > 0)) {
                         audio.volume = Math.max(0, Math.min(1, audio.volume + (targetVolume === 1 ? 0.25 : -0.25)));
@@ -51,25 +53,36 @@ export function Sound() {
                 handleFade(0);
             }
         }
-
         return () => {
             if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
         };
     }, [active]);
 
-    const handleClick = () => {
+    const handleInteraction = (event: React.MouseEvent | React.TouchEvent) => {
         if (!isFading) {
+            setActive(!active)
+        }
+        event.preventDefault();
+        const now = Date.now();
+        if (now - lastTapRef.current > 500) {
+            lastTapRef.current = now;
             setActive(!active);
         }
-    };
+    }
 
-    return <div className={BoxClassName} onClick={handleClick}>
+    return <div
+        className={BoxClassName}
+        onClick={handleInteraction}
+        onTouchStart={handleInteraction}
+        role="button"
+        tabIndex={0}
+    >
         <IconSound className={SvgClassName} style={{
             color: active ? ActiveColor : InactiveColor,
             transition: "transform .3s",
             transform: `scaleY(${active ? 1 : .5})`,
         }}/>
-        <audio ref={audioRef} src={arknightsConfig?.bgm?.src ?? (import.meta.env.BASE_URL + "audios/bgm.mp3")}/>
+        <audio ref={audioRef} src={arknightsConfig?.bgm?.src ?? `${import.meta.env.BASE_URL}audios/bgm.mp3`}/>
     </div>
 }
 
