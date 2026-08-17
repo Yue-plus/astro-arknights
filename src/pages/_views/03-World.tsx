@@ -154,7 +154,7 @@ export default function World() {
           className={`absolute ${selectedItemIndex !== null ? "left-0" : "right-0"} top-1/2 transform -translate-y-1/2 opacity-70`}
         >
           <ParticleFactory
-            activeLabel={selectedItemIndex !== null ? undefined : "island"}
+            activeLabel={selectedItemIndex !== null ? undefined : "arknights"}
             imageUrl={
               selectedItemIndex !== null
                 ? items[selectedItemIndex].imageUrl
@@ -163,13 +163,25 @@ export default function World() {
             width={windowSize.width}
             height={windowSize.height}
             isGrayscale={false}
-            scale={1.7}
+            pointSize={selectedItemIndex === null ? 4 : 3}
+            scale={
+              selectedItemIndex === null
+                ? Math.min(
+                    (windowSize.width * 0.44) / 740,
+                    (windowSize.height * 0.52) / 634
+                  ) * 2
+                : 1.7
+            }
             particleAreaX={
               selectedItemIndex !== null
                 ? windowSize.width / 5
-                : windowSize.width / 2 + 60
+                : windowSize.width * 0.7 - 200
             }
-            particleAreaY={windowSize.height / 2 - 150}
+            particleAreaY={
+              selectedItemIndex !== null
+                ? windowSize.height / 2 - 150
+                : windowSize.height / 2 - 200
+            }
           />
         </div>
       )}

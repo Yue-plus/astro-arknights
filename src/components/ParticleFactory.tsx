@@ -1,732 +1,555 @@
-// TODO : 在粒子生成动画中应用鼠标影响（已完成）
-// TODO : caven尺寸改变时只需要让粒子改变
+import { useEffect, useMemo, useRef } from "react";
+import * as THREE from "three";
 
-import React, { useRef, useState, useEffect } from "react";
+const PARTICLE_COUNT = 10_000;
+const ORIGINAL_MODEL_SIZE = 800;
+const LEGACY_MODEL_SIZE = 400;
+const DEFAULT_POINT_SIZE = 3;
+const POINTER_INNER_RADIUS = 48;
+const POINTER_OUTER_RADIUS = 230;
+const POINTER_INNER_FORCE = 3.2;
+const POINTER_OUTER_FORCE = 0.16;
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
-// 全局常量
-const width = 400;
-const height = 400;
-const animateTime = 40;
-const opacityStep = 1 / animateTime;
-const Radius = 30;
-const Inten = 0.25;
-const LargeRadius = 400;
-const LargeInten = 0.00005;
-const BaseParticleRadius = 0.6;
-const ParticleDensity = 6;
+const MODEL_NAMES = [
+  "arknights",
+  "originiums",
+  "originium_arts",
+  "reunion",
+  "infected",
+  "nomadic_city",
+  "rhodes_island",
+] as const;
 
-// 全局变量
-/** 粒子对鼠标的敏感度 */
-let mouseSensitivity = 5;
-/** 明度阈值 (0-255) */
-let brightnessThreshold = 100;
-/** 透明度阈值 (0-255) */
-let alphaThreshold = 6;
-/** 整体缩放因子 */
-let scale = 6;
+type ModelName = (typeof MODEL_NAMES)[number];
+type ModelPoint = [number, number, number?];
 
-// Logo 数据
-const logos = [
-  { label: "infected", url: "/images/03-world/infected.png" },
-  { label: "nomadic_city", url: "/images/03-world/nomadic_city.png" },
-  { label: "originium_arts", url: "/images/03-world/originium_arts.png" },
-  { label: "originiums", url: "/images/03-world/originiums.png" },
-  { label: "reunion", url: "/images/03-world/reunion.png" },
-  { label: "island", url: "/images/rhodes_island.png" },
-];
-
-// 辅助函数
-function lerp(start: number, end: number, t: number): number {
-  return start * (1 - t) + end * t;
-}
-
-function easeOutLog(t: number): number {
-  // TODO: We need a better function
-  return 1 - Math.pow(1.8, -12 * t);
-}
-
-/** 粒子类 */
-class Particle {
-  x: number;
-  y: number;
-  totalX: number;
-  totalY: number;
-  mx?: number;
-  my?: number;
-  vx?: number;
-  vy?: number;
-  time: number;
-  r: number;
-  color: number[];
-  opacity: number;
-  initialX: number;
-  initialY: number;
-  progress: number;
-  animationProgress: number;
-  animationDuration: number;
-  initialOpacity: number;
-  offsetX: number;
-  offsetY: number;
-  grayColor: number;
-  exitVx?: number;
-  exitVy?: number;
-
-  constructor(totalX: number, totalY: number, time: number, color: number[]) {
-    this.x = totalX;
-    this.y = totalY;
-    this.totalX = totalX;
-    this.totalY = totalY;
-    this.time = time;
-    this.r = BaseParticleRadius * scale;
-    this.color = [...color];
-    this.opacity = 0;
-    const angle = Math.random() * Math.PI * 2;
-    const radius = (Math.random() * Math.min(width, height)) / 1.2; // 粒子初始位置范围
-    this.initialX = width / 2 + Math.cos(angle) * radius;
-    this.initialY = height / 2 + Math.sin(angle) * radius;
-    this.x = this.initialX;
-    this.y = this.initialY;
-    this.initialOpacity = 0;
-    this.opacity = this.initialOpacity;
-    this.progress = 0;
-    this.animationProgress = 0;
-    this.animationDuration = 3000; // 出场动画持续时间
-    this.offsetX = (Math.random() - 0.5) * 1;
-    this.offsetY = (Math.random() - 0.5) * 1;
-    this.grayColor = Math.round(
-      0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
-    );
-  }
-
-  draw(ctx: CanvasRenderingContext2D, isGrayscale: boolean) {
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const scaledX = centerX + (this.x - centerX) * scale;
-    const scaledY = centerY + (this.y - centerY) * scale;
-
-    if (isGrayscale) {
-      ctx.fillStyle = `rgba(${this.grayColor}, ${this.grayColor}, ${this.grayColor}, ${this.opacity})`;
-    } else {
-      ctx.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.opacity})`;
-    }
-    ctx.beginPath();
-    ctx.arc(scaledX, scaledY, this.r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  update(deltaTime: number, mouseX?: number, mouseY?: number) {
-    // 1. 计算鼠标影响产生的力 (无论是否在动画中)
-    let repX = 0;
-    let repY = 0;
-
-    if (mouseX !== undefined && mouseY !== undefined) {
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const scaledMouseX = centerX + (mouseX - centerX) / scale;
-      const scaledMouseY = centerY + (mouseY - centerY) / scale;
-      let dx = scaledMouseX - this.x;
-      let dy = scaledMouseY - this.y;
-      let distance = Math.sqrt(dx ** 2 + dy ** 2);
-
-      // 大范围排斥
-      if (distance < LargeRadius) {
-        let largeDisPercent = LargeRadius / distance;
-        largeDisPercent = largeDisPercent > 7 ? 7 : largeDisPercent;
-        let largeAngle = Math.atan2(dy, dx);
-        repX +=
-          Math.cos(largeAngle) *
-          largeDisPercent *
-          -LargeInten *
-          mouseSensitivity;
-        repY +=
-          Math.sin(largeAngle) *
-          largeDisPercent *
-          -LargeInten *
-          mouseSensitivity;
-      }
-
-      // 小范围强排斥
-      if (distance < Radius * 2) {
-        // 稍微扩大判定范围增加灵敏度
-        let disPercent = Radius / distance;
-        disPercent = disPercent > 7 ? 7 : disPercent;
-        let angle = Math.atan2(dy, dx);
-        repX += Math.cos(angle) * disPercent * -Inten * mouseSensitivity;
-        repY += Math.sin(angle) * disPercent * -Inten * mouseSensitivity;
-      }
-    }
-
-    // 2. 更新位置
-    if (this.animationProgress < this.animationDuration) {
-      // --- 入场动画阶段 ---
-      this.animationProgress += deltaTime;
-      const progress = Math.min(
-        this.animationProgress / this.animationDuration,
-        1
-      );
-      const easeProgress = easeOutLog(progress);
-
-      // 计算动画应该到达的基础位置
-      const baseX = lerp(this.initialX, this.totalX, easeProgress);
-      const baseY = lerp(this.initialY, this.totalY, easeProgress);
-
-      // 在动画过程中，累加鼠标产生的速度偏移
-      this.vx = (this.vx || 0) * 0.95 + repX; // 加上摩擦系数防止无限加速
-      this.vy = (this.vy || 0) * 0.95 + repY;
-
-      // 最终位置 = 动画路径位置 + 鼠标偏移
-      this.x = baseX + this.vx;
-      this.y = baseY + this.vy;
-
-      this.opacity = lerp(this.initialOpacity, 1, easeProgress);
-    } else {
-      // --- 常态维持阶段 ---
-      // 计算回到目标点的力 (恢复力)
-      this.mx = this.totalX - this.x;
-      this.my = this.totalY - this.y;
-      this.vx = this.mx / this.time + repX;
-      this.vy = this.my / this.time + repY;
-
-      this.x += this.vx;
-      this.y += this.vy;
-    }
-
-    if (this.opacity < 1) this.opacity += opacityStep;
-  }
-
-  change(x: number, y: number, color: number[]) {
-    this.totalX = x;
-    this.totalY = y;
-    this.color = [...color];
-    this.time = animateTime;
-  }
-
-  updateTransition(targetParticle: Particle | undefined, progress: number) {
-    if (!targetParticle) return;
-
-    this.totalX = lerp(this.totalX, targetParticle.totalX, progress);
-    this.totalY = lerp(this.totalY, targetParticle.totalY, progress);
-    this.color = this.color.map((c, i) =>
-      lerp(c, targetParticle.color[i], progress)
-    );
-  }
-}
-
-/** Logo图片类 */
-class LogoImg {
-  src: string;
-  name: string;
-  particleData: Particle[];
-  isLoaded: boolean;
-  constructor(src: string, name: string) {
-    this.src = src;
-    this.name = name;
-    this.particleData = [];
-    this.isLoaded = false;
-
-    if (src.endsWith(".svg")) {
-      this.loadSVG(src);
-    } else {
-      this.loadImage(src);
-    }
-  }
-
-  loadImage(src: string) {
-    let img = new Image();
-    img.crossOrigin = "";
-    img.src = src;
-    img.onload = () => {
-      const tmp_canvas = document.createElement("canvas");
-      const tmp_ctx = tmp_canvas.getContext("2d");
-      const imgW = width * scale;
-      const imgH = ~~(width * (img.height / img.width) * scale);
-      tmp_canvas.width = imgW;
-      tmp_canvas.height = imgH;
-      tmp_ctx?.drawImage(img, 0, 0, imgW, imgH);
-      const imgData = tmp_ctx?.getImageData(0, 0, imgW, imgH).data;
-      tmp_ctx?.clearRect(0, 0, imgW, imgH);
-
-      for (let y = 0; y < imgH; y += ParticleDensity) {
-        for (let x = 0; x < imgW; x += ParticleDensity) {
-          const index = (x + y * imgW) * 4;
-          const r = imgData![index];
-          const g = imgData![index + 1];
-          const b = imgData![index + 2];
-          const a = imgData![index + 3];
-          const brightness = Math.max(r, g, b);
-          if (brightness >= brightnessThreshold && a >= alphaThreshold) {
-            const offsetX = (Math.random() * 2 - 1) / scale;
-            const offsetY = (Math.random() * 2 - 1) / scale;
-            const particle = new Particle(
-              x / scale + offsetX,
-              y / scale + offsetY,
-              animateTime,
-              [r, g, b, a]
-            );
-            this.particleData.push(particle);
-          }
-        }
-      }
-      window.dispatchEvent(
-        new CustomEvent("logoImageLoaded", { detail: { name: this.name } })
-      );
-    };
-  }
-
-  loadSVG(src: string) {
-    fetch(src)
-      .then((response) => response.text())
-      .then((svgText) => {
-        const svg = new Blob([svgText], { type: "image/svg+xml" });
-        const url = URL.createObjectURL(svg);
-        const img = new Image();
-        img.src = url;
-        img.onload = () => {
-          const tmp_canvas = document.createElement("canvas");
-          const tmp_ctx = tmp_canvas.getContext("2d");
-          const imgW = width * scale;
-          const imgH = ~~(width * (img.height / img.width) * scale);
-          tmp_canvas.width = imgW;
-          tmp_canvas.height = imgH;
-          tmp_ctx?.drawImage(img, 0, 0, imgW, imgH);
-          const imgData = tmp_ctx?.getImageData(0, 0, imgW, imgH).data;
-          tmp_ctx?.clearRect(0, 0, imgW, imgH);
-
-          for (let y = 0; y < imgH; y += ParticleDensity) {
-            for (let x = 0; x < imgW; x += ParticleDensity) {
-              const index = (x + y * imgW) * 4;
-              const r = imgData![index];
-              const g = imgData![index + 1];
-              const b = imgData![index + 2];
-              const a = imgData![index + 3];
-              const sum = r + g + b + a;
-              if (sum >= 100) {
-                const offsetX = (Math.random() * 2 - 1) / scale;
-                const offsetY = (Math.random() * 2 - 1) / scale;
-                const particle = new Particle(
-                  x / scale + offsetX,
-                  y / scale + offsetY,
-                  animateTime,
-                  [r, g, b, a]
-                );
-                this.particleData.push(particle);
-              }
-            }
-          }
-          window.dispatchEvent(
-            new CustomEvent("logoImageLoaded", { detail: { name: this.name } })
-          );
-        };
-      });
-  }
-}
-
-// 画布类
-class ParticleCanvas {
-  canvasEle: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-  width: number;
-  height: number;
-  ParticleArr: Particle[];
-  mouseX?: number;
-  mouseY?: number;
-  currentLogo: LogoImg | null;
-  particleAreaWidth: number;
-  particleAreaHeight: number;
-  lastUpdateTime: number;
-  debug: boolean;
-  isGrayscale: boolean;
-  particleAreaX: number;
-  particleAreaY: number;
-  transitionProgress: number;
-  isTransitioning: boolean;
-  targetParticles: Particle[];
-  private animationFrameId: number | null = null;
-  private scale: number;
-  private exitAnimationDuration: number = 1000; // 离场动画持续时间
-  private newImageDelay: number = 100; // 新图片加载延迟
-  private isExiting: boolean = false;
-  private nextLogo: LogoImg | null = null;
-
-  constructor(
-    target: HTMLCanvasElement,
-    particleAreaWidth: number,
-    particleAreaHeight: number,
-    isGrayscale: boolean,
-    particleAreaX?: number,
-    particleAreaY?: number,
-    initialScale: number = 4
-  ) {
-    this.canvasEle = target;
-    this.ctx = target.getContext("2d") as CanvasRenderingContext2D;
-    this.width = target.width;
-    this.height = target.height;
-    this.ParticleArr = [];
-    this.currentLogo = null;
-    this.particleAreaWidth = particleAreaWidth;
-    this.particleAreaHeight = particleAreaHeight;
-    this.lastUpdateTime = performance.now();
-    this.debug = false;
-    this.isGrayscale = isGrayscale;
-    this.particleAreaX =
-      particleAreaX ?? this.width - this.particleAreaWidth - 50;
-    this.particleAreaY =
-      particleAreaY ?? (this.height - this.particleAreaHeight) / 2;
-    this.transitionProgress = 0;
-    this.isTransitioning = false;
-    this.targetParticles = [];
-    this.scale = initialScale;
-    scale = initialScale;
-
-    this.canvasEle.addEventListener("mousemove", this.handleMouseMove);
-    this.canvasEle.addEventListener("mouseleave", this.handleMouseLeave);
-  }
-
-  handleMouseMove = (e: MouseEvent) => {
-    const { left, top } = this.canvasEle.getBoundingClientRect();
-    this.mouseX = e.clientX - left;
-    this.mouseY = e.clientY - top;
+interface ParticleModel {
+  count: number;
+  size: {
+    width: number;
+    height: number;
   };
-
-  handleMouseLeave = () => {
-    this.mouseX = undefined;
-    this.mouseY = undefined;
-  };
-
-  changeImg(img: LogoImg) {
-    if (this.currentLogo && this.currentLogo !== img) {
-      this.nextLogo = img;
-      this.triggerExitAnimation();
-    } else {
-      this.loadNewImage(img);
-    }
-  }
-
-  triggerExitAnimation() {
-    this.isExiting = true;
-    this.transitionProgress = 0;
-
-    this.ParticleArr.forEach((particle) => {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 2 + 2;
-      particle.exitVx = Math.cos(angle) * speed;
-      particle.exitVy = Math.sin(angle) * speed;
-    });
-
-    setTimeout(() => {
-      if (this.nextLogo) {
-        this.loadNewImage(this.nextLogo);
-        this.nextLogo = null;
-      }
-    }, this.exitAnimationDuration + this.newImageDelay);
-  }
-
-  loadNewImage(img: LogoImg) {
-    this.currentLogo = img;
-    this.ParticleArr = img.particleData.map(
-      (item) => new Particle(item.totalX, item.totalY, animateTime, item.color)
-    );
-    this.isExiting = false;
-  }
-
-  drawCanvas() {
-    const currentTime = performance.now();
-    const deltaTime = currentTime - this.lastUpdateTime;
-    this.lastUpdateTime = currentTime;
-
-    this.ctx.clearRect(0, 0, this.width, this.height);
-
-    if (this.ParticleArr.length > 0) {
-      const particleAreaX = this.particleAreaX;
-      const particleAreaY = this.particleAreaY;
-
-      let relativeMouseX =
-        this.mouseX !== undefined ? this.mouseX - particleAreaX : undefined;
-      let relativeMouseY =
-        this.mouseY !== undefined ? this.mouseY - particleAreaY : undefined;
-
-      if (this.isTransitioning) {
-        this.transitionProgress += deltaTime / 1000;
-        if (this.transitionProgress >= 1) {
-          this.isTransitioning = false;
-          this.ParticleArr = this.targetParticles;
-          this.targetParticles = [];
-        } else {
-          this.ParticleArr.forEach((particle, index) => {
-            particle.updateTransition(
-              this.targetParticles[index],
-              this.transitionProgress
-            );
-          });
-        }
-      }
-
-      if (this.isExiting) {
-        this.transitionProgress += deltaTime / this.exitAnimationDuration;
-        if (this.transitionProgress >= 1) {
-          this.ParticleArr = [];
-        } else {
-          this.ParticleArr.forEach((particle) => {
-            particle.x += particle.exitVx!;
-            particle.y += particle.exitVy!;
-            particle.opacity = Math.max(0, 1 - this.transitionProgress);
-          });
-        }
-      } else {
-        // 正常更新粒子
-        this.ParticleArr.forEach((particle) => {
-          particle.update(deltaTime, relativeMouseX, relativeMouseY);
-        });
-      }
-
-      this.ctx.save();
-      this.ctx.translate(particleAreaX, particleAreaY);
-
-      this.ParticleArr.forEach((particle) => {
-        particle.draw(this.ctx, this.isGrayscale);
-      });
-
-      if (
-        this.debug &&
-        this.mouseX !== undefined &&
-        this.mouseY !== undefined
-      ) {
-        this.ctx.beginPath();
-        this.ctx.arc(
-          relativeMouseX!,
-          relativeMouseY!,
-          LargeRadius,
-          0,
-          Math.PI * 2
-        );
-        this.ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.arc(relativeMouseX!, relativeMouseY!, Radius, 0, Math.PI * 2);
-        this.ctx.strokeStyle = "rgba(0, 255, 0, 0.5)";
-        this.ctx.stroke();
-      }
-
-      this.ctx.restore();
-    } else if (this.currentLogo && this.currentLogo.particleData.length > 0) {
-      // 如果当前没有粒子但有新的 logo 数据，则创建新的粒子
-      this.ParticleArr = this.currentLogo.particleData.map(
-        (item) =>
-          new Particle(item.totalX, item.totalY, animateTime, item.color)
-      );
-    }
-
-    this.animationFrameId = window.requestAnimationFrame(() =>
-      this.drawCanvas()
-    );
-  }
-
-  toggleDebug() {
-    this.debug = !this.debug;
-  }
-
-  setGrayscale(isGrayscale: boolean) {
-    this.isGrayscale = isGrayscale;
-  }
-
-  stop() {
-    if (this.animationFrameId) {
-      window.cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
-    }
-    this.canvasEle.removeEventListener("mousemove", this.handleMouseMove);
-    this.canvasEle.removeEventListener("mouseleave", this.handleMouseLeave);
-  }
-
-  changeScale(newScale: number) {
-    scale = newScale;
-    this.ParticleArr.forEach((particle) => {
-      particle.r = BaseParticleRadius * scale;
-    });
-  }
-
-  setBrightnessThreshold(threshold: number) {
-    brightnessThreshold = Math.max(0, Math.min(255, threshold));
-  }
-
-  setAlphaThreshold(threshold: number) {
-    alphaThreshold = Math.max(0, Math.min(255, threshold));
-  }
+  points: ModelPoint[];
 }
 
 interface ParticleSystemProps {
   activeLabel?: string;
-  imageUrl?: string; // 新增 imageUrl 参数
+  imageUrl?: string;
   width: number;
   height: number;
   isGrayscale: boolean;
   particleAreaX?: number;
   particleAreaY?: number;
+  pointSize?: number;
   scale?: number;
-  brightnessThreshold?: number;
-  alphaThreshold?: number;
-  debug?: boolean;
 }
 
-const ParticleFactory: React.FC<ParticleSystemProps> = ({
+interface ParticleLayout {
+  centerX: number;
+  centerY: number;
+  modelScale: number;
+}
+
+const modelPromises = new Map<ModelName, Promise<ParticleModel>>();
+const modelOrders = new WeakMap<ParticleModel, Uint32Array>();
+
+function loadModel(name: ModelName) {
+  const cached = modelPromises.get(name);
+  if (cached) return cached;
+
+  const base = import.meta.env.BASE_URL;
+  const promise = fetch(`${base}world-particles/${name}.json`).then(
+    async (response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to load particle model: ${name}`);
+      }
+      return (await response.json()) as ParticleModel;
+    },
+  );
+
+  modelPromises.set(name, promise);
+  return promise;
+}
+
+function resolveModelName(activeLabel?: string, imageUrl?: string): ModelName {
+  if (imageUrl) {
+    const fileName = imageUrl.split("/").pop()?.replace(/\.[^.]+$/, "");
+    if (MODEL_NAMES.includes(fileName as ModelName)) {
+      return fileName as ModelName;
+    }
+  }
+
+  if (activeLabel === "island" || activeLabel === "rhodes") {
+    return "rhodes_island";
+  }
+
+  if (MODEL_NAMES.includes(activeLabel as ModelName)) {
+    return activeLabel as ModelName;
+  }
+
+  return "arknights";
+}
+
+function createShuffledOrder(length: number, seed: number) {
+  const order = new Uint32Array(length);
+  for (let index = 0; index < length; index += 1) order[index] = index;
+
+  let state = seed || 1;
+  const random = () => {
+    state = (state * 1_664_525 + 1_013_904_223) >>> 0;
+    return state / 0x1_0000_0000;
+  };
+
+  for (let index = length - 1; index > 0; index -= 1) {
+    const target = Math.floor(random() * (index + 1));
+    const value = order[index];
+    order[index] = order[target];
+    order[target] = value;
+  }
+
+  return order;
+}
+
+function getModelOrder(model: ParticleModel) {
+  const cached = modelOrders.get(model);
+  if (cached) return cached;
+
+  const order = createShuffledOrder(
+    Math.min(model.count, model.points.length, PARTICLE_COUNT),
+    model.count * 2_654_435_761,
+  );
+  modelOrders.set(model, order);
+  return order;
+}
+
+class WorldParticleSystem {
+  private readonly canvas: HTMLCanvasElement;
+  private readonly renderer: THREE.WebGLRenderer;
+  private readonly scene = new THREE.Scene();
+  private readonly camera: THREE.OrthographicCamera;
+  private readonly geometry = new THREE.BufferGeometry();
+  private readonly material: THREE.ShaderMaterial;
+  private readonly points: THREE.Points;
+
+  private readonly positions = new Float32Array(PARTICLE_COUNT * 3);
+  private readonly colors = new Float32Array(PARTICLE_COUNT * 4);
+  private readonly targetPositions = new Float32Array(PARTICLE_COUNT * 3);
+  private readonly targetAlpha = new Float32Array(PARTICLE_COUNT);
+  private readonly speeds = new Float32Array(PARTICLE_COUNT);
+
+  private readonly positionAttribute: THREE.BufferAttribute;
+  private readonly colorAttribute: THREE.BufferAttribute;
+  private readonly pointSizeUniform: { value: number };
+
+  private width: number;
+  private height: number;
+  private pixelRatio = 1;
+  private activeCount = 0;
+  private transitionCount = 0;
+  private currentModel: ParticleModel | null = null;
+  private currentOrder: Uint32Array | null = null;
+  private transitionPhase = 0;
+  private layout: ParticleLayout;
+  private animationFrameId: number | null = null;
+  private lastUpdateTime = performance.now();
+  private pointerX = 0;
+  private pointerY = 0;
+  private pointerActive = false;
+  private pointSize: number;
+
+  constructor(
+    canvas: HTMLCanvasElement,
+    width: number,
+    height: number,
+    layout: ParticleLayout,
+    pointSize: number,
+  ) {
+    this.canvas = canvas;
+    this.width = width;
+    this.height = height;
+    this.layout = layout;
+    this.pointSize = pointSize;
+
+    for (let index = 0; index < PARTICLE_COUNT; index += 1) {
+      const positionIndex = index * 3;
+      const colorIndex = index * 4;
+
+      this.positions[positionIndex] = (Math.random() - 0.5) * width;
+      this.positions[positionIndex + 1] = (Math.random() - 0.5) * height;
+      this.positions[positionIndex + 2] = (Math.random() - 0.5) * 500;
+
+      this.targetPositions[positionIndex] = this.positions[positionIndex];
+      this.targetPositions[positionIndex + 1] = this.positions[positionIndex + 1];
+      this.targetPositions[positionIndex + 2] = 0;
+
+      this.colors[colorIndex] = 1;
+      this.colors[colorIndex + 1] = 1;
+      this.colors[colorIndex + 2] = 1;
+      this.colors[colorIndex + 3] = 0;
+      this.targetAlpha[index] = 0;
+      this.speeds[index] = 20 + Math.random() * 10;
+    }
+
+    this.positionAttribute = new THREE.BufferAttribute(this.positions, 3);
+    this.positionAttribute.setUsage(THREE.DynamicDrawUsage);
+    this.colorAttribute = new THREE.BufferAttribute(this.colors, 4);
+    this.colorAttribute.setUsage(THREE.DynamicDrawUsage);
+    this.geometry.setAttribute("position", this.positionAttribute);
+    this.geometry.setAttribute("color", this.colorAttribute);
+
+    this.pointSizeUniform = { value: pointSize };
+    this.material = new THREE.ShaderMaterial({
+      uniforms: {
+        uPointSize: this.pointSizeUniform,
+      },
+      vertexShader: `
+        attribute vec4 color;
+        varying vec4 vColor;
+        uniform float uPointSize;
+
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = uPointSize;
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec4 vColor;
+
+        void main() {
+          float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+          if (distanceToCenter > 0.5 || vColor.a <= 0.0) discard;
+
+          float edgeAlpha = 1.0 - smoothstep(0.32, 0.5, distanceToCenter);
+          gl_FragColor = vec4(vColor.rgb, vColor.a * edgeAlpha);
+        }
+      `,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+
+    this.points = new THREE.Points(this.geometry, this.material);
+    this.points.frustumCulled = false;
+    this.scene.add(this.points);
+
+    this.camera = new THREE.OrthographicCamera(
+      -width / 2,
+      width / 2,
+      height / 2,
+      -height / 2,
+      -1_000,
+      1_000,
+    );
+    this.camera.position.z = 500;
+
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: false,
+      powerPreference: "high-performance",
+    });
+    this.renderer.setClearColor(0x000000, 0);
+
+    this.canvas.addEventListener("pointermove", this.handlePointerMove, {
+      passive: true,
+    });
+    this.canvas.addEventListener("pointerleave", this.handlePointerLeave, {
+      passive: true,
+    });
+
+    this.resize(width, height);
+    this.animationFrameId = requestAnimationFrame(this.update);
+  }
+
+  setModel(model: ParticleModel) {
+    const previousCount = this.activeCount;
+
+    this.currentModel = model;
+    this.activeCount = Math.min(model.count, model.points.length, PARTICLE_COUNT);
+    this.transitionCount = Math.max(
+      this.transitionCount,
+      previousCount,
+      this.activeCount,
+    );
+    this.currentOrder = getModelOrder(model);
+    this.transitionPhase = Math.random() * Math.PI * 2;
+    this.applyModelTargets();
+
+    if (this.activeCount > previousCount) {
+      const addedCount = this.activeCount - previousCount;
+
+      for (let index = previousCount; index < this.activeCount; index += 1) {
+        const positionIndex = index * 3;
+        const colorIndex = index * 4;
+        const [x, y, z] = this.getRingPosition(index - previousCount, addedCount);
+
+        this.positions[positionIndex] = x;
+        this.positions[positionIndex + 1] = y;
+        this.positions[positionIndex + 2] = z;
+        this.colors[colorIndex + 3] = 0;
+      }
+    }
+  }
+
+  setLayout(layout: ParticleLayout) {
+    this.layout = layout;
+    this.applyModelTargets();
+  }
+
+  resize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+    this.renderer.setPixelRatio(this.pixelRatio);
+    this.renderer.setSize(width, height, false);
+    this.pointSizeUniform.value = this.pointSize * this.pixelRatio;
+
+    this.camera.left = -width / 2;
+    this.camera.right = width / 2;
+    this.camera.top = height / 2;
+    this.camera.bottom = -height / 2;
+    this.camera.updateProjectionMatrix();
+    this.applyModelTargets();
+  }
+
+  destroy() {
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+
+    this.canvas.removeEventListener("pointermove", this.handlePointerMove);
+    this.canvas.removeEventListener("pointerleave", this.handlePointerLeave);
+    this.geometry.dispose();
+    this.material.dispose();
+    this.renderer.dispose();
+  }
+
+  setPointSize(pointSize: number) {
+    this.pointSize = pointSize;
+    this.pointSizeUniform.value = pointSize * this.pixelRatio;
+  }
+
+  private applyModelTargets() {
+    if (!this.currentModel || !this.currentOrder) return;
+
+    const { centerX, centerY, modelScale } = this.layout;
+    const sceneCenterX = centerX - this.width / 2;
+    const sceneCenterY = this.height / 2 - centerY;
+    const modelCenterX = this.currentModel.size.width / 2;
+    const modelCenterY = this.currentModel.size.height / 2;
+
+    for (let index = 0; index < this.activeCount; index += 1) {
+      const point = this.currentModel.points[this.currentOrder[index]];
+      const positionIndex = index * 3;
+
+      this.targetPositions[positionIndex] =
+        sceneCenterX + (point[0] - modelCenterX) * modelScale;
+      this.targetPositions[positionIndex + 1] =
+        sceneCenterY + (modelCenterY - point[1]) * modelScale;
+      this.targetPositions[positionIndex + 2] = 0;
+      this.targetAlpha[index] = (point[2] ?? 255) / 255;
+    }
+
+    const outgoingCount = Math.max(this.transitionCount, this.activeCount);
+    const retiredCount = outgoingCount - this.activeCount;
+
+    for (let index = this.activeCount; index < outgoingCount; index += 1) {
+      const positionIndex = index * 3;
+      const [x, y, z] = this.getRingPosition(
+        index - this.activeCount,
+        retiredCount,
+      );
+
+      this.targetPositions[positionIndex] = x;
+      this.targetPositions[positionIndex + 1] = y;
+      this.targetPositions[positionIndex + 2] = z;
+      this.targetAlpha[index] = 0;
+    }
+
+    for (let index = outgoingCount; index < PARTICLE_COUNT; index += 1) {
+      this.targetAlpha[index] = 0;
+    }
+  }
+
+  private getRingPosition(index: number, count: number) {
+    if (!this.currentModel) return [0, 0, 0] as const;
+
+    const { centerX, centerY, modelScale } = this.layout;
+    const sceneCenterX = centerX - this.width / 2;
+    const sceneCenterY = this.height / 2 - centerY;
+    const normalizedIndex = index / Math.max(count, 1);
+    const angle =
+      this.transitionPhase + index * GOLDEN_ANGLE + normalizedIndex * Math.PI;
+    const band = 0.72 + ((index * 73) % 17) / 100;
+    const radius =
+      Math.max(this.currentModel.size.width, this.currentModel.size.height) *
+      modelScale *
+      band;
+
+    return [
+      sceneCenterX + Math.cos(angle) * radius,
+      sceneCenterY + Math.sin(angle) * radius,
+      Math.sin(angle * 3) * 70,
+    ] as const;
+  }
+
+  private handlePointerMove = (event: PointerEvent) => {
+    const rect = this.canvas.getBoundingClientRect();
+    this.pointerX = event.clientX - rect.left - rect.width / 2;
+    this.pointerY = rect.height / 2 - (event.clientY - rect.top);
+    this.pointerActive = true;
+  };
+
+  private handlePointerLeave = () => {
+    this.pointerActive = false;
+  };
+
+  private update = (currentTime: number) => {
+    const deltaTime = Math.min((currentTime - this.lastUpdateTime) / 1_000, 0.05);
+    const frameScale = deltaTime * 60;
+    this.lastUpdateTime = currentTime;
+
+    for (let index = 0; index < PARTICLE_COUNT; index += 1) {
+      const positionIndex = index * 3;
+      const colorIndex = index * 4;
+      const easing = Math.min(frameScale / this.speeds[index], 0.25);
+
+      let pointerOffsetX = 0;
+      let pointerOffsetY = 0;
+
+      if (this.pointerActive && index < this.activeCount) {
+        const deltaX = this.pointerX - this.positions[positionIndex];
+        const deltaY = this.pointerY - this.positions[positionIndex + 1];
+        const distance = Math.max(Math.sqrt(deltaX * deltaX + deltaY * deltaY), 1);
+        const innerPressure =
+          Math.exp(
+            -(distance * distance) /
+              (2 * POINTER_INNER_RADIUS * POINTER_INNER_RADIUS),
+          ) * POINTER_INNER_FORCE;
+        const outerPressure =
+          Math.exp(
+            -(distance * distance) /
+              (2 * POINTER_OUTER_RADIUS * POINTER_OUTER_RADIUS),
+          ) * POINTER_OUTER_FORCE;
+        const pressure = (innerPressure + outerPressure) * frameScale;
+
+        pointerOffsetX = (-deltaX / distance) * pressure;
+        pointerOffsetY = (-deltaY / distance) * pressure;
+      }
+
+      this.positions[positionIndex] +=
+        (this.targetPositions[positionIndex] - this.positions[positionIndex]) *
+          easing +
+        pointerOffsetX;
+      this.positions[positionIndex + 1] +=
+        (this.targetPositions[positionIndex + 1] -
+          this.positions[positionIndex + 1]) *
+          easing +
+        pointerOffsetY;
+      this.positions[positionIndex + 2] +=
+        (this.targetPositions[positionIndex + 2] -
+          this.positions[positionIndex + 2]) *
+        easing;
+      this.colors[colorIndex + 3] +=
+        (this.targetAlpha[index] - this.colors[colorIndex + 3]) * easing;
+    }
+
+    this.positionAttribute.needsUpdate = true;
+    this.colorAttribute.needsUpdate = true;
+    this.renderer.render(this.scene, this.camera);
+    this.animationFrameId = requestAnimationFrame(this.update);
+  };
+}
+
+export default function ParticleFactory({
   activeLabel,
-  imageUrl, // 解构新参数
+  imageUrl,
   width,
   height,
-  isGrayscale,
   particleAreaX,
   particleAreaY,
-  scale: initialScale,
-  brightnessThreshold: initialBrightnessThreshold,
-  alphaThreshold: initialAlphaThreshold,
-  debug = false,
-}) => {
-  const [activeLogo, setActiveLogo] = useState<LogoImg | null>(null);
-  const [logoImgs, setLogoImgs] = useState<LogoImg[]>([]);
-  const [particleCanvas, setParticleCanvas] = useState<ParticleCanvas | null>(
-    null
-  );
+  pointSize = DEFAULT_POINT_SIZE,
+  scale = 1.7,
+}: ParticleSystemProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particleCanvasRef = useRef<ParticleCanvas | null>(null);
+  const particleSystemRef = useRef<WorldParticleSystem | null>(null);
+  const modelName = useMemo(
+    () => resolveModelName(activeLabel, imageUrl),
+    [activeLabel, imageUrl],
+  );
+  const layout = useMemo<ParticleLayout>(
+    () => ({
+      centerX: (particleAreaX ?? width / 2 - LEGACY_MODEL_SIZE / 2) + 200,
+      centerY: (particleAreaY ?? height / 2 - LEGACY_MODEL_SIZE / 2) + 200,
+      modelScale: (scale * LEGACY_MODEL_SIZE) / ORIGINAL_MODEL_SIZE,
+    }),
+    [height, particleAreaX, particleAreaY, scale, width],
+  );
 
-  // 初始化效果
   useEffect(() => {
-    // 如果提供了 imageUrl，则创建一个临时的 LogoImg 对象
-    const newLogoImgs = imageUrl
-      ? [new LogoImg(imageUrl, "dynamic")]
-      : logos.map((item) => new LogoImg(item.url, item.label));
-    setLogoImgs(newLogoImgs);
+    const canvas = canvasRef.current;
+    if (!canvas || width <= 0 || height <= 0) return;
 
-    if (canvasRef.current) {
-      const particleAreaWidth = width / 3;
-      const particleAreaHeight = height / 2;
+    const particleSystem = new WorldParticleSystem(
+      canvas,
+      width,
+      height,
+      layout,
+      pointSize,
+    );
+    particleSystemRef.current = particleSystem;
 
-      if (particleCanvas) {
-        particleCanvas.stop();
-      }
-
-      const newParticleCanvas = new ParticleCanvas(
-        canvasRef.current,
-        particleAreaWidth,
-        particleAreaHeight,
-        isGrayscale,
-        particleAreaX,
-        particleAreaY,
-        initialScale
-      );
-      setParticleCanvas(newParticleCanvas);
-      particleCanvasRef.current = newParticleCanvas;
-      newParticleCanvas.debug = debug;
-      if (initialBrightnessThreshold !== undefined) {
-        newParticleCanvas.setBrightnessThreshold(initialBrightnessThreshold);
-      }
-      if (initialAlphaThreshold !== undefined) {
-        newParticleCanvas.setAlphaThreshold(initialAlphaThreshold);
-      }
-      newParticleCanvas.drawCanvas();
-
-      // 将 ParticleCanvas 实例暴露到全局对象
-      (window as any).particleCanvas = newParticleCanvas;
-
-      // 添加控制台指令
-      (window as any).changeLogoByLabel = (label: string) => {
-        const selectedLogo = newLogoImgs.find((logo) => logo.name === label);
-        if (selectedLogo) {
-          newParticleCanvas.changeImg(selectedLogo);
-          console.log(`切换到标签: ${label}`);
-        } else {
-          console.log(`未找到标签: ${label}`);
-        }
-      };
-    }
+    for (const name of MODEL_NAMES) void loadModel(name);
 
     return () => {
-      if (particleCanvas) {
-        particleCanvas.stop();
-      }
-      // 清理全局对象
-      delete (window as any).particleCanvas;
-      delete (window as any).changeLogoByLabel;
+      particleSystem.destroy();
+      particleSystemRef.current = null;
     };
-  }, [
-    width,
-    height,
-    isGrayscale,
-    particleAreaX,
-    particleAreaY,
-    initialScale,
-    initialBrightnessThreshold,
-    initialAlphaThreshold,
-    debug,
-    imageUrl,
-  ]);
+  }, []);
 
-  // 处理 activeLabel 或 imageUrl 变化
   useEffect(() => {
-    if ((activeLabel || imageUrl) && logoImgs.length > 0 && particleCanvas) {
-      // 如果提供了 imageUrl，优先使用它
-      const targetLabel = imageUrl ? "dynamic" : activeLabel;
-      const selectedLogo = logoImgs.find((logo) => logo.name === targetLabel);
-      if (selectedLogo && selectedLogo.isLoaded) {
-        particleCanvas.changeImg(selectedLogo);
-      } else if (selectedLogo && !selectedLogo.isLoaded) {
-        // 如果图片还没加载完成，等待加载完成后切换
-        const handleImageLoad = (event: Event) => {
-          if ((event as CustomEvent).detail.name === targetLabel) {
-            particleCanvas?.changeImg(selectedLogo);
-          }
-        };
-        window.addEventListener("logoImageLoaded", handleImageLoad);
-        return () =>
-          window.removeEventListener("logoImageLoaded", handleImageLoad);
-      }
-    }
-  }, [activeLabel, imageUrl, logoImgs, particleCanvas]);
+    particleSystemRef.current?.resize(width, height);
+  }, [height, width]);
 
-  // 处理 Logo 点击
-  const handleLogoClick = (logoItem: LogoImg) => {
-    setActiveLogo(logoItem);
-    if (particleCanvas) {
-      particleCanvas.changeImg(logoItem);
-    }
-  };
-
-  // 设置 Logo
   useEffect(() => {
-    if (logoImgs.length > 0 && particleCanvas) {
-      const targetLabel = imageUrl ? "dynamic" : activeLabel;
-      const defaultLogo = logoImgs.find((logo) => logo.name === targetLabel);
-      if (defaultLogo) {
-        handleLogoClick(defaultLogo);
-      } else {
-        console.log(`logo not found`);
-      }
-    }
-  }, [logoImgs, particleCanvas, activeLabel, imageUrl]);
+    particleSystemRef.current?.setLayout(layout);
+  }, [layout]);
 
-  // 处理灰度模式变化
   useEffect(() => {
-    if (particleCanvas) {
-      particleCanvas.setGrayscale(isGrayscale);
-    }
-  }, [isGrayscale, particleCanvas]);
+    particleSystemRef.current?.setPointSize(pointSize);
+  }, [pointSize]);
 
-  // 切换调试模式
-  const toggleDebug = () => {
-    if (particleCanvas) {
-      particleCanvas.toggleDebug();
-    }
-  };
+  useEffect(() => {
+    let cancelled = false;
+
+    loadModel(modelName)
+      .then((model) => {
+        if (!cancelled) particleSystemRef.current?.setModel(model);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [modelName]);
 
   return (
     <div
       className="particle-system"
       style={{ width: `${width}px`, height: `${height}px` }}
     >
-      <canvas ref={canvasRef} width={width} height={height}></canvas>
+      <canvas
+        ref={canvasRef}
+        className="block h-full w-full"
+        aria-hidden="true"
+      />
     </div>
   );
-};
-
-export default ParticleFactory;
+}
