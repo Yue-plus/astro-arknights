@@ -1,0 +1,25 @@
+---
+import Contributors from "../../components/Contributors";
+import GoBackTool from "../../components/GoBackTool";
+import InfoLayout from "../../layouts/InfoLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<InfoLayout
+  title="CONTRIBUTORS"
+  subTitle="项目贡献者"
+  tabTitle="项目贡献者 | Astro Arknights"
+  pageIndex={5}
+>
+  <Contributors client:load />
+  <GoBackTool
+    slot="tool-panel"
+    goBackHref={`${base}#more`}
+    goBackLabel="返回更多内容"
+    goBackSubLabel="BACK TO MORE"
+    preferHistoryBack
+    showHomeButton={false}
+    client:load
+  />
+</InfoLayout>

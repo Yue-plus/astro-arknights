@@ -1,5 +1,9 @@
 // src/pages/_views/components/Footer.tsx
-export default function Footer() {
+export default function Footer({
+  onContributorsClick,
+}: {
+  onContributorsClick?: () => void;
+}) {
   return (
     <div className="w-full h-[400px] bg-[#181818] text-[#8a8a8a] flex flex-col justify-center items-center relative z-10 border-t border-[#333]">
       {/* 顶部链接区 */}
@@ -33,17 +37,16 @@ export default function Footer() {
         </a>
         <span className="text-[#333]">|</span>
         <a
-          href="https://github.com/Yue-plus"
+          href={`${import.meta.env.BASE_URL}contributors/`}
+          target="_self"
+          onClick={(event) => {
+            if (!onContributorsClick) return;
+            event.preventDefault();
+            onContributorsClick();
+          }}
           className="hover:text-ark-blue transition-colors"
         >
-          Author: Yue_plus
-        </a>
-        <span className="text-[#333]">|</span>
-        <a
-          href="https://github.com/Zhongye1"
-          className="hover:text-ark-blue transition-colors"
-        >
-          Contributor: Zhongye1
+          Project Contributors
         </a>
       </div>
 

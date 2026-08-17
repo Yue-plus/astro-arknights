@@ -9,12 +9,14 @@ interface Props {
     subTitle?: string
     tabTitle?: string
     subNavigationItems?: SubNavigationItem[]
+    pageIndex?: number
 }
 
 const title = Astro.props.title ?? "INFO"
 const subTitle = Astro.props.subTitle ?? "情报中心"
 const tabTitle = Astro.props.tabTitle ?? "情报中心"
 const subNavigationItems = Astro.props.subNavigationItems
+const pageIndex = Astro.props.pageIndex ?? 1
 ---
 
 <RootLayout title={tabTitle} {...{subNavigationItems}}>
@@ -23,7 +25,8 @@ const subNavigationItems = Astro.props.subNavigationItems
         <PageTracker client:only="react"/>
     </div>
     <LineDecorator client:only="react"/>
-    <div class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem] break-words hyphens-auto text-ellipsis">
+    <div data-info-layout-page-index={pageIndex}
+         class="w-full h-full flex pt-[9.5rem] portrait:pt-[9.375rem] portrait:pr-[5.75rem] break-words hyphens-auto text-ellipsis">
         {
             // TODO: 左侧栏竖屏适配
 
@@ -81,7 +84,8 @@ const subNavigationItems = Astro.props.subNavigationItems
     import {viewIndex} from "../components/store/rootLayoutStore"
     import {directions} from "../components/store/lineDecoratorStore"
 
-    viewIndex.set(1)
+    const layoutRoot = document.querySelector<HTMLElement>("[data-info-layout-page-index]")
+    viewIndex.set(Number(layoutRoot?.dataset.infoLayoutPageIndex ?? 1))
 
     function handleWindowsResize() {
         if (window.innerWidth > window.innerHeight)
