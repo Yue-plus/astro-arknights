@@ -67,17 +67,19 @@ const AK_CARDS: AkCard[] = [
   },
   {
     id: "04",
-    title: "作者主页",
-    subtitle: "AUTHOR PROFILE",
+    title: "项目贡献者",
+    subtitle: "CONTRIBUTORS",
     img: "/images/05-more/terra_historicus.jpg",
     icon: (
       <img
         src="/images/05-more/icon-terra_historicus.png"
-        alt="Author Profile"
+        alt="Contributors"
         className="min-w-8 h-8"
       />
     ),
-    onClick: () => window.open("https://github.com/Zhongye1", "_blank"),
+    onClick: () => {
+      window.location.href = `${import.meta.env.BASE_URL}contributors/`;
+    },
   },
 ];
 
