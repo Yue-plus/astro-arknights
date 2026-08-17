@@ -93,44 +93,54 @@ export default function RootPageViews() {
         }
     }, [handleTouchEnd])
 
-    const lastScrollTime = useRef(0);
+    const lastWheelEventTime = useRef(0);
+    const lastWheelDelta = useRef(0);
+    const lastWheelNavigationTime = useRef(Number.NEGATIVE_INFINITY);
 
     // --- 修改滚轮逻辑 ---
     useEffect(() => {
         const handleScroll = (event: WheelEvent) => {
             // [新增] 如果滚动被锁定（例如正在查看图集），则不执行主页面切换
-            if (isScrollLocked.get()) return; 
+            if (isScrollLocked.get() || event.deltaY === 0) return;
 
-            if (performance.now() - lastScrollTime.current > 800) { // 稍微缩短一点冷却时间以获得更跟手的体验
-                
-                // 向下滚动 (看下面内容)
-                if (event.deltaY > 0) {
-                    if (localViewIndex === MAX_INDEX) {
-                        // 在最后一页，显示 Footer
-                        if (!isFooterVisible.get()) {
-                            isFooterVisible.set(true);
-                            lastScrollTime.current = performance.now();
-                        }
-                    } else {
-                        // 正常翻页
-                        const newIndex = localViewIndex + 1;
-                        location.hash = arknightsConfig.navbar.items[newIndex].href.split("#")[1];
-                        lastScrollTime.current = performance.now();
+            const now = performance.now();
+            const delta = Math.abs(event.deltaY);
+            const hasGestureGap = now - lastWheelEventTime.current > 120;
+            const hasNewImpulse = delta >= 8 && delta > lastWheelDelta.current * 1.5;
+
+            lastWheelEventTime.current = now;
+            lastWheelDelta.current = delta;
+
+            // 页面切换期间先阻止重复翻页；保护期结束后，新的明显发力可以
+            // 立即触发，而触控板逐渐衰减的尾部惯性不会继续翻到下一页。
+            if (now - lastWheelNavigationTime.current < 650) return;
+            if (delta < 8 || (!hasGestureGap && !hasNewImpulse)) return;
+
+            lastWheelNavigationTime.current = now;
+
+            // 向下滚动 (看下面内容)
+            if (event.deltaY > 0) {
+                if (localViewIndex === MAX_INDEX) {
+                    // 在最后一页，显示 Footer
+                    if (!isFooterVisible.get()) {
+                        isFooterVisible.set(true);
                     }
-                } 
-                // 向上滚动 (看上面内容)
-                else {
-                    if (localViewIndex === MAX_INDEX && isFooterVisible.get()) {
-                        // 在最后一页，且 Footer 显示中 -> 隐藏 Footer
-                        isFooterVisible.set(false);
-                        lastScrollTime.current = performance.now();
-                    } else {
-                        // 正常翻页
-                        if (localViewIndex > 0) {
-                            const newIndex = localViewIndex - 1;
-                            location.hash = arknightsConfig.navbar.items[newIndex].href.split("#")[1];
-                            lastScrollTime.current = performance.now();
-                        }
+                } else {
+                    // 正常翻页
+                    const newIndex = localViewIndex + 1;
+                    location.hash = arknightsConfig.navbar.items[newIndex].href.split("#")[1];
+                }
+            }
+            // 向上滚动 (看上面内容)
+            else {
+                if (localViewIndex === MAX_INDEX && isFooterVisible.get()) {
+                    // 在最后一页，且 Footer 显示中 -> 隐藏 Footer
+                    isFooterVisible.set(false);
+                } else {
+                    // 正常翻页
+                    if (localViewIndex > 0) {
+                        const newIndex = localViewIndex - 1;
+                        location.hash = arknightsConfig.navbar.items[newIndex].href.split("#")[1];
                     }
                 }
             }
