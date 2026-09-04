@@ -79,7 +79,7 @@ export default {
           target: "_self",
           href: base + "docs/",
           className:
-            "text-black bg-ark-blue border-[#2bf] hover:border-white font-bold font-benderBold",
+            "text-black bg-ark-blue border-[#ffd700] hover:border-white font-bold font-benderBold",
         },
         {
           // TODO: 换个好看的图标

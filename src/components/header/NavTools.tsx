@@ -4,7 +4,7 @@ import {useStore} from "@nanostores/react";
 import {isOwnerInfoOpen, isToolBoxOpen} from "../store/rootLayoutStore.ts";
 import arknightsConfig from "../../../arknights.config";
 
-const ActiveColor = "#18d1ff"
+const ActiveColor = "#ffd700"
 const InactiveColor = "#c4c2c2"
 const BoxClassName: React.ComponentProps<"div">["className"] =
     "h-4/5 m-auto relative flex flex-auto items-center justify-center cursor-pointer transition duration-300"

@@ -73,7 +73,7 @@
   top: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
-  color: #18d1ff;
+  color: #ffd700;
   font-size: 0.75rem;
 }
 
@@ -83,7 +83,7 @@
   align-items: center;
   gap: 1rem;
   background-color: rgba(255, 255, 255, 0.05);
-  border-left: 4px solid #18d1ff;
+  border-left: 4px solid #ffd700;
   padding: 1rem;
   width: fit-content;
   backdrop-filter: blur(10px);
@@ -94,17 +94,17 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  border: 1px solid #18d1ff;
+  border: 1px solid #ffd700;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #18d1ff;
+  color: #ffd700;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .voice-section .voice-btn:hover {
-  background-color: #18d1ff;
+  background-color: #ffd700;
   color: black;
 }
 
@@ -114,7 +114,7 @@
 }
 
 .voice-section .voice-title {
-  color: #18d1ff;
+  color: #ffd700;
   font-family: "benderBold";
   font-size: 0.625rem;
   text-transform: uppercase;

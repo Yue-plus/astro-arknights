@@ -140,13 +140,13 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
       <div className="absolute top-[20%] left-8 md:left-12 z-20 flex flex-col">
         {/* 年份标签 */}
         <div className="mb-8">
-          <div className="text-[10px] bg-black/50 px-1 py-0.5 inline-block mb-1 text-[#23ADE5] font-bold tracking-widest">
+          <div className="text-[10px] bg-black/50 px-1 py-0.5 inline-block mb-1 text-[#ffd700] font-bold tracking-widest">
             TIMELINE
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl md:text-5xl font-black italic">2026</span>
             <span className="text-xl opacity-50 font-light">‹</span>
-            <span className="bg-[#23ADE5] text-black text-xs font-bold px-1 py-0.5 transform -skew-x-12">
+            <span className="bg-[#ffd700] text-black text-xs font-bold px-1 py-0.5 transform -skew-x-12">
               2026
             </span>
           </div>
@@ -169,7 +169,7 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
                 <div
                   className={`
                             h-[2px] transition-all duration-300 z-10
-                            ${isActive ? "w-6 bg-[#23ADE5]" : "w-3 bg-white/40 group-hover:bg-white/80 group-hover:w-4"}
+                            ${isActive ? "w-6 bg-[#ffd700]" : "w-3 bg-white/40 group-hover:bg-white/80 group-hover:w-4"}
                         `}
                 ></div>
 
@@ -177,7 +177,7 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
                 <span
                   className={`
                             font-mono text-sm transition-all duration-300
-                            ${isActive ? "text-[#23ADE5] font-bold scale-110" : "text-white/40 group-hover:text-white/80"}
+                            ${isActive ? "text-[#ffd700] font-bold scale-110" : "text-white/40 group-hover:text-white/80"}
                         `}
                 >
                   {item.id}
@@ -202,12 +202,12 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
               {activeItem.title}
             </h2>
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-[#23ADE5] text-lg font-bold tracking-widest">
+              <span className="text-[#ffd700] text-lg font-bold tracking-widest">
                 {activeItem.subtitle}
               </span>
             </div>
             {/* 装饰性蓝线 */}
-            <div className="w-16 h-1 bg-[#23ADE5] mt-4"></div>
+            <div className="w-16 h-1 bg-[#ffd700] mt-4"></div>
           </motion.div>
         </div>
 
@@ -237,10 +237,10 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
                   {isActive && (
                     <motion.div
                       layoutId="activeBorder"
-                      className="absolute inset-0 border-2 border-[#23ADE5]"
+                      className="absolute inset-0 border-2 border-[#ffd700]"
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[8px] border-l-[8px] border-t-[#23ADE5] border-l-transparent"></div>
+                      <div className="absolute top-0 left-0 w-0 h-0 border-t-[8px] border-l-[8px] border-t-[#ffd700] border-l-transparent"></div>
                     </motion.div>
                   )}
 
@@ -261,7 +261,7 @@ export default function ArknightsGallery({ onBack }: GalleryProps) {
             className="group relative flex items-center justify-between h-14 w-48 bg-[#333] hover:bg-[#444] text-white transition-colors"
           >
             {/* 装饰性左边框 (高亮条) */}
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#23ADE5] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#ffd700] opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
             {/* 图标区域 */}
             <div className="pl-4 pr-2">

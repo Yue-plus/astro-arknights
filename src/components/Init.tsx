@@ -12,8 +12,8 @@ export function Init() {
     const [isFadingOut, setIsFadingOut] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const commonColor = "rgb(164,164,164)";
-    const loadingColorText = "#61cefa";
-    const loadingColor = "#61cefa";
+    const loadingColorText = "#ffd700";
+    const loadingColor = "#ffd700";
     const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
     const [loadedResources, setLoadedResources] = useState<Set<string>>(new Set());
     const observerRef = useRef<PerformanceObserver | null>(null);

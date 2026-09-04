@@ -257,7 +257,7 @@ export default function Media() {
                     >
                       {activeData.info.split(/\[|\]/).map((part, index) => {
                         if (index % 2 === 1) {
-                          return <span key={index} style={{ color: '#22d3ee', fontWeight: 'bold' }}>{part}</span>;
+                          return <span key={index} style={{ color: '#ffd700', fontWeight: 'bold' }}>{part}</span>;
                         }
                         return part;
                       })}

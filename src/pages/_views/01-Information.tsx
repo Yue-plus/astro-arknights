@@ -392,7 +392,7 @@ export default function Information() {
         <div className="swiper-scrollbar-horizontal w-full h-full bg-[#ababab]">
           <div
             className="swiper-scrollbar-drag"
-            style={{ backgroundColor: "#18d1ff", borderRadius: 0 }}
+            style={{ backgroundColor: "#ffd700", borderRadius: 0 }}
           />
         </div>
       </div>

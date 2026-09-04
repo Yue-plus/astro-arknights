@@ -13,7 +13,7 @@ export default {
 	],
 	theme: {
 		colors: {
-			"ark-blue": "#18d1ff",
+			"ark-blue": "#ffd700",
 			"ark-gold": "#ffd700",
 			"end-yellow": "#ffee22",
 			"transparent": colors.transparent,
