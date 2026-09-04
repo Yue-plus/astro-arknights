@@ -7,8 +7,8 @@ export default function NavItem({index, info}: {index: number, info: NavbarItem}
     const $viewIndex = useStore(viewIndex)
 
     const liClassName = useMemo(() => {
-        return "inline-block text-center mx-10 duration-300 hover:text-ark-blue"
-            + ($viewIndex !== index ? "" : " text-ark-blue")
+        return "inline-block text-center mx-10 duration-300 hover:text-ark-gold"
+            + ($viewIndex !== index ? "" : " text-ark-gold")
     }, [$viewIndex])
 
     return <li className={liClassName} onClick={() => viewIndex.set(index)}>

@@ -47,7 +47,7 @@ function Navigation({showSubNavigation}: { showSubNavigation: boolean }) {
                       className={"h-[7.5rem] flex items-center justify-between transition ease-in-out duration-200"}
                       aria-label={item.title + " - " + item.subtitle}
                       style={{
-                          color: $viewIndex === index ? "#19d1ff" : "inherit",
+                          color: $viewIndex === index ? "#ffd700" : "inherit",
                           borderBottom: "1px solid hsla(0, 0%, 100%, .3)",
                           transitionDelay: delay + "ms",
                           opacity: showItems ? 1 : 0,
