@@ -319,7 +319,7 @@ export default function Media() {
                 style={{ animationDelay: "300ms" }}
               >
                 <button
-                  className="group flex items-center bg-[rgb(24,209,255)] hover:bg-white transition-colors duration-300 text-[rgb(0,0,0)] cursor-pointer w-[14.375rem] h-[3.75rem] pl-4 pr-7 py-0 whitespace-nowrap"
+                  className="group flex items-center bg-[#ffd700] hover:bg-white transition-colors duration-300 text-[rgb(0,0,0)] cursor-pointer w-[14.375rem] h-[3.75rem] pl-4 pr-7 py-0 whitespace-nowrap"
                   onClick={handleDetailClick}
                 >
                   <div className="flex flex-col justify-center">

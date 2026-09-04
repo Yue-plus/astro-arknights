@@ -14,7 +14,6 @@ interface AkCard {
   title: string;
   subtitle: string;
   img: string;
-  icon: React.ReactNode;
   desc?: string;
   onClick?: () => void;
 }
@@ -25,14 +24,7 @@ const AK_CARDS: AkCard[] = [
     id: "01",
     title: "代码仓库",
     subtitle: "REPOSITORY",
-    img: "/images/passport.png",
-    icon: (
-      <img
-        src="/images/passport.png"
-        alt="Repository"
-        className="min-w-6 h-6"
-      />
-    ),
+    img: "/images/05-more/1.png",
     onClick: () =>
       window.open("https://github.com/Yue-plus/astro-arknights", "_blank"),
   },
@@ -40,14 +32,7 @@ const AK_CARDS: AkCard[] = [
     id: "02",
     title: "相关文档",
     subtitle: "DOCUMENTATION",
-    img: "/images/passport.png",
-    icon: (
-      <img
-        src="/images/05-more/icon-integrated_strategies.png"
-        alt="Documentation"
-        className="min-w-6 h-6"
-      />
-    ),
+    img: "/images/05-more/2.png",
     onClick: () =>
       window.open("https://arknights.astro.yue.zone/docs/", "_blank"),
   },
@@ -55,14 +40,7 @@ const AK_CARDS: AkCard[] = [
     id: "03",
     title: "作者主页",
     subtitle: "AUTHOR PROFILE",
-    img: "/images/passport.png",
-    icon: (
-      <img
-        src="/images/05-more/icon-SCHNIE_historicus.png"
-        alt="Author Profile"
-        className="min-w-6 h-6"
-      />
-    ),
+    img: "/images/05-more/3.png",
     onClick: () => window.open("https://github.com/schrolemons", "_blank"),
   },
 ];

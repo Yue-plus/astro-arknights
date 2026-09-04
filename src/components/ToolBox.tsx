@@ -9,7 +9,6 @@ import {
     IconTapTap,
     IconWechat,
     IconWeibo,
-    LogoRhodesIsland
 } from "./SvgIcons";
 
 export default function ToolBox() {
@@ -27,10 +26,6 @@ export default function ToolBox() {
                          absolute top-[6.75rem] portrait:top-1/2 right-0 portrait:left-1/2
                          transition duration-300
                          portrait:-translate-x-1/2 portrait:-translate-y-1/2`}>
-            <div className="w-full h-full absolute top-0 left-0 overflow-hidden">
-                <LogoRhodesIsland className={`h-[59.375rem] portrait:h-[55rem] text-[#06bbff]
-                                              absolute top-[-2rem] left-[-18.75rem] portrait:left-[-5rem]`}/>
-            </div>
             <div className={`w-[4.5rem] h-[4.5rem] mt-[.5rem] text-white
                              absolute right-0 top-0 transition duration-300 cursor-pointer
                              hidden portrait:block`}

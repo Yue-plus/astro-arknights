@@ -72,7 +72,7 @@ function Item({
       aria-label={`${title} - ${subTitle}`}
     >
       <div
-        className="text-[4.5rem] text-[rgba(24,209,255,.25)] font-n15eBold absolute right-[.75rem] bottom-[.75rem] transition-opacity duration-300"
+        className="text-[4.5rem] text-[rgba(255,215,0,.25)] font-n15eBold absolute right-[.75rem] bottom-[.75rem] transition-opacity duration-300"
         style={{ opacity: active ? "100" : "0" }}
       >
         {subTitle}
