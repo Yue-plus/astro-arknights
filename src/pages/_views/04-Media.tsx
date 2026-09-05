@@ -113,9 +113,9 @@ export default function Media() {
       setShowGallery(true);
       isScrollLocked.set(true); // 锁定主页面滚动
     } else if (currentCat === "books") {
-      window.open("https://www.sch-nie.com/core/", "_blank");
+      window.open("https://zero.sch-nie.com/core/", "_blank");
     } else if (currentCat === "Question_Set") {
-      window.open("https://www.sch-nie.com/categories/tests/", "_blank");
+      window.open("https://zero.sch-nie.com/categories/tests/", "_blank");
     } else if (currentCat === "website") {
       window.open("https://monitor.sch-nie.com", "_blank");
     } else {
