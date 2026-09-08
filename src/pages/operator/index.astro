@@ -13,14 +13,28 @@ const uniqueIds = [...new Set(allOperator.map(item => item.data.id))];
 <InfoLayout title="OPERATOR" subTitle="人物信息" tabTitle="人物">
     <div id="operator-container" class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
         <div id="operator-scroll-wrapper">
-            <nav id="operator-content" class="max-w-[80.75rem] mx-auto pt-8">
+            <nav id="operator-content" class="max-w-[80.75rem] mx-auto pt-4 pb-8">
                 {allOperator.length > 0 ? (
-                    allOperator.map((item) => (
-                        <div class="w-full mb-16 operator-item" data-id={item.data.id}>
-                            <a target="_blank" href={`${base}operator/${item.slug}`} title={item.data.title ?? item.data.id} class="w-full block relative">
-                                <div class="w-full p-8 bg-black rounded-lg border-2 border-white flex items-center justify-center">
-                                    <div class="text-white text-4xl font-bold text-center">{item.data.title ?? item.data.id}</div>
+                    allOperator.map((item, index) => (
+                        <div class="operator-item w-full" data-id={item.data.id}>
+                            <a target="_blank" href={`${base}operator/${item.slug}`} title={item.data.title ?? item.data.id}
+                               class="group relative flex items-center w-full max-w-[64rem] mx-auto gap-8 px-2 py-7 border-b border-white/15 hover:bg-white/5 transition-colors duration-300 no-underline text-inherit cursor-pointer">
+                                <div class="shrink-0 w-24 h-24 flex flex-col items-center justify-center border border-white/20 group-hover:border-ark-blue transition-colors duration-300">
+                                    <div class="text-ark-blue font-oswaldMedium text-3xl leading-none">{String(index + 1).padStart(2, "0")}</div>
+                                    <div class="mt-2 font-benderBold text-[0.625rem] tracking-[0.25em] text-white/40">OPERATOR</div>
                                 </div>
+
+                                <div class="shrink-0 flex flex-col justify-center">
+                                    <div class="text-ark-blue text-lg font-bold whitespace-nowrap">{item.data.id ?? "未知"}</div>
+                                    <div class="mt-2 font-benderBold text-[0.6875rem] tracking-[0.25em] text-white/40">PROFILE</div>
+                                </div>
+
+                                <div class="flex-1 min-w-0 pl-8 border-l border-white/10">
+                                    <div class="font-benderRegular text-sm tracking-[0.15em] text-white/50">CHARACTER RECORD</div>
+                                    <div class="mt-1.5 text-white text-2xl font-bold leading-snug truncate group-hover:text-ark-blue transition-colors duration-300">{item.data.title ?? item.data.id}</div>
+                                </div>
+
+                                <svg class="shrink-0 w-6 h-6 text-ark-blue opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                             </a>
                         </div>
                     ))
@@ -28,19 +42,31 @@ const uniqueIds = [...new Set(allOperator.map(item => item.data.id))];
                     <div class="text-center text-2xl font-n15eBold pt-12 pb-16">无人物数据</div>
                 )}
             </nav>
-            <div class="text-center text-2xl font-n15eBold pt-12 pb-16">- END -</div>
+            <div class="text-center text-sm tracking-[0.4em] text-white/40 font-benderBold pt-8 pb-8">- END -</div>
         </div>
     </div>
 
     <GoBackTool slot="tool-panel" client:load/>
 
     <div slot="aside-header">
-        <div class="p-4">
-            <h3 class="text-white text-xl font-bold mb-4">人物 筛选</h3>
-            <div class="flex flex-col space-y-2">
-                <button class="id-btn active px-4 py-2 bg-ark-blue text-white rounded-md" data-id="all">全部</button>
+        <div class="pr-4">
+            <div class="flex items-center gap-3 pb-5 border-b border-white/15">
+                <span class="h-9 w-1 bg-ark-blue"></span>
+                <div>
+                    <div class="text-white text-lg font-benderBold leading-none tracking-[0.2em]">FILTER</div>
+                    <div class="text-white/50 text-sm mt-1.5">人物筛选</div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2.5 mt-6">
+                <button class="id-btn active w-full flex items-center justify-between px-5 py-3 bg-ark-blue transition-colors duration-300 cursor-pointer font-bold" data-id="all">
+                    <span>全部</span>
+                    <span class="font-benderBold text-sm opacity-70">ALL</span>
+                </button>
                 {uniqueIds.map((id) => (
-                    <button class="id-btn px-4 py-2 bg-[#5a5a5a] text-white rounded-md" data-id={id}>{id}</button>
+                    <button class="id-btn w-full flex items-center justify-between px-5 py-3 bg-[#5a5a5a] transition-colors duration-300 cursor-pointer font-bold" data-id={id}>
+                        <span>{id}</span>
+                        <span class="font-benderBold text-sm opacity-70">OPTR</span>
+                    </button>
                 ))}
             </div>
         </div>
@@ -109,3 +135,9 @@ const uniqueIds = [...new Set(allOperator.map(item => item.data.id))];
         });
     });
 </script>
+
+<style>
+  .id-btn { color: #fff; }
+  .id-btn:not(.active):hover { background-color: #6b6b6b; }
+  .id-btn.active { color: #000; }
+</style>

@@ -1,8 +1,6 @@
 ---
 import {getCollection} from 'astro:content'
-// import {Debug} from 'astro:components'
 import InfoLayout from "../../layouts/InfoLayout.astro"
-import InfoCard from "../../components/InfoCard.astro"
 import GoBackTool from "../../components/GoBackTool"
 
 const base = import.meta.env.BASE_URL
@@ -17,46 +15,84 @@ function getThumbnailPath(category: string | undefined, thumbnail: string | unde
     };
     return thumbnail ?? categoryToThumbnail[category as keyof typeof categoryToThumbnail] ?? "ACTIVITY.jpg";
 }
+
+// 辅助函数：从内容 id（如 "2025-11-17_标题"）解析日期
+function getDateParts(id: string): { year: string, month: string, day: string } | null {
+    const match = id.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    return match ? { year: match[1], month: match[2], day: match[3] } : null;
+}
 ---
 
 <InfoLayout title="Universe" subTitle="宇宙" tabTitle="宇宙">
     <div id="blog-container" class="h-full flex-auto mr-[-16px] overflow-x-hidden overflow-y-scroll">
         <div id="blog-scroll-wrapper">
             <nav id="blog-content" class="max-w-[80.75rem] mx-auto">
-
                 {
-                    (allBlog.length > 0) && allBlog.map((item, index) =>
-                                <div class="w-full mb-16 flex justify-center blog-item" data-category={item.data.category ?? '未分类'}>
-                                    <a target="_blank" href={`${base}blog/${item.slug}`} title={item.data.title ?? item.id} class="w-3/4 block relative">
-                                        <img class="w-full h-[250px] object-cover object-center" 
-                                             src={`${base}info-thumbnail/${getThumbnailPath(item.data.category, item.data.thumbnail)}`} 
-                                             alt="Thumbnail"/>
-                                        <div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/80 to-transparent">
-                                            <div class="text-ark-blue text-2xl font-bold mb-2">{item.data.category ?? "未分类"}</div>
-                                            <div class="text-white text-4xl font-bold mb-2">{item.data.title ?? item.id}</div>
-                                            <div class="text-white/80 text-lg">{item.id.substring(0, 4)} // {item.id.substring(5, 7)} / {item.id.substring(8, 10)}</div>
-                                        </div>
-                                    </a>
-                                </div>
-                            )
+                    (allBlog.length > 0) && allBlog.map((item) => {
+                        const category = item.data.category ?? '未分类';
+                        const title = item.data.title ?? item.id;
+                        const date = getDateParts(item.id);
+                        const year = date?.year ?? "----";
+                        const month = date?.month ?? "--";
+                        const day = date?.day ?? "--";
+                        const thumbnail = `${base}info-thumbnail/${getThumbnailPath(item.data.category, item.data.thumbnail)}`;
+                        return (
+                            <div class="blog-item w-full flex justify-center" data-category={category}>
+                                <a target="_blank" href={`${base}blog/${item.slug}`} title={title}
+                                   class="group relative flex items-center w-full max-w-[64rem] gap-8 px-2 py-7 border-b border-white/15 hover:bg-white/5 transition-colors duration-300 no-underline text-inherit cursor-pointer">
+                                    <div class="shrink-0 w-44 h-28 overflow-hidden">
+                                        <img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-500"
+                                             src={thumbnail}
+                                             alt={`${title} - 缩略图`}/>
+                                    </div>
+
+                                    <div class="shrink-0 flex flex-col justify-center">
+                                        <div class="text-ark-blue text-lg font-bold whitespace-nowrap">{category}</div>
+                                        <div class="mt-2 font-benderBold text-[0.6875rem] tracking-[0.25em] text-white/40">ARCHIVE</div>
+                                    </div>
+
+                                    <div class="flex-1 min-w-0 ml-6 pl-8 border-l border-white/10">
+                                        <div class="font-benderRegular text-sm tracking-[0.15em] text-white/50">{year} // {month} / {day}</div>
+                                        <div class="mt-1.5 text-white text-2xl font-bold leading-snug truncate group-hover:text-ark-blue transition-colors duration-300">{title}</div>
+                                    </div>
+
+                                    <svg class="shrink-0 w-6 h-6 text-ark-blue opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </a>
+                            </div>
+                        );
+                    })
                 }
-                <!--<Debug {allBlog}/>-->
             </nav>
-            <div class="text-center text-2xl font-n15eBold pt-12 pb-16">- END -</div>
-            <!-- TODO: 显示页码 -->
+            <div class="text-center text-sm tracking-[0.4em] text-white/40 font-benderBold pt-8 pb-8">- END -</div>
         </div>
     </div>
 
-
-
     <div slot="aside-header">
-        <div class="p-4">
-            <h3 class="text-white text-xl font-bold mb-4">分类筛选</h3>
-            <div class="flex flex-col space-y-2">
-                <button class="category-btn active px-4 py-2 bg-ark-blue text-white rounded-md" data-category="all">全部</button>
-                <button class="category-btn px-4 py-2 bg-[#5a5a5a] text-white rounded-md" data-category="微故事">微故事</button>
-                <button class="category-btn px-4 py-2 bg-[#5a5a5a] text-white rounded-md" data-category="事件">事件</button>
-                <button class="category-btn px-4 py-2 bg-[#5a5a5a] text-white rounded-md" data-category="世界观">世界观</button>
+        <div class="pr-4">
+            <div class="flex items-center gap-3 pb-5 border-b border-white/15">
+                <span class="h-9 w-1 bg-ark-blue"></span>
+                <div>
+                    <div class="text-white text-lg font-benderBold leading-none tracking-[0.2em]">FILTER</div>
+                    <div class="text-white/50 text-sm mt-1.5">分类筛选</div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2.5 mt-6">
+                <button class="category-btn active w-full flex items-center justify-between px-5 py-3 bg-ark-blue transition-colors duration-300 cursor-pointer font-bold" data-category="all">
+                    <span>全部</span>
+                    <span class="font-benderBold text-sm opacity-70">ALL</span>
+                </button>
+                <button class="category-btn w-full flex items-center justify-between px-5 py-3 bg-[#5a5a5a] transition-colors duration-300 cursor-pointer font-bold" data-category="微故事">
+                    <span>微故事</span>
+                    <span class="font-benderBold text-sm opacity-70">STORY</span>
+                </button>
+                <button class="category-btn w-full flex items-center justify-between px-5 py-3 bg-[#5a5a5a] transition-colors duration-300 cursor-pointer font-bold" data-category="事件">
+                    <span>事件</span>
+                    <span class="font-benderBold text-sm opacity-70">EVENT</span>
+                </button>
+                <button class="category-btn w-full flex items-center justify-between px-5 py-3 bg-[#5a5a5a] transition-colors duration-300 cursor-pointer font-bold" data-category="世界观">
+                    <span>世界观</span>
+                    <span class="font-benderBold text-sm opacity-70">WORLD</span>
+                </button>
             </div>
         </div>
     </div>
@@ -179,3 +215,9 @@ function getThumbnailPath(category: string | undefined, thumbnail: string | unde
         });
     });
 </script>
+
+<style>
+  .category-btn { color: #fff; }
+  .category-btn:not(.active):hover { background-color: #6b6b6b; }
+  .category-btn.active { color: #000; }
+</style>
